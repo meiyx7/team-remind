@@ -45,8 +45,23 @@
   min-width: 0;
 }
 
+.todo-title-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.urgent-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background: var(--state-error);
+  flex-shrink: 0;
+}
+
 .todo-title {
-  display: block;
+  flex: 1;
   font-size: var(--fs-base);
   font-weight: 500;
   color: var(--text-primary);

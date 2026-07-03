@@ -19,7 +19,7 @@ const KEYS = {
   TODOS: 'todos'
 }
 
-// 初始化：首次启动写入种子数据
+// 初始化：首次启动写入种子数据（待办日期占位符替换为相对今天的真实日期）
 function init() {
   if (!wx.getStorageSync(KEYS.TEAMS)) {
     wx.setStorageSync(KEYS.TEAMS, seedTeams)
@@ -28,7 +28,22 @@ function init() {
     wx.setStorageSync(KEYS.MEMBERS, seedMembers)
   }
   if (!wx.getStorageSync(KEYS.TODOS)) {
-    wx.setStorageSync(KEYS.TODOS, seedTodos)
+    wx.setStorageSync(KEYS.TODOS, seedTodos.map(resolveDate))
+  }
+}
+
+// 占位符 -> 真实日期（让种子数据永远贴近今天，演示效果好）
+function resolveDate(t) {
+  const map = {
+    '__TODAY__': 0, '__TODAY_PLUS_1__': 1, '__TODAY_PLUS_2__': 2,
+    '__TODAY_PLUS_5__': 5, '__TODAY_MINUS_1__': -1, '__TODAY_MINUS_2__': -2
+  }
+  const due = map[t.dueDate]
+  const created = map[t.createdAt]
+  return {
+    ...t,
+    dueDate: due !== undefined ? getDateStrOffset(due) : t.dueDate,
+    createdAt: created !== undefined ? getDateStrOffset(created) : t.createdAt
   }
 }
 
@@ -162,6 +177,46 @@ function getMyStats() {
   return { mine, inProgress, completed }
 }
 
+// 今日待办统计（供首页顶部进度条 + 完成率卡用）
+function getTodayStats() {
+  const user = getUser()
+  const empty = { total: 0, completed: 0, rate: 0 }
+  if (!user) return empty
+  const today = getTodayStr()
+  const list = getTodos().filter(t => t.assigneeId === user.id && t.dueDate === today)
+  const total = list.length
+  const completed = list.filter(t => t.status === 'completed').length
+  return { total, completed, rate: total === 0 ? 0 : Math.round(completed / total * 100) }
+}
+
+// 按时间维度过滤我的待办：today | week | all
+function getMyTodosByRange(range) {
+  const all = getMyTodos('all')
+  if (range === 'all') return all
+  const today = getTodayStr()
+  const weekEnd = getDateStrOffset(6)
+  if (range === 'today') return all.filter(t => t.dueDate === today)
+  if (range === 'week') return all.filter(t => t.dueDate >= today && t.dueDate <= weekEnd)
+  return all
+}
+
+// 问候语（按当前小时段）
+function getGreeting() {
+  const h = new Date().getHours()
+  if (h < 6) return '夜深了'
+  if (h < 11) return '早上好'
+  if (h < 14) return '中午好'
+  if (h < 18) return '下午好'
+  return '晚上好'
+}
+
+// 获取今天日期的中文长格式（7月3日 周四）
+function getTodayLabel() {
+  const d = new Date()
+  const week = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][d.getDay()]
+  return `${d.getMonth() + 1}月${d.getDate()}日 ${week}`
+}
+
 // 创建待办
 function createTodo(data) {
   const user = getUser()
@@ -176,6 +231,7 @@ function createTodo(data) {
     assigneeId: data.assigneeId || (user ? user.id : ''),
     assigneeName: data.assigneeName || (user ? user.name : '未指派'),
     dueDate: data.dueDate || '',
+    priority: data.priority || 'normal',   // urgent | normal
     status: 'pending',
     createdAt: getTodayStr(),
     createdBy: user ? user.id : ''
@@ -222,6 +278,16 @@ function getTodayStr() {
   return `${y}-${m}-${day}`
 }
 
+// 今天 + offset 天的 ISO 日期
+function getDateStrOffset(offset) {
+  const d = new Date()
+  d.setDate(d.getDate() + offset)
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${y}-${m}-${day}`
+}
+
 module.exports = {
   init,
   reset,
@@ -237,6 +303,10 @@ module.exports = {
   getRecentTodos,
   getMyStats,
   getMyStatusCounts,
+  getTodayStats,
+  getMyTodosByRange,
+  getGreeting,
+  getTodayLabel,
   createTodo,
   toggleTodoComplete,
   startTodo,

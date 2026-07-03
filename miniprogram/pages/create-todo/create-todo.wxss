@@ -109,6 +109,47 @@
   margin-top: 16rpx;
 }
 
+/* 优先级胶囊 */
+.priority-chips {
+  display: flex;
+  flex-direction: row;
+  gap: 16rpx;
+  margin-top: 16rpx;
+}
+
+.priority-chip {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8rpx;
+  padding: 14rpx 32rpx;
+  border-radius: var(--radius-full);
+  border: 1rpx solid var(--border-light);
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  font-size: 26rpx;
+  font-weight: 500;
+}
+
+.priority-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background: var(--state-error);
+}
+
+.priority-chip.priority-normal.active {
+  background: var(--color-brand);
+  color: var(--text-inverse);
+  border-color: var(--color-brand);
+}
+
+.priority-chip.priority-urgent.active {
+  background: var(--state-error);
+  color: var(--text-inverse);
+  border-color: var(--state-error);
+}
+
 .team-chip {
   padding: 12rpx 24rpx;
   border-radius: var(--radius-full);

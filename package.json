@@ -1,6 +1,6 @@
 {
   "name": "team-remind",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "团队待办小程序 - 微信原生开发，翡翠绿设计风格",
   "main": "miniprogram/app.js",
   "scripts": {

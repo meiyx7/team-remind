@@ -63,9 +63,10 @@ const seedTodos = [
     teamName: '产品设计组',
     assigneeId: 'u1',
     assigneeName: '张明',
-    dueDate: '2025-07-05',
+    dueDate: '__TODAY__',
+    priority: 'urgent',
     status: 'in_progress',
-    createdAt: '2025-07-03',
+    createdAt: '__TODAY__',
     createdBy: 'u1'
   },
   {
@@ -76,9 +77,10 @@ const seedTodos = [
     teamName: '产品设计组',
     assigneeId: 'u1',
     assigneeName: '张明',
-    dueDate: '2025-07-07',
+    dueDate: '__TODAY__',
+    priority: 'normal',
     status: 'pending',
-    createdAt: '2025-07-02',
+    createdAt: '__TODAY__',
     createdBy: 'u2'
   },
   {
@@ -89,9 +91,10 @@ const seedTodos = [
     teamName: '产品设计组',
     assigneeId: 'u1',
     assigneeName: '张明',
-    dueDate: '2025-07-03',
+    dueDate: '__TODAY__',
+    priority: 'normal',
     status: 'completed',
-    createdAt: '2025-06-30',
+    createdAt: '__TODAY__',
     createdBy: 'u3'
   },
   {
@@ -102,9 +105,10 @@ const seedTodos = [
     teamName: '运营推广组',
     assigneeId: 'u1',
     assigneeName: '张明',
-    dueDate: '2025-07-08',
+    dueDate: '__TODAY_PLUS_2__',
+    priority: 'urgent',
     status: 'in_progress',
-    createdAt: '2025-07-01',
+    createdAt: '__TODAY__',
     createdBy: 'u4'
   },
   {
@@ -115,10 +119,25 @@ const seedTodos = [
     teamName: '产品设计组',
     assigneeId: 'u1',
     assigneeName: '张明',
-    dueDate: '2025-07-12',
+    dueDate: '__TODAY_PLUS_5__',
+    priority: 'normal',
     status: 'pending',
-    createdAt: '2025-07-03',
+    createdAt: '__TODAY__',
     createdBy: 'u1'
+  },
+  {
+    id: 'todo6',
+    title: '客户访谈记录整理',
+    description: '上周三位重点客户的访谈纪要',
+    teamId: 't1',
+    teamName: '产品设计组',
+    assigneeId: 'u1',
+    assigneeName: '张明',
+    dueDate: '__TODAY_MINUS_1__',
+    priority: 'urgent',
+    status: 'in_progress',
+    createdAt: '__TODAY_MINUS_2__',
+    createdBy: 'u2'
   }
 ]
 

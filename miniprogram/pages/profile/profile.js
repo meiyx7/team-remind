@@ -8,7 +8,6 @@ Page({
   data: {
     themeClass: '',
     user: null,
-    teamCount: 0,
     darkMode: false,
     version,
     icons
@@ -23,15 +22,8 @@ Page({
     }
     this.setData({
       themeClass: app.getThemeClass(),
-      darkMode: app.globalData.darkMode
-    })
-    this.loadData()
-  },
-
-  loadData() {
-    this.setData({
-      user: store.getUser(),
-      teamCount: store.getTeams().length
+      darkMode: app.globalData.darkMode,
+      user: store.getUser()
     })
   },
 
@@ -48,10 +40,6 @@ Page({
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().updateTheme()
     }
-  },
-
-  goMyTeams() {
-    wx.switchTab({ url: '/pages/team-list/team-list' })
   },
 
   onComingSoon() {

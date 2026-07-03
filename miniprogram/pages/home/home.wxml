@@ -1,9 +1,40 @@
-<!-- pages/home/home.wxml 首页 = 待办（统计卡作为筛选条件） -->
+<!-- pages/home/home.wxml 首页 = 待办（问候+进度+视图切换+统计筛选） -->
 <view class="page-container {{themeClass}}">
   <nav-bar title="团队待办"></nav-bar>
 
   <view class="home-content">
-    <!-- 统计卡：同时作为筛选条件，点击联动下方列表 -->
+    <!-- 顶部问候卡：日期 + 今日进度条 -->
+    <view class="greeting-card">
+      <view class="greeting-row">
+        <view class="greeting-main">
+          <text class="greeting-text">{{greeting}}，{{userName}}</text>
+          <text class="greeting-date">{{todayLabel}}</text>
+        </view>
+        <view class="today-progress" wx:if="{{todayStats.total > 0}}">
+          <text class="progress-num">{{todayStats.completed}}/{{todayStats.total}}</text>
+          <text class="progress-label">今日完成</text>
+        </view>
+      </view>
+      <view class="progress-bar-wrap" wx:if="{{todayStats.total > 0}}">
+        <view class="progress-bar-track">
+          <view class="progress-bar-fill" style="width: {{todayStats.rate}}%;"></view>
+        </view>
+        <text class="progress-rate">{{todayStats.rate}}%</text>
+      </view>
+    </view>
+
+    <!-- 时间维度视图切换 -->
+    <view class="range-tabs">
+      <view
+        class="range-tab {{rangeFilter === item.key ? 'active' : ''}}"
+        wx:for="{{rangeDefs}}"
+        wx:key="key"
+        data-key="{{item.key}}"
+        bindtap="onRangeTap"
+      >{{item.label}}</view>
+    </view>
+
+    <!-- 统计卡：同时作为状态筛选条件 -->
     <view class="stats-grid">
       <view
         class="stat-card stat-{{item.key}} {{statFilter === item.key ? 'active' : ''}}"
@@ -12,14 +43,14 @@
         data-key="{{item.key}}"
         bindtap="onStatTap"
       >
-        <text class="stat-count">{{item.count}}</text>
+        <text class="stat-count">{{item.key === 'completed' ? item.rate + '%' : item.count}}</text>
         <text class="stat-label">{{item.label}}</text>
       </view>
     </view>
 
     <!-- 当前筛选标识 -->
     <view class="list-header">
-      <text class="list-title">{{statFilter === 'all' ? '全部待办' : currentLabel}}</text>
+      <text class="list-title">{{listTitle}}</text>
       <text class="list-count">{{todos.length}} 项</text>
     </view>
 
@@ -38,9 +69,9 @@
     <!-- 空态 -->
     <empty-state
       wx:else
-      text="{{statFilter === 'all' ? '暂无待办' : '该状态下暂无待办'}}"
-      hint="{{statFilter === 'all' ? '点击右下角按钮创建第一个待办' : ''}}"
-      action-text="{{statFilter === 'all' ? '创建待办' : ''}}"
+      text="{{emptyText}}"
+      hint="{{emptyHint}}"
+      action-text="{{emptyAction}}"
       bind:action="goCreateTodo"
     />
   </view>

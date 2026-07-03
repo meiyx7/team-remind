@@ -9,7 +9,10 @@
     <image wx:if="{{todo.displayStatus === 'completed'}}" class="check-icon" src="{{checkIcon}}" />
   </view>
   <view class="todo-main">
-    <text class="todo-title {{todo.displayStatus === 'completed' ? 'done' : ''}}">{{todo.title}}</text>
+    <view class="todo-title-row">
+      <view wx:if="{{todo.priority === 'urgent' && todo.displayStatus !== 'completed'}}" class="urgent-dot"></view>
+      <text class="todo-title {{todo.displayStatus === 'completed' ? 'done' : ''}}">{{todo.title}}</text>
+    </view>
     <text class="todo-sub">{{subText}}</text>
   </view>
   <view class="todo-right">

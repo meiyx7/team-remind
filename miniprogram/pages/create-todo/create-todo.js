@@ -7,6 +7,11 @@ Page({
     title: '',
     description: '',
     dueDate: '',
+    priority: 'normal',          // urgent | normal
+    priorityDefs: [
+      { key: 'normal', label: '普通' },
+      { key: 'urgent', label: '紧急' }
+    ],
     teams: [],
     selectedTeamId: '',
     members: [],
@@ -64,6 +69,13 @@ Page({
     this.loadMembers()
   },
 
+  selectPriority(e) {
+    const { key } = e.currentTarget.dataset
+    if (key === this.data.priority) return
+    this.setData({ priority: key })
+    wx.vibrateShort({ type: 'light' })
+  },
+
   toggleMember(e) {
     const { id } = e.currentTarget.dataset
     const members = this.data.selectedMembers
@@ -85,7 +97,7 @@ Page({
 
   onSubmit() {
     if (this.data.submitting) return
-    const { title, description, dueDate, selectedTeamId, selectedMembers } = this.data
+    const { title, description, dueDate, selectedTeamId, selectedMembers, priority } = this.data
     if (!title.trim()) {
       wx.showToast({ title: '请输入待办标题', icon: 'none' })
       return
@@ -101,6 +113,7 @@ Page({
       title: title.trim(),
       description: description.trim(),
       dueDate,
+      priority: this.data.priority,
       teamId: selectedTeamId,
       assigneeId: assignee ? assignee.id : '',
       assigneeName: assignee ? assignee.name : '未指派'

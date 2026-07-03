@@ -30,20 +30,6 @@
         </view>
         <view class="coming-tag">即将上线</view>
       </view>
-    </view>
-
-    <!-- 团队管理 -->
-    <view class="settings-group">
-      <view class="settings-row" bindtap="goMyTeams">
-        <view class="row-left">
-          <image class="row-icon" src="{{icons.team}}" />
-          <text class="settings-label">我的团队</text>
-        </view>
-        <view class="settings-right">
-          <text class="settings-value">{{teamCount}} 个团队</text>
-          <image class="chevron" src="{{icons.chevron}}" />
-        </view>
-      </view>
       <view class="settings-row row-coming" bindtap="onComingSoon">
         <view class="row-left">
           <image class="row-icon" src="{{icons.bell}}" />

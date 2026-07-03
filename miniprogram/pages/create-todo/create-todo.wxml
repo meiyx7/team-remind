@@ -51,6 +51,25 @@
 
       <view class="divider"></view>
 
+      <!-- 优先级 -->
+      <view class="form-section">
+        <text class="form-label">优先级</text>
+        <view class="priority-chips">
+          <view
+            class="priority-chip {{priority === item.key ? 'active' : ''}} priority-{{item.key}}"
+            wx:for="{{priorityDefs}}"
+            wx:key="key"
+            data-key="{{item.key}}"
+            bindtap="selectPriority"
+          >
+            <view wx:if="{{item.key === 'urgent'}}" class="priority-dot"></view>
+            <text>{{item.label}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="divider"></view>
+
       <!-- 关联团队 -->
       <view class="form-section">
         <text class="form-label">关联团队</text>
