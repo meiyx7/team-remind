@@ -1,0 +1,25 @@
+/* components/filter-tabs/filter-tabs.wxss */
+.filter-tabs {
+  white-space: nowrap;
+  padding: 24rpx 32rpx 16rpx;
+  background: var(--bg-secondary);
+}
+
+.filter-tab {
+  display: inline-block;
+  padding: 12rpx 32rpx;
+  margin-right: 16rpx;
+  border: 1rpx solid var(--border-light);
+  background: var(--bg-primary);
+  border-radius: 16rpx;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all 0.15s;
+}
+
+.filter-tab.active {
+  background: var(--color-brand);
+  color: var(--text-inverse);
+  border-color: var(--color-brand);
+}

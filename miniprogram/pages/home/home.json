@@ -1,7 +1,8 @@
 {
-  "navigationStyle": "custom",
+  "navigationBarTitleText": "团队待办",
   "usingComponents": {
     "nav-bar": "/components/nav-bar/nav-bar",
-    "status-badge": "/components/status-badge/status-badge"
+    "todo-card": "/components/todo-card/todo-card",
+    "empty-state": "/components/empty-state/empty-state"
   }
 }

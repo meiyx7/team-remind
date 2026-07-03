@@ -1,0 +1,19 @@
+<!-- components/todo-card/todo-card.wxml 待办卡片 -->
+<view class="todo-card todo-card-{{todo.displayStatus}}" data-id="{{todo.id}}" bindtap="onTap">
+  <view
+    wx:if="{{showCheck}}"
+    class="todo-check {{todo.displayStatus === 'completed' ? 'checked' : ''}}"
+    data-id="{{todo.id}}"
+    catchtap="onToggle"
+  >
+    <image wx:if="{{todo.displayStatus === 'completed'}}" class="check-icon" src="{{checkIcon}}" />
+  </view>
+  <view class="todo-main">
+    <text class="todo-title {{todo.displayStatus === 'completed' ? 'done' : ''}}">{{todo.title}}</text>
+    <text class="todo-sub">{{subText}}</text>
+  </view>
+  <view class="todo-right">
+    <text wx:if="{{dueText}}" class="todo-due {{todo.displayStatus === 'overdue' ? 'overdue' : ''}}">{{dueText}}</text>
+    <status-badge status="{{todo.displayStatus}}" />
+  </view>
+</view>

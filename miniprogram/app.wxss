@@ -46,14 +46,70 @@ page {
   --shadow-sm: 0 2rpx 4rpx rgba(0,0,0,0.04);
   --shadow-md: 0 4rpx 16rpx rgba(0,0,0,0.05);
   --shadow-lg: 0 8rpx 24rpx rgba(0,0,0,0.10);
-  --shadow-elevated: 0 12rpx 32rpx rgba(16,185,129,0.30);
+  --shadow-elevated: 0 12rpx 32rpx rgba(0,0,0,0.16);
+
+  /* 间距令牌（4 的倍数体系） */
+  --space-xs: 8rpx;
+  --space-sm: 16rpx;
+  --space-md: 24rpx;
+  --space-lg: 32rpx;
+  --space-xl: 48rpx;
+  --space-2xl: 64rpx;
+
+  /* 字号令牌 */
+  --fs-xs: 22rpx;
+  --fs-sm: 26rpx;
+  --fs-base: 30rpx;
+  --fs-md: 32rpx;
+  --fs-lg: 36rpx;
+  --fs-xl: 40rpx;
+  --fs-2xl: 48rpx;
+
+  /* 内容区底部留白：tabbar 高度(100rpx) + 安全区 */
+  --tabbar-height: 100rpx;
+
+  /* 导航栏背景（带半透明 + 模糊） */
+  --nav-bg: rgba(255, 255, 255, 0.95);
 
   background-color: var(--bg-secondary);
   color: var(--text-primary);
   font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
-  font-size: 30rpx;
+  font-size: var(--fs-base);
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
+}
+
+/* 暗色模式：在根容器加 .theme-dark 类即可让所有 CSS 变量级联覆盖 */
+.theme-dark {
+  --color-brand: #34d399;
+  --color-brand-light: #6ee7b7;
+  --color-brand-lightest: #064e3b;
+  --color-brand-dark: #34d399;
+  --color-brand-darker: #6ee7b7;
+
+  --color-gray-100: #1e293b;
+  --color-gray-200: #334155;
+  --color-gray-300: #475569;
+  --color-gray-400: #64748b;
+
+  --bg-primary: #1e293b;
+  --bg-secondary: #0f172a;
+  --bg-tertiary: #334155;
+
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #64748b;
+  --text-inverse: #0f172a;
+
+  --border-light: #334155;
+  --border-default: #475569;
+
+  --shadow-sm: 0 2rpx 4rpx rgba(0,0,0,0.30);
+  --shadow-md: 0 4rpx 16rpx rgba(0,0,0,0.35);
+  --shadow-lg: 0 8rpx 24rpx rgba(0,0,0,0.45);
+  --shadow-elevated: 0 12rpx 32rpx rgba(0,0,0,0.50);
+
+  --nav-bg: rgba(15, 23, 42, 0.92);
 }
 
 view, text, image, input, textarea, button, scroll-view {
@@ -81,7 +137,7 @@ view, text, image, input, textarea, button, scroll-view {
   height: 96rpx;
   line-height: 96rpx;
   text-align: center;
-  font-size: 32rpx;
+  font-size: var(--fs-md);
   font-weight: 600;
   letter-spacing: 2rpx;
   border: none;
@@ -96,6 +152,12 @@ view, text, image, input, textarea, button, scroll-view {
   transform: scale(0.99);
 }
 
+.btn-primary[disabled] {
+  background: var(--color-gray-300);
+  color: var(--text-inverse);
+  opacity: 0.7;
+}
+
 /* 次按钮（描边） */
 .btn-ghost {
   background: var(--bg-primary);
@@ -105,7 +167,7 @@ view, text, image, input, textarea, button, scroll-view {
   height: 64rpx;
   line-height: 64rpx;
   text-align: center;
-  font-size: 26rpx;
+  font-size: var(--fs-sm);
   font-weight: 500;
 }
 

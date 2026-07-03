@@ -1,5 +1,6 @@
 // pages/create-todo/create-todo.js
 const store = require('../../utils/store')
+const icons = require('../../utils/icons')
 
 Page({
   data: {
@@ -10,13 +11,19 @@ Page({
     selectedTeamId: '',
     members: [],
     selectedMembers: [],
-    today: ''
+    today: '',
+    submitting: false,
+    themeClass: '',
+    calendarIcon: icons.calendar,
+    chevronIcon: icons.chevron
   },
 
   onLoad() {
+    const app = getApp()
     const today = store.getTodayStr()
     const teams = store.getTeams()
     this.setData({
+      themeClass: app.getThemeClass(),
       today,
       teams,
       selectedTeamId: teams.length > 0 ? teams[0].id : ''
@@ -77,6 +84,7 @@ Page({
   },
 
   onSubmit() {
+    if (this.data.submitting) return
     const { title, description, dueDate, selectedTeamId, selectedMembers } = this.data
     if (!title.trim()) {
       wx.showToast({ title: '请输入待办标题', icon: 'none' })
@@ -87,6 +95,7 @@ Page({
       return
     }
 
+    this.setData({ submitting: true })
     const assignee = selectedMembers.length > 0 ? selectedMembers[0] : null
     store.createTodo({
       title: title.trim(),
@@ -96,11 +105,13 @@ Page({
       assigneeId: assignee ? assignee.id : '',
       assigneeName: assignee ? assignee.name : '未指派'
     })
+    wx.vibrateShort({ type: 'medium' })
 
     wx.showToast({ title: '创建成功', icon: 'success', duration: 800 })
     setTimeout(() => {
+      this.setData({ submitting: false })
       wx.navigateBack({
-        fail: () => wx.switchTab({ url: '/pages/todo-list/todo-list' })
+        fail: () => wx.switchTab({ url: '/pages/home/home' })
       })
     }, 800)
   }

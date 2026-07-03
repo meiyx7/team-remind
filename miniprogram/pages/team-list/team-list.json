@@ -1,6 +1,9 @@
 {
   "navigationStyle": "custom",
+  "enablePullDownRefresh": true,
   "usingComponents": {
-    "nav-bar": "/components/nav-bar/nav-bar"
+    "nav-bar": "/components/nav-bar/nav-bar",
+    "avatar": "/components/avatar/avatar",
+    "empty-state": "/components/empty-state/empty-state"
   }
 }

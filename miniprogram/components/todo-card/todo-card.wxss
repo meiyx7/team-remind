@@ -1,0 +1,83 @@
+/* components/todo-card/todo-card.wxss */
+.todo-card {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 24rpx;
+  padding: 28rpx;
+  background: var(--bg-primary);
+  border: 1rpx solid var(--border-light);
+  border-radius: var(--radius-md);
+}
+
+.todo-card:active {
+  background: var(--bg-secondary);
+}
+
+.todo-check {
+  width: 40rpx;
+  height: 40rpx;
+  border: 4rpx solid var(--color-gray-300);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 4rpx;
+}
+
+.todo-check:active {
+  background: var(--bg-tertiary);
+}
+
+.todo-check.checked {
+  background: var(--color-brand);
+  border-color: var(--color-brand);
+}
+
+.check-icon {
+  width: 22rpx;
+  height: 22rpx;
+}
+
+.todo-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.todo-title {
+  display: block;
+  font-size: var(--fs-base);
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+.todo-title.done {
+  text-decoration: line-through;
+  color: var(--text-tertiary);
+}
+
+.todo-sub {
+  display: block;
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+  margin-top: 6rpx;
+}
+
+.todo-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8rpx;
+  flex-shrink: 0;
+}
+
+.todo-due {
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+}
+
+.todo-due.overdue {
+  color: var(--state-error);
+}

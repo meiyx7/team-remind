@@ -1,6 +1,7 @@
 {
-  "navigationStyle": "custom",
+  "navigationBarTitleText": "我的",
   "usingComponents": {
-    "nav-bar": "/components/nav-bar/nav-bar"
+    "nav-bar": "/components/nav-bar/nav-bar",
+    "avatar": "/components/avatar/avatar"
   }
 }

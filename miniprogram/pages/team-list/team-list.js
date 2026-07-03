@@ -1,10 +1,16 @@
 // pages/team-list/team-list.js
 const store = require('../../utils/store')
+const icons = require('../../utils/icons')
 
 Page({
   data: {
+    themeClass: '',
     keyword: '',
-    teams: []
+    teams: [],
+    searchIcon: icons.search,
+    clearIcon: icons.clear,
+    chevronIcon: icons.chevron,
+    plusIcon: icons.plusBrand || icons.plus
   },
 
   onShow() {
@@ -12,8 +18,15 @@ Page({
     if (!app.ensureLogin('/pages/team-list/team-list')) return
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 1 })
+      this.getTabBar().updateTheme()
     }
+    this.setData({ themeClass: app.getThemeClass() })
     this.loadData()
+  },
+
+  onPullDownRefresh() {
+    this.loadData()
+    wx.stopPullDownRefresh()
   },
 
   loadData() {
@@ -33,14 +46,16 @@ Page({
   onClear() {
     this.setData({ keyword: '' })
     this.loadData()
+    wx.vibrateShort({ type: 'light' })
   },
 
   goTeamDetail(e) {
     const { id } = e.currentTarget.dataset
+    wx.vibrateShort({ type: 'light' })
     wx.navigateTo({ url: '/pages/team-detail/team-detail?id=' + id })
   },
 
   onCreateTeam() {
-    wx.showToast({ title: '创建团队功能开发中', icon: 'none' })
+    wx.showToast({ title: '创建团队功能即将上线', icon: 'none' })
   }
 })

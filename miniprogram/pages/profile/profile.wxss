@@ -1,27 +1,14 @@
 /* pages/profile/profile.wxss */
-
 .profile-content {
-  padding: 32rpx 32rpx 200rpx;
+  padding: 32rpx 32rpx calc(var(--tabbar-height) + env(safe-area-inset-bottom) + 48rpx);
 }
 
 /* 用户卡 */
 .profile-card {
-  position: relative;
-  overflow: hidden;
   background: var(--bg-primary);
   border: 1rpx solid var(--border-light);
   border-radius: var(--radius-lg);
   padding: 32rpx;
-}
-
-.profile-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 6rpx;
-  background: linear-gradient(90deg, var(--color-brand), var(--color-brand-light));
 }
 
 .profile-row {
@@ -29,19 +16,6 @@
   flex-direction: row;
   align-items: center;
   gap: 24rpx;
-}
-
-.user-avatar {
-  width: 112rpx;
-  height: 112rpx;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-inverse);
-  font-size: 44rpx;
-  font-weight: 600;
-  flex-shrink: 0;
 }
 
 .user-info {
@@ -52,25 +26,16 @@
 }
 
 .user-name {
-  font-size: 34rpx;
+  font-size: var(--fs-lg);
   font-weight: 600;
   color: var(--text-primary);
   line-height: 1.5;
 }
 
 .user-email {
-  font-size: 26rpx;
+  font-size: var(--fs-sm);
   color: var(--text-tertiary);
   margin-top: 4rpx;
-}
-
-.chevron {
-  width: 16rpx;
-  height: 16rpx;
-  border-right: 4rpx solid var(--text-tertiary);
-  border-top: 4rpx solid var(--text-tertiary);
-  transform: rotate(45deg);
-  flex-shrink: 0;
 }
 
 /* 设置分组 */
@@ -99,8 +64,29 @@
   background: var(--bg-secondary);
 }
 
+/* 即将上线行：不可点视觉 */
+.row-coming:active {
+  background: transparent;
+}
+
+.row-coming .settings-label {
+  color: var(--text-tertiary);
+}
+
+.row-left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.row-icon {
+  width: 36rpx;
+  height: 36rpx;
+}
+
 .settings-label {
-  font-size: 30rpx;
+  font-size: var(--fs-base);
   color: var(--text-primary);
 }
 
@@ -112,8 +98,21 @@
 }
 
 .settings-value {
-  font-size: 26rpx;
+  font-size: var(--fs-sm);
   color: var(--text-tertiary);
+}
+
+.chevron {
+  width: 20rpx;
+  height: 20rpx;
+}
+
+.coming-tag {
+  font-size: var(--fs-xs);
+  color: var(--text-tertiary);
+  background: var(--bg-tertiary);
+  padding: 6rpx 16rpx;
+  border-radius: var(--radius-full);
 }
 
 /* 退出登录 */
@@ -126,7 +125,7 @@
   border: 1rpx solid var(--state-error);
   border-radius: var(--radius-lg);
   color: var(--state-error);
-  font-size: 32rpx;
+  font-size: var(--fs-md);
   font-weight: 500;
 }
 

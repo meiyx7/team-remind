@@ -1,0 +1,28 @@
+<!-- pages/help/help.wxml -->
+<view class="page-container {{themeClass}}">
+  <nav-bar title="帮助与反馈" show-back="{{true}}"></nav-bar>
+
+  <view class="help-content">
+    <view class="section-title">常见问题</view>
+    <view class="faq-list">
+      <view class="faq-item" wx:for="{{faqs}}" wx:key="index">
+        <text class="faq-q">Q：{{item.q}}</text>
+        <text class="faq-a">A：{{item.a}}</text>
+      </view>
+    </view>
+
+    <view class="section-title">意见反馈</view>
+    <textarea
+      class="feedback-input"
+      placeholder="请描述你遇到的问题或建议（选填）"
+      placeholder-class="feedback-placeholder"
+      value="{{feedback}}"
+      bindinput="onFeedbackInput"
+      maxlength="300"
+      auto-height
+    />
+    <button class="feedback-btn" bindtap="onSubmitFeedback">提交反馈</button>
+
+    <view class="contact">联系方式：support@team-todo.example.com</view>
+  </view>
+</view>

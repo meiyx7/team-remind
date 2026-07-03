@@ -2,7 +2,7 @@
 
 .login-page {
   min-height: 100vh;
-  background: var(--bg-primary);
+  background: var(--bg-secondary);
   display: flex;
   flex-direction: column;
 }
@@ -22,7 +22,7 @@
   min-height: 200rpx;
 }
 
-/* Logo */
+/* Logo（扁平单色，无渐变无光晕） */
 .logo-wrap {
   display: flex;
   align-items: center;
@@ -33,21 +33,15 @@
   width: 160rpx;
   height: 160rpx;
   border-radius: var(--radius-xl);
-  background: linear-gradient(135deg, var(--color-brand) 0%, var(--color-brand-darker) 100%);
+  background: var(--color-brand);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 16rpx 40rpx rgba(16, 185, 129, 0.30);
 }
 
-/* 勾选标记 */
-.check-mark {
-  width: 64rpx;
-  height: 40rpx;
-  border-left: 8rpx solid #ffffff;
-  border-bottom: 8rpx solid #ffffff;
-  transform: rotate(-45deg) translate(4rpx, -4rpx);
-  border-radius: 4rpx;
+.logo-check {
+  width: 80rpx;
+  height: 80rpx;
 }
 
 .app-name {

@@ -1,13 +1,18 @@
 // pages/login/login.js
 const auth = require('../../utils/auth')
+const icons = require('../../utils/icons')
 
 Page({
   data: {
     loading: false,
-    from: ''
+    from: '',
+    themeClass: '',
+    checkIcon: icons.check
   },
 
   onLoad(options) {
+    const app = getApp()
+    this.setData({ themeClass: app.getThemeClass() })
     if (options.from) {
       this.setData({ from: decodeURIComponent(options.from) })
     }
@@ -18,6 +23,7 @@ Page({
     this.setData({ loading: true })
     try {
       await auth.mockWechatLogin()
+      wx.vibrateShort({ type: 'light' })
       wx.showToast({ title: '登录成功', icon: 'success', duration: 800 })
       setTimeout(() => {
         if (this.data.from) {
@@ -34,10 +40,10 @@ Page({
   },
 
   onAgreement() {
-    wx.showToast({ title: '用户协议', icon: 'none' })
+    wx.navigateTo({ url: '/pages/agreement/agreement?type=user' })
   },
 
   onPrivacy() {
-    wx.showToast({ title: '隐私政策', icon: 'none' })
+    wx.navigateTo({ url: '/pages/agreement/agreement?type=privacy' })
   }
 })

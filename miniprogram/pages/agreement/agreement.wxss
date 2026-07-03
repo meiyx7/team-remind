@@ -1,0 +1,11 @@
+/* pages/agreement/agreement.wxss */
+.agreement-content {
+  padding: 32rpx;
+}
+
+.agreement-text {
+  font-size: var(--fs-base);
+  color: var(--text-secondary);
+  line-height: 1.8;
+  white-space: pre-wrap;
+}

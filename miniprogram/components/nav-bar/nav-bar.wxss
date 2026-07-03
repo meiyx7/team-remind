@@ -9,7 +9,7 @@
 }
 
 .nav-wrap.solid {
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--nav-bg);
   backdrop-filter: blur(8px);
   border-bottom: 1rpx solid var(--border-light);
 }

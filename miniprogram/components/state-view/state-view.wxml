@@ -1,0 +1,24 @@
+<!-- components/state-view/state-view.wxml 统一三态：loading / error / empty -->
+<view class="state-view" wx:if="{{state}}">
+  <!-- loading -->
+  <view wx:if="{{state === 'loading'}}" class="state-box">
+    <view class="spinner"></view>
+    <text class="state-title">{{title || '加载中...'}}</text>
+  </view>
+
+  <!-- error -->
+  <view wx:elif="{{state === 'error'}}" class="state-box">
+    <image class="state-icon" src="{{errorIcon}}" />
+    <text class="state-title">{{title || '加载失败'}}</text>
+    <text wx:if="{{desc}}" class="state-desc">{{desc}}</text>
+    <view wx:if="{{showRetry}}" class="state-btn" bindtap="onRetry">{{retryText}}</view>
+  </view>
+
+  <!-- empty -->
+  <view wx:else class="state-box">
+    <image class="state-icon" src="{{emptyIcon}}" />
+    <text class="state-title">{{title || '暂无内容'}}</text>
+    <text wx:if="{{desc}}" class="state-desc">{{desc}}</text>
+    <view wx:if="{{actionText}}" class="state-btn" bindtap="onAction">{{actionText}}</view>
+  </view>
+</view>

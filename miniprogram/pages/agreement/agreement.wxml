@@ -1,0 +1,8 @@
+<!-- pages/agreement/agreement.wxml -->
+<view class="page-container {{themeClass}}">
+  <nav-bar title="{{title}}" show-back="{{true}}"></nav-bar>
+
+  <view class="agreement-content">
+    <text class="agreement-text">{{content}}</text>
+  </view>
+</view>

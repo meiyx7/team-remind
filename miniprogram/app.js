@@ -6,7 +6,8 @@ App({
     userInfo: null,
     statusBarHeight: 0,
     navBarHeight: 0,
-    menuButton: null
+    menuButton: null,
+    darkMode: false
   },
 
   onLaunch() {
@@ -15,6 +16,9 @@ App({
 
     // 读取登录用户
     this.globalData.userInfo = wx.getStorageSync('user') || null
+
+    // 读取深色模式偏好
+    this.globalData.darkMode = !!wx.getStorageSync('darkMode')
 
     // 计算导航栏相关尺寸
     this.initLayout()
@@ -44,5 +48,18 @@ App({
       return false
     }
     return true
+  },
+
+  // 深色模式：切换并持久化
+  toggleDark() {
+    const next = !this.globalData.darkMode
+    this.globalData.darkMode = next
+    wx.setStorageSync('darkMode', next)
+    return next
+  },
+
+  // 供页面绑定根容器 class
+  getThemeClass() {
+    return this.globalData.darkMode ? 'theme-dark' : ''
   }
 })

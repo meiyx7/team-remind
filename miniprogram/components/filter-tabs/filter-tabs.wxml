@@ -1,0 +1,10 @@
+<!-- components/filter-tabs/filter-tabs.wxml 横向筛选 Tab -->
+<scroll-view class="filter-tabs" scroll-x enhanced show-scrollbar="{{false}}">
+  <view
+    class="filter-tab {{active === item.key ? 'active' : ''}}"
+    wx:for="{{filters}}"
+    wx:key="key"
+    data-key="{{item.key}}"
+    bindtap="onSelect"
+  >{{item.label}}</view>
+</scroll-view>

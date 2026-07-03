@@ -1,0 +1,30 @@
+<!-- pages/about/about.wxml -->
+<view class="page-container {{themeClass}}">
+  <nav-bar title="关于" show-back="{{true}}"></nav-bar>
+
+  <view class="about-content">
+    <view class="logo-block">
+      <view class="logo-circle">
+        <image class="logo-check" src="{{checkIcon}}" />
+      </view>
+      <text class="app-name">团队待办</text>
+      <text class="app-version">v{{version}}</text>
+      <text class="app-slogan">高效团队协作，从此开始</text>
+    </view>
+
+    <view class="about-group">
+      <view class="about-row" bindtap="goAgreement" data-type="user">
+        <text class="about-label">用户协议</text>
+        <image class="chevron" src="{{chevronIcon}}" />
+      </view>
+      <view class="about-row" bindtap="goAgreement" data-type="privacy">
+        <text class="about-label">隐私政策</text>
+        <image class="chevron" src="{{chevronIcon}}" />
+      </view>
+    </view>
+
+    <view class="about-desc">
+      团队待办是一款轻量级的团队任务协作小程序，帮助你与团队成员高效管理待办、跟踪进度、按时完成。
+    </view>
+  </view>
+</view>

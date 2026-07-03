@@ -2,11 +2,13 @@
   "pages": [
     "pages/home/home",
     "pages/team-list/team-list",
-    "pages/todo-list/todo-list",
     "pages/profile/profile",
     "pages/login/login",
     "pages/team-detail/team-detail",
-    "pages/create-todo/create-todo"
+    "pages/create-todo/create-todo",
+    "pages/about/about",
+    "pages/help/help",
+    "pages/agreement/agreement"
   ],
   "window": {
     "backgroundTextStyle": "dark",
@@ -14,7 +16,8 @@
     "navigationBarTitleText": "团队待办",
     "navigationBarTextStyle": "black",
     "backgroundColor": "#f9fafb",
-    "navigationStyle": "custom"
+    "navigationStyle": "custom",
+    "enablePullDownRefresh": true
   },
   "tabBar": {
     "custom": true,
@@ -30,10 +33,6 @@
       {
         "pagePath": "pages/team-list/team-list",
         "text": "团队"
-      },
-      {
-        "pagePath": "pages/todo-list/todo-list",
-        "text": "待办"
       },
       {
         "pagePath": "pages/profile/profile",

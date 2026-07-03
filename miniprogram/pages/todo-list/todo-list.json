@@ -1,7 +1,0 @@
-{
-  "navigationStyle": "custom",
-  "usingComponents": {
-    "nav-bar": "/components/nav-bar/nav-bar",
-    "status-badge": "/components/status-badge/status-badge"
-  }
-}

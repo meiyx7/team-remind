@@ -1,15 +1,15 @@
 <!-- pages/login/login.wxml -->
-<view class="login-page">
+<view class="login-page {{themeClass}}">
   <nav-bar title="团队待办"></nav-bar>
 
   <view class="login-content">
     <!-- 顶部留白 -->
     <view class="top-spacer"></view>
 
-    <!-- Logo -->
+    <!-- Logo（扁平单色，去渐变与光晕） -->
     <view class="logo-wrap">
       <view class="logo-icon">
-        <view class="check-mark"></view>
+        <image class="logo-check" src="{{checkIcon}}" />
       </view>
     </view>
 

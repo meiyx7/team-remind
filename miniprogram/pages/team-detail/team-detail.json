@@ -1,7 +1,11 @@
 {
-  "navigationStyle": "custom",
+  "navigationBarTitleText": "团队详情",
   "usingComponents": {
     "nav-bar": "/components/nav-bar/nav-bar",
-    "status-badge": "/components/status-badge/status-badge"
+    "state-view": "/components/state-view/state-view",
+    "todo-card": "/components/todo-card/todo-card",
+    "filter-tabs": "/components/filter-tabs/filter-tabs",
+    "avatar": "/components/avatar/avatar",
+    "empty-state": "/components/empty-state/empty-state"
   }
 }

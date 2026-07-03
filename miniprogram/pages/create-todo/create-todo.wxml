@@ -1,5 +1,5 @@
 <!-- pages/create-todo/create-todo.wxml -->
-<view class="page-container">
+<view class="page-container {{themeClass}}">
   <nav-bar title="创建待办" show-back="{{true}}"></nav-bar>
 
   <view class="form-content">
@@ -41,13 +41,10 @@
         <picker mode="date" value="{{dueDate}}" start="{{today}}" bindchange="onDateChange">
           <view class="date-row">
             <view class="date-left">
-              <view class="calendar-icon">
-                <view class="cal-bind"></view>
-                <view class="cal-body"></view>
-              </view>
+              <image class="calendar-icon" src="{{calendarIcon}}" />
               <text class="date-text {{dueDate ? '' : 'placeholder'}}">{{dueDate ? dueDate : '请选择截止日期'}}</text>
             </view>
-            <view class="chevron"></view>
+            <image class="chevron-icon" src="{{chevronIcon}}" />
           </view>
         </picker>
       </view>
@@ -101,7 +98,7 @@
 
   <!-- 底部提交 -->
   <view class="submit-bar">
-    <button class="submit-btn" bindtap="onSubmit">提交待办</button>
+    <button class="submit-btn" bindtap="onSubmit" loading="{{submitting}}" disabled="{{submitting}}">{{submitting ? '提交中...' : '提交待办'}}</button>
     <view class="safe-bottom"></view>
   </view>
 </view>

@@ -1,0 +1,28 @@
+/* components/avatar/avatar.wxss */
+.avatar {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-inverse);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.avatar-sm {
+  width: 48rpx;
+  height: 48rpx;
+  font-size: 22rpx;
+}
+
+.avatar-md {
+  width: 80rpx;
+  height: 80rpx;
+  font-size: 30rpx;
+}
+
+.avatar-lg {
+  width: 112rpx;
+  height: 112rpx;
+  font-size: 44rpx;
+}

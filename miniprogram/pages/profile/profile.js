@@ -1,20 +1,30 @@
 // pages/profile/profile.js
 const store = require('../../utils/store')
 const auth = require('../../utils/auth')
+const version = require('../../utils/version')
+const icons = require('../../utils/icons')
 
 Page({
   data: {
+    themeClass: '',
     user: null,
     teamCount: 0,
-    darkMode: false
+    darkMode: false,
+    version,
+    icons
   },
 
   onShow() {
     const app = getApp()
     if (!app.ensureLogin('/pages/profile/profile')) return
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
-      this.getTabBar().setData({ selected: 3 })
+      this.getTabBar().setData({ selected: 2 })
+      this.getTabBar().updateTheme()
     }
+    this.setData({
+      themeClass: app.getThemeClass(),
+      darkMode: app.globalData.darkMode
+    })
     this.loadData()
   },
 
@@ -25,38 +35,40 @@ Page({
     })
   },
 
+  // 深色模式：真实切换 + 持久化
   onToggleDark(e) {
+    const app = getApp()
     const darkMode = e.detail.value
-    this.setData({ darkMode })
-    wx.showToast({
-      title: darkMode ? '深色模式（演示）' : '已切换浅色',
-      icon: 'none'
-    })
+    // 与全局状态对齐（防止与全局不一致）
+    if (app.globalData.darkMode !== darkMode) {
+      app.toggleDark()
+    }
+    this.setData({ darkMode, themeClass: app.getThemeClass() })
+    // 立即同步 TabBar 主题（无需切 Tab 即可生效）
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().updateTheme()
+    }
   },
 
   goMyTeams() {
     wx.switchTab({ url: '/pages/team-list/team-list' })
   },
 
-  onNotification() {
-    wx.showToast({ title: '消息通知设置开发中', icon: 'none' })
+  onComingSoon() {
+    wx.showToast({ title: '该功能即将上线', icon: 'none' })
   },
 
-  onTheme() {
-    wx.showToast({ title: '主题换肤开发中', icon: 'none' })
+  goHelp() {
+    wx.navigateTo({ url: '/pages/help/help' })
   },
 
-  onHelp() {
-    wx.showToast({ title: '帮助与反馈开发中', icon: 'none' })
+  goAbout() {
+    wx.navigateTo({ url: '/pages/about/about' })
   },
 
-  onAbout() {
-    wx.showModal({
-      title: '关于团队待办',
-      content: '团队待办 v1.0.0\n高效团队协作，从此开始',
-      showCancel: false,
-      confirmText: '知道了'
-    })
+  goAgreement(e) {
+    const { type } = e.currentTarget.dataset
+    wx.navigateTo({ url: '/pages/agreement/agreement?type=' + type })
   },
 
   onLogout() {

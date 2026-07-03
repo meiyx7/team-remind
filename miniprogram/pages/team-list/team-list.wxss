@@ -9,32 +9,32 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  height: 64rpx;
+  height: 56rpx;
   padding: 0 20rpx;
   border: 1rpx solid var(--color-brand);
-  border-radius: 12rpx;
+  border-radius: var(--radius-full);
   color: var(--color-brand-dark);
   font-size: 26rpx;
   font-weight: 500;
+  gap: 6rpx;
 }
 
 .create-btn:active {
   background: var(--color-brand-lightest);
 }
 
-.plus-sign {
-  font-size: 32rpx;
-  margin-right: 4rpx;
-  line-height: 1;
+.create-icon {
+  width: 28rpx;
+  height: 28rpx;
 }
 
 .create-text {
   font-size: 26rpx;
+  line-height: 1;
 }
 
 /* 搜索框 */
 .search-wrap {
-  position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -49,30 +49,8 @@
 .search-icon {
   width: 32rpx;
   height: 32rpx;
-  position: relative;
   margin-right: 16rpx;
   flex-shrink: 0;
-}
-
-.search-circle {
-  width: 22rpx;
-  height: 22rpx;
-  border: 4rpx solid var(--text-tertiary);
-  border-radius: 50%;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.search-handle {
-  width: 12rpx;
-  height: 4rpx;
-  background: var(--text-tertiary);
-  position: absolute;
-  bottom: 4rpx;
-  right: 0;
-  transform: rotate(45deg);
-  border-radius: 2rpx;
 }
 
 .search-input {
@@ -92,9 +70,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-tertiary);
-  font-size: 36rpx;
-  line-height: 1;
+  flex-shrink: 0;
+}
+
+.clear-icon {
+  width: 28rpx;
+  height: 28rpx;
 }
 
 /* 团队卡片 */
@@ -111,26 +92,12 @@
   gap: 24rpx;
   background: var(--bg-primary);
   border: 1rpx solid var(--border-light);
-  border-left: 6rpx solid var(--color-brand);
   border-radius: var(--radius-md);
   padding: 32rpx;
 }
 
 .team-item:active {
   background: var(--bg-secondary);
-}
-
-.team-avatar {
-  width: 64rpx;
-  height: 64rpx;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-inverse);
-  font-size: 28rpx;
-  font-weight: 500;
-  flex-shrink: 0;
 }
 
 .team-main {
@@ -154,21 +121,8 @@
   margin-top: 4rpx;
 }
 
-.chevron {
-  width: 16rpx;
-  height: 16rpx;
-  border-right: 4rpx solid var(--text-tertiary);
-  border-top: 4rpx solid var(--text-tertiary);
-  transform: rotate(45deg);
+.chevron-icon {
+  width: 32rpx;
+  height: 32rpx;
   flex-shrink: 0;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 120rpx 0;
-}
-
-.empty-text {
-  color: var(--text-tertiary);
-  font-size: 28rpx;
 }

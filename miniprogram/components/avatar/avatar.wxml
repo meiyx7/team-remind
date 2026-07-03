@@ -1,0 +1,2 @@
+<!-- components/avatar/avatar.wxml 头像 -->
+<view class="avatar avatar-{{size}}" style="background-color: {{color}};">{{text}}</view>

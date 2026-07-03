@@ -80,29 +80,9 @@
 }
 
 .calendar-icon {
-  position: relative;
   width: 32rpx;
   height: 32rpx;
-}
-
-.cal-bind {
-  position: absolute;
-  top: 0;
-  left: 4rpx;
-  width: 24rpx;
-  height: 8rpx;
-  background: var(--text-tertiary);
-  border-radius: 4rpx 4rpx 0 0;
-}
-
-.cal-body {
-  position: absolute;
-  top: 6rpx;
-  left: 0;
-  width: 32rpx;
-  height: 26rpx;
-  border: 2rpx solid var(--text-tertiary);
-  border-radius: 4rpx;
+  flex-shrink: 0;
 }
 
 .date-text {
@@ -114,12 +94,10 @@
   color: var(--text-tertiary);
 }
 
-.chevron {
-  width: 16rpx;
-  height: 16rpx;
-  border-right: 4rpx solid var(--text-tertiary);
-  border-top: 4rpx solid var(--text-tertiary);
-  transform: rotate(45deg);
+.chevron-icon {
+  width: 32rpx;
+  height: 32rpx;
+  flex-shrink: 0;
 }
 
 /* 团队胶囊 */

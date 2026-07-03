@@ -1,5 +1,16 @@
 // utils/store.js 数据 CRUD + Storage 持久化
 const { seedUser, seedTeams, seedMembers, seedTodos } = require('./mock')
+const dateUtil = require('./date')
+
+// 给 todo 附加展示状态 + 截止日期相对标签（今天/明天/N天后/已逾期N天）
+function decorate(todo, today) {
+  const ds = computeDisplayStatus(todo, today)
+  let dueLabel = ''
+  if (todo.dueDate) {
+    dueLabel = dateUtil.relativeLabel(todo.dueDate) || dateUtil.toChineseShort(todo.dueDate)
+  }
+  return { ...todo, displayStatus: ds, dueLabel }
+}
 
 const KEYS = {
   USER: 'user',
@@ -78,14 +89,14 @@ function computeDisplayStatus(todo, today) {
   return todo.status
 }
 
-// 获取当前用户的待办（带展示状态）
+// 获取当前用户的待办（带展示状态 + 相对日期）
 function getMyTodos(filter) {
   const user = getUser()
   if (!user) return []
   const today = getTodayStr()
   let list = getTodos()
     .filter(t => t.assigneeId === user.id)
-    .map(t => ({ ...t, displayStatus: computeDisplayStatus(t, today) }))
+    .map(t => decorate(t, today))
 
   if (filter && filter !== 'all') {
     list = list.filter(t => t.displayStatus === filter)
@@ -100,13 +111,28 @@ function getTeamTodos(teamId, filter) {
   const today = getTodayStr()
   let list = getTodos()
     .filter(t => t.teamId === teamId)
-    .map(t => ({ ...t, displayStatus: computeDisplayStatus(t, today) }))
+    .map(t => decorate(t, today))
 
   if (filter && filter !== 'all') {
     list = list.filter(t => t.displayStatus === filter)
   }
   list.sort((a, b) => (a.dueDate || '').localeCompare(b.dueDate || ''))
   return list
+}
+
+// 统计当前用户各状态待办数（供首页统计卡使用）
+function getMyStatusCounts() {
+  const user = getUser()
+  const empty = { pending: 0, in_progress: 0, overdue: 0, completed: 0 }
+  if (!user) return empty
+  const today = getTodayStr()
+  const list = getTodos().filter(t => t.assigneeId === user.id)
+  const counts = { ...empty }
+  list.forEach(t => {
+    const ds = computeDisplayStatus(t, today)
+    if (counts[ds] !== undefined) counts[ds]++
+  })
+  return counts
 }
 
 // 获取最近待办（未完成优先，取前 N 条）
@@ -210,6 +236,7 @@ module.exports = {
   getTeamTodos,
   getRecentTodos,
   getMyStats,
+  getMyStatusCounts,
   createTodo,
   toggleTodoComplete,
   startTodo,
