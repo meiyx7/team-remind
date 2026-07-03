@@ -1,12 +1,14 @@
 name: 上传小程序
 
 on:
+  push:
+    branches: [ main ]
   workflow_dispatch:
     inputs:
       version:
-        description: '版本号 (如 1.0.0)'
-        required: true
-        default: '1.0.0'
+        description: '版本号 (如 0.2.0)，留空则读 VERSION 文件'
+        required: false
+        default: ''
       desc:
         description: '版本描述'
         required: false
@@ -35,9 +37,25 @@ jobs:
           head -1 private.key
           echo "密钥行数: $(wc -l < private.key)"
 
+      - name: Resolve version
+        id: ver
+        run: |
+          INPUT_VER="${{ github.event.inputs.version }}"
+          if [ -z "$INPUT_VER" ]; then
+            # push 触发或手动留空：读 VERSION 文件
+            FILE_VER=$(tr -d '[:space:]' < VERSION)
+            echo "version=$FILE_VER" >> $GITHUB_OUTPUT
+            echo "desc=团队待办小程序 v${FILE_VER} 代码上传" >> $GITHUB_OUTPUT
+          else
+            echo "version=$INPUT_VER" >> $GITHUB_OUTPUT
+            INPUT_DESC="${{ github.event.inputs.desc }}"
+            [ -z "$INPUT_DESC" ] && INPUT_DESC="团队待办小程序代码上传"
+            echo "desc=$INPUT_DESC" >> $GITHUB_OUTPUT
+          fi
+
       - name: Upload MiniProgram
         env:
           WX_APPID: ${{ secrets.WX_APPID }}
-          VERSION: ${{ github.event.inputs.version }}
-          DESC: ${{ github.event.inputs.desc }}
+          VERSION: ${{ steps.ver.outputs.version }}
+          DESC: ${{ steps.ver.outputs.desc }}
         run: node scripts/upload.js
