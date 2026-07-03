@@ -1,0 +1,31 @@
+/* components/status-badge/status-badge.wxss */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4rpx 16rpx;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.badge.pending {
+  background: var(--color-gray-100);
+  color: var(--text-secondary);
+}
+
+.badge.in_progress {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--state-warning);
+}
+
+.badge.completed {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--state-success);
+}
+
+.badge.overdue {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--state-error);
+}

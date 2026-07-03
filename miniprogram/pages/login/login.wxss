@@ -1,0 +1,110 @@
+/* pages/login/login.wxss */
+
+.login-page {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  display: flex;
+  flex-direction: column;
+}
+
+.login-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 64rpx;
+}
+
+.top-spacer,
+.bottom-spacer {
+  flex: 1;
+  min-height: 200rpx;
+}
+
+/* Logo */
+.logo-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-icon {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, var(--color-brand) 0%, var(--color-brand-darker) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 16rpx 40rpx rgba(16, 185, 129, 0.30);
+}
+
+/* 勾选标记 */
+.check-mark {
+  width: 64rpx;
+  height: 40rpx;
+  border-left: 8rpx solid #ffffff;
+  border-bottom: 8rpx solid #ffffff;
+  transform: rotate(-45deg) translate(4rpx, -4rpx);
+  border-radius: 4rpx;
+}
+
+.app-name {
+  margin-top: 40rpx;
+  font-size: 60rpx;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.8rpx;
+}
+
+.app-slogan {
+  margin-top: 16rpx;
+  font-size: 26rpx;
+  color: var(--text-tertiary);
+}
+
+.gap {
+  height: 80rpx;
+}
+
+.login-btn {
+  width: 100%;
+  height: 96rpx;
+  line-height: 96rpx;
+  background: var(--color-brand);
+  color: var(--text-inverse);
+  border-radius: var(--radius-full);
+  font-size: 32rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+  border: none;
+  text-align: center;
+}
+
+.login-btn::after {
+  border: none;
+}
+
+.login-btn[disabled] {
+  background: var(--color-brand-light);
+  color: var(--text-inverse);
+  opacity: 0.85;
+}
+
+.login-btn:active {
+  transform: scale(0.99);
+  opacity: 0.92;
+}
+
+.agreement {
+  margin-top: 32rpx;
+  font-size: 24rpx;
+  color: var(--text-tertiary);
+  text-align: center;
+  line-height: 1.6;
+}
+
+.agreement .link {
+  color: var(--color-brand-dark);
+}

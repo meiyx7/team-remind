@@ -1,0 +1,41 @@
+<!-- pages/login/login.wxml -->
+<view class="login-page">
+  <nav-bar title="团队待办"></nav-bar>
+
+  <view class="login-content">
+    <!-- 顶部留白 -->
+    <view class="top-spacer"></view>
+
+    <!-- Logo -->
+    <view class="logo-wrap">
+      <view class="logo-icon">
+        <view class="check-mark"></view>
+      </view>
+    </view>
+
+    <!-- 应用名 -->
+    <view class="app-name">团队待办</view>
+    <!-- Slogan -->
+    <view class="app-slogan">高效团队协作，从此开始</view>
+
+    <!-- 间距 -->
+    <view class="gap"></view>
+
+    <!-- 登录按钮 -->
+    <button class="login-btn" bindtap="onLogin" loading="{{loading}}" disabled="{{loading}}">
+      <text wx:if="{{!loading}}">微信一键登录</text>
+      <text wx:else>登录中...</text>
+    </button>
+
+    <!-- 协议 -->
+    <view class="agreement">
+      <text>登录即表示同意</text>
+      <text class="link" bindtap="onAgreement">《用户协议》</text>
+      <text>和</text>
+      <text class="link" bindtap="onPrivacy">《隐私政策》</text>
+    </view>
+
+    <!-- 底部留白 -->
+    <view class="bottom-spacer"></view>
+  </view>
+</view>

@@ -1,0 +1,80 @@
+<!-- pages/home/home.wxml -->
+<view class="page-container">
+  <nav-bar title="团队待办"></nav-bar>
+
+  <view class="home-content">
+    <!-- 统计卡片 -->
+    <view class="stats-row">
+      <view class="stat-card stat-brand">
+        <view class="stat-label-wrap">
+          <view class="dot dot-brand"></view>
+          <text class="stat-label">我的待办</text>
+        </view>
+        <view class="stat-value">{{stats.mine}}</view>
+      </view>
+      <view class="stat-card stat-warning">
+        <view class="stat-label-wrap">
+          <view class="dot dot-warning"></view>
+          <text class="stat-label">进行中</text>
+        </view>
+        <view class="stat-value">{{stats.inProgress}}</view>
+      </view>
+      <view class="stat-card stat-gray">
+        <view class="stat-label-wrap">
+          <view class="dot dot-gray"></view>
+          <text class="stat-label">已完成</text>
+        </view>
+        <view class="stat-value">{{stats.completed}}</view>
+      </view>
+    </view>
+
+    <!-- 我的团队 -->
+    <view class="section-header">
+      <text class="section-title">我的团队</text>
+      <text class="section-link" bindtap="goTeamList">查看全部 &gt;</text>
+    </view>
+
+    <scroll-view class="team-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+      <view class="team-card" wx:for="{{teams}}" wx:key="id" data-id="{{item.id}}" bindtap="goTeamDetail">
+        <view class="team-avatar" style="background-color: {{item.avatarColor === '#10b981' ? 'var(--color-brand-lightest)' : 'var(--color-gray-100)'}}; color: {{item.avatarColor}};">{{item.avatarChar}}</view>
+        <view class="team-info">
+          <text class="team-name truncate">{{item.name}}</text>
+          <text class="team-meta">{{item.memberCount}}人 · {{item.todoCount}}个待办</text>
+        </view>
+      </view>
+    </scroll-view>
+
+    <!-- 最近待办 -->
+    <view class="section-header">
+      <text class="section-title">最近待办</text>
+      <text class="section-link" bindtap="goTodoList">查看全部 &gt;</text>
+    </view>
+
+    <view class="todo-list">
+      <block wx:if="{{recentTodos.length > 0}}">
+        <view class="todo-card" wx:for="{{recentTodos}}" wx:key="id">
+          <view class="todo-row">
+            <view class="todo-dot todo-dot-{{item.displayStatus}}"></view>
+            <view class="todo-main">
+              <text class="todo-title {{item.displayStatus === 'completed' ? 'done' : ''}}">{{item.title}}</text>
+              <view class="todo-meta">
+                <text class="todo-tag">{{item.teamName}}</text>
+                <text class="todo-due">截止: {{item.dueDate}}</text>
+              </view>
+            </view>
+            <status-badge status="{{item.displayStatus}}" />
+          </view>
+        </view>
+      </block>
+      <view wx:else class="empty-tip">
+        <text>暂无待办，点击右下角按钮创建</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- FAB -->
+  <view class="fab" bindtap="goCreateTodo">
+    <view class="fab-plus-h"></view>
+    <view class="fab-plus-v"></view>
+  </view>
+</view>

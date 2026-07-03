@@ -1,0 +1,54 @@
+<!-- pages/team-list/team-list.wxml -->
+<view class="page-container">
+  <nav-bar title="我的团队">
+    <view slot="left">
+      <view class="create-btn" bindtap="onCreateTeam">
+        <text class="plus-sign">+</text>
+        <text class="create-text">创建团队</text>
+      </view>
+    </view>
+  </nav-bar>
+
+  <view class="team-list-content">
+    <!-- 搜索框 -->
+    <view class="search-wrap">
+      <view class="search-icon">
+        <view class="search-circle"></view>
+        <view class="search-handle"></view>
+      </view>
+      <input
+        class="search-input"
+        type="text"
+        placeholder="搜索团队..."
+        placeholder-class="search-placeholder"
+        value="{{keyword}}"
+        bindinput="onSearch"
+        confirm-type="search"
+      />
+      <view wx:if="{{keyword}}" class="clear-btn" bindtap="onClear">×</view>
+    </view>
+
+    <!-- 团队列表 -->
+    <view class="team-cards">
+      <view
+        class="team-item"
+        wx:for="{{teams}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="goTeamDetail"
+        style="border-left-color: {{item.accentColor}};"
+      >
+        <view class="team-avatar" style="background-color: {{item.avatarColor}};">{{item.avatarChar}}</view>
+        <view class="team-main">
+          <text class="team-name truncate">{{item.name}}</text>
+          <text class="team-desc truncate">{{item.memberCount}} 位成员 · {{item.inProgressCount}} 个待办进行中</text>
+        </view>
+        <view class="chevron"></view>
+      </view>
+
+      <view wx:if="{{teams.length === 0}}" class="empty-state">
+        <text class="empty-text">未找到匹配的团队</text>
+      </view>
+    </view>
+  </view>
+</view>

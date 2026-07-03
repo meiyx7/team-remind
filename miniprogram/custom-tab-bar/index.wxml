@@ -1,0 +1,27 @@
+<!-- custom-tab-bar/index.wxml -->
+<view class="tabbar">
+  <view
+    class="tab-item {{selected === index ? 'active' : ''}}"
+    wx:for="{{list}}"
+    wx:key="pagePath"
+    data-index="{{index}}"
+    data-path="{{item.pagePath}}"
+    bindtap="switchTab"
+  >
+    <!-- 首页 -->
+    <view class="tab-icon" wx:if="{{item.iconPath === 'home'}}">
+      <view class="icon-home {{selected === index ? 'on' : ''}}"></view>
+    </view>
+    <view class="tab-icon" wx:elif="{{item.iconPath === 'team'}}">
+      <view class="icon-team {{selected === index ? 'on' : ''}}"></view>
+    </view>
+    <view class="tab-icon" wx:elif="{{item.iconPath === 'todo'}}">
+      <view class="icon-todo {{selected === index ? 'on' : ''}}"></view>
+    </view>
+    <view class="tab-icon" wx:elif="{{item.iconPath === 'profile'}}">
+      <view class="icon-profile {{selected === index ? 'on' : ''}}"></view>
+    </view>
+    <text class="tab-text">{{item.text}}</text>
+  </view>
+</view>
+<view class="tabbar-safe"></view>

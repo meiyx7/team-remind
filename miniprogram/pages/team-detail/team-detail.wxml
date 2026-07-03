@@ -1,0 +1,95 @@
+<!-- pages/team-detail/team-detail.wxml -->
+<view class="page-container">
+  <nav-bar title="团队详情" show-back="{{true}}"></nav-bar>
+
+  <view wx:if="{{team}}" class="team-detail-content">
+    <!-- 团队头部卡 -->
+    <view class="team-header-card">
+      <view class="header-wash"></view>
+      <view class="header-row">
+        <view class="team-avatar" style="background-color: {{team.avatarColor}};">{{team.avatarChar}}</view>
+        <view class="team-meta">
+          <text class="team-name">{{team.name}}</text>
+          <text class="team-desc">{{team.description}}</text>
+        </view>
+      </view>
+      <view class="stats-row">
+        <view class="stat-item">
+          <text class="stat-num">{{team.memberCount}}</text>
+          <text class="stat-label">成员</text>
+        </view>
+        <view class="stat-dot"></view>
+        <view class="stat-item">
+          <text class="stat-num text-brand">{{todos.length}}</text>
+          <text class="stat-label">待办</text>
+        </view>
+        <view class="stat-dot"></view>
+        <view class="stat-item">
+          <text class="stat-num">{{completedCount}}</text>
+          <text class="stat-label">已完成</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- Tab 切换 -->
+    <view class="tab-bar">
+      <view class="tab-item {{activeTab === 'members' ? 'active' : ''}}" data-tab="members" bindtap="switchTab">
+        <text>成员</text>
+      </view>
+      <view class="tab-item {{activeTab === 'todos' ? 'active' : ''}}" data-tab="todos" bindtap="switchTab">
+        <text>待办</text>
+      </view>
+    </view>
+
+    <!-- 成员列表 -->
+    <view wx:if="{{activeTab === 'members'}}" class="members-list">
+      <view class="member-row" wx:for="{{members}}" wx:key="id">
+        <view class="member-avatar" style="background-color: {{item.avatarColor}};">{{item.avatarChar}}</view>
+        <text class="member-name">{{item.name}}</text>
+        <view class="member-badge {{item.role === 'creator' ? 'creator' : 'member'}}">
+          {{item.role === 'creator' ? '创建者' : '成员'}}
+        </view>
+      </view>
+    </view>
+
+    <!-- 待办列表 -->
+    <view wx:if="{{activeTab === 'todos'}}" class="todos-pane">
+      <!-- 筛选 Tab -->
+      <scroll-view class="filter-tabs" scroll-x enhanced show-scrollbar="{{false}}">
+        <view class="filter-tab {{todoFilter === 'all' ? 'active' : ''}}" data-filter="all" bindtap="switchTodoFilter">全部</view>
+        <view class="filter-tab {{todoFilter === 'in_progress' ? 'active' : ''}}" data-filter="in_progress" bindtap="switchTodoFilter">进行中</view>
+        <view class="filter-tab {{todoFilter === 'pending' ? 'active' : ''}}" data-filter="pending" bindtap="switchTodoFilter">待开始</view>
+        <view class="filter-tab {{todoFilter === 'completed' ? 'active' : ''}}" data-filter="completed" bindtap="switchTodoFilter">已完成</view>
+      </scroll-view>
+
+      <view class="todo-cards">
+        <view class="todo-card todo-card-{{item.displayStatus}}" wx:for="{{filteredTodos}}" wx:key="id">
+          <view class="todo-check {{item.displayStatus === 'completed' ? 'checked' : ''}}" data-id="{{item.id}}" catchtap="onToggleTodo">
+            <view wx:if="{{item.displayStatus === 'completed'}}" class="check-icon"></view>
+          </view>
+          <view class="todo-main">
+            <text class="todo-title {{item.displayStatus === 'completed' ? 'done' : ''}}">{{item.title}}</text>
+            <text class="todo-sub">{{item.assigneeName}} 指派</text>
+          </view>
+          <view class="todo-right">
+            <text class="todo-due">{{item.dueDate}}</text>
+            <status-badge status="{{item.displayStatus}}" />
+          </view>
+        </view>
+
+        <view wx:if="{{filteredTodos.length === 0}}" class="empty-tip">
+          <text>暂无待办</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 邀请成员按钮 -->
+    <view wx:if="{{activeTab === 'members'}}" class="invite-btn" bindtap="onInvite">
+      <view class="invite-icon">
+        <view class="invite-plus-h"></view>
+        <view class="invite-plus-v"></view>
+      </view>
+      <text>邀请成员</text>
+    </view>
+  </view>
+</view>

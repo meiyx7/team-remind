@@ -1,0 +1,23 @@
+<!-- components/nav-bar/nav-bar.wxml -->
+<view class="nav-wrap {{bgTransparent ? 'transparent' : 'solid'}}">
+  <!-- 状态栏占位 -->
+  <view style="height: {{statusBarHeight}}px;"></view>
+  <!-- 导航栏内容 -->
+  <view class="nav-bar" style="height: {{navBarHeight}}px;">
+    <!-- 左侧 -->
+    <view class="nav-left" style="width: {{menuWidth + 12}}px;">
+      <view wx:if="{{showBack}}" class="back-btn" bindtap="onBack">
+        <view class="back-arrow"></view>
+      </view>
+      <slot name="left" wx:else></slot>
+    </view>
+    <!-- 标题 -->
+    <view class="nav-title truncate">{{title}}</view>
+    <!-- 右侧占位（与胶囊对齐） -->
+    <view class="nav-right" style="width: {{menuWidth + 12}}px;">
+      <slot name="right"></slot>
+    </view>
+  </view>
+</view>
+<!-- 占位（非透明时撑开高度） -->
+<view wx:if="{{!bgTransparent}}" style="height: {{statusBarHeight + navBarHeight}}px;"></view>

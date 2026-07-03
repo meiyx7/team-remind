@@ -1,16 +1,13 @@
 {
   "name": "team-remind",
   "version": "1.0.0",
-  "description": "团队待办小程序 - 微信原生 + Supabase",
+  "description": "团队待办小程序 - 微信原生开发，翡翠绿设计风格",
   "main": "miniprogram/app.js",
   "scripts": {
     "lint": "echo \"No linter configured\""
   },
-  "dependencies": {
-    "@supabase/supabase-js": "^2.45.0"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "miniprogram-ci": "^1.9.11",
-    "less": "^3.13.1"
+    "miniprogram-ci": "^1.9.11"
   }
 }

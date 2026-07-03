@@ -1,0 +1,70 @@
+<!-- pages/profile/profile.wxml -->
+<view class="page-container">
+  <nav-bar title="我的"></nav-bar>
+
+  <view class="profile-content">
+    <!-- 用户卡 -->
+    <view class="profile-card">
+      <view class="profile-row">
+        <view class="user-avatar" style="background-color: {{user.avatarColor}};">{{user.avatarChar}}</view>
+        <view class="user-info">
+          <text class="user-name">{{user.name}}</text>
+          <text class="user-email">{{user.email}}</text>
+        </view>
+        <view class="chevron"></view>
+      </view>
+    </view>
+
+    <!-- 偏好设置 -->
+    <view class="settings-group">
+      <view class="settings-row">
+        <text class="settings-label">深色模式</text>
+        <switch checked="{{darkMode}}" bindchange="onToggleDark" color="#10b981" />
+      </view>
+      <view class="settings-row" bindtap="onTheme">
+        <text class="settings-label">主题换肤</text>
+        <view class="settings-right">
+          <text class="settings-value">经典绿</text>
+          <view class="chevron"></view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 团队管理 -->
+    <view class="settings-group">
+      <view class="settings-row" bindtap="goMyTeams">
+        <text class="settings-label">我的团队</text>
+        <view class="settings-right">
+          <text class="settings-value">{{teamCount}} 个团队</text>
+          <view class="chevron"></view>
+        </view>
+      </view>
+      <view class="settings-row" bindtap="onNotification">
+        <text class="settings-label">消息通知</text>
+        <view class="settings-right">
+          <view class="chevron"></view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 其他 -->
+    <view class="settings-group">
+      <view class="settings-row" bindtap="onHelp">
+        <text class="settings-label">帮助与反馈</text>
+        <view class="settings-right">
+          <view class="chevron"></view>
+        </view>
+      </view>
+      <view class="settings-row" bindtap="onAbout">
+        <text class="settings-label">关于团队待办</text>
+        <view class="settings-right">
+          <text class="settings-value">v1.0.0</text>
+          <view class="chevron"></view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 退出登录 -->
+    <view class="logout-btn" bindtap="onLogout">退出登录</view>
+  </view>
+</view>

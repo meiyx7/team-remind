@@ -1,0 +1,107 @@
+<!-- pages/create-todo/create-todo.wxml -->
+<view class="page-container">
+  <nav-bar title="创建待办" show-back="{{true}}"></nav-bar>
+
+  <view class="form-content">
+    <!-- 表单卡 -->
+    <view class="form-card">
+      <!-- 基本信息 -->
+      <view class="form-section">
+        <view class="form-group">
+          <text class="form-label">待办标题</text>
+          <input
+            class="form-input"
+            type="text"
+            placeholder="请输入待办标题"
+            placeholder-class="form-placeholder"
+            value="{{title}}"
+            bindinput="onTitleInput"
+            maxlength="50"
+          />
+        </view>
+        <view class="form-group">
+          <text class="form-label">待办描述</text>
+          <textarea
+            class="form-textarea"
+            placeholder="添加详细描述..."
+            placeholder-class="form-placeholder"
+            value="{{description}}"
+            bindinput="onDescInput"
+            maxlength="200"
+            auto-height
+          />
+        </view>
+      </view>
+
+      <view class="divider"></view>
+
+      <!-- 截止日期 -->
+      <view class="form-section">
+        <text class="form-label">截止日期</text>
+        <picker mode="date" value="{{dueDate}}" start="{{today}}" bindchange="onDateChange">
+          <view class="date-row">
+            <view class="date-left">
+              <view class="calendar-icon">
+                <view class="cal-bind"></view>
+                <view class="cal-body"></view>
+              </view>
+              <text class="date-text {{dueDate ? '' : 'placeholder'}}">{{dueDate ? dueDate : '请选择截止日期'}}</text>
+            </view>
+            <view class="chevron"></view>
+          </view>
+        </picker>
+      </view>
+
+      <view class="divider"></view>
+
+      <!-- 关联团队 -->
+      <view class="form-section">
+        <text class="form-label">关联团队</text>
+        <view class="team-chips">
+          <view
+            class="team-chip {{selectedTeamId === item.id ? 'active' : ''}}"
+            wx:for="{{teams}}"
+            wx:key="id"
+            data-id="{{item.id}}"
+            bindtap="selectTeam"
+          >{{item.name}}</view>
+        </view>
+      </view>
+
+      <view class="divider"></view>
+
+      <!-- 指派成员 -->
+      <view class="form-section">
+        <text class="form-label">指派成员</text>
+        <!-- 已选成员 -->
+        <view class="selected-members" wx:if="{{selectedMembers.length > 0}}">
+          <view class="selected-member" wx:for="{{selectedMembers}}" wx:key="id">
+            <view class="member-avatar-sm" style="background-color: {{item.avatarColor}};">{{item.avatarChar}}</view>
+            <text class="member-name-sm">{{item.name}}</text>
+            <view class="remove-btn" data-id="{{item.id}}" catchtap="removeMember">×</view>
+          </view>
+        </view>
+        <!-- 可选成员 -->
+        <view class="member-pool" wx:if="{{members.length > 0}}">
+          <view
+            class="member-chip"
+            wx:for="{{members}}"
+            wx:key="id"
+            data-id="{{item.id}}"
+            bindtap="toggleMember"
+          >
+            <view class="member-avatar-xs" style="background-color: {{item.avatarColor}};">{{item.avatarChar}}</view>
+            <text class="member-name-xs">{{item.name}}</text>
+          </view>
+        </view>
+        <view wx:else class="empty-members">该团队暂无可指派成员</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部提交 -->
+  <view class="submit-bar">
+    <button class="submit-btn" bindtap="onSubmit">提交待办</button>
+    <view class="safe-bottom"></view>
+  </view>
+</view>
