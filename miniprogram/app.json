@@ -1,24 +1,38 @@
 {
   "pages": [
-    "pages/index/index",
-    "pages/create/create",
-    "pages/detail/detail",
-    "pages/profile/profile"
+    "pages/home/home",
+    "pages/team-list/team-list",
+    "pages/todo-list/todo-list",
+    "pages/profile/profile",
+    "pages/login/login",
+    "pages/team-detail/team-detail",
+    "pages/create-todo/create-todo"
   ],
   "window": {
-    "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#4A90D9",
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#ffffff",
     "navigationBarTitleText": "团队待办",
-    "navigationBarTextStyle": "white",
-    "backgroundColor": "#F5F5F5"
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f9fafb",
+    "navigationStyle": "custom"
   },
   "tabBar": {
-    "color": "#999999",
-    "selectedColor": "#4A90D9",
+    "custom": true,
+    "color": "#94a3b8",
+    "selectedColor": "#10b981",
     "backgroundColor": "#ffffff",
+    "borderStyle": "white",
     "list": [
       {
-        "pagePath": "pages/index/index",
+        "pagePath": "pages/home/home",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/team-list/team-list",
+        "text": "团队"
+      },
+      {
+        "pagePath": "pages/todo-list/todo-list",
         "text": "待办"
       },
       {
@@ -28,5 +42,6 @@
     ]
   },
   "sitemapLocation": "sitemap.json",
-  "style": "v2"
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents"
 }

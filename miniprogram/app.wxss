@@ -1,37 +1,119 @@
-/* app.wxss 全局样式 */
+/* app.wxss 全局样式 + 设计令牌 */
 
 page {
-  background-color: #F5F5F5;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  color: #333;
-  font-size: 28rpx;
+  /* 品牌色 */
+  --color-brand: #10b981;
+  --color-brand-light: #34d399;
+  --color-brand-lightest: #d1fae5;
+  --color-brand-dark: #059669;
+  --color-brand-darker: #047857;
+
+  /* 状态色 */
+  --state-success: #10b981;
+  --state-warning: #f59e0b;
+  --state-error: #ef4444;
+  --state-info: #3b82f6;
+
+  /* 灰阶 */
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+
+  /* 背景 */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --bg-tertiary: #f3f4f6;
+
+  /* 文本 */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #94a3b8;
+  --text-inverse: #ffffff;
+
+  /* 边框 */
+  --border-light: #e5e7eb;
+  --border-default: #d1d5db;
+
+  /* 圆角 */
+  --radius-sm: 8rpx;
+  --radius-md: 16rpx;
+  --radius-lg: 24rpx;
+  --radius-xl: 32rpx;
+  --radius-full: 9999rpx;
+
+  /* 阴影 */
+  --shadow-sm: 0 2rpx 4rpx rgba(0,0,0,0.04);
+  --shadow-md: 0 4rpx 16rpx rgba(0,0,0,0.05);
+  --shadow-lg: 0 8rpx 24rpx rgba(0,0,0,0.10);
+  --shadow-elevated: 0 12rpx 32rpx rgba(16,185,129,0.30);
+
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+  font-size: 30rpx;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+view, text, image, input, textarea, button, scroll-view {
   box-sizing: border-box;
 }
 
-/* 通用卡片样式 */
-.card {
-  background: #fff;
-  border-radius: 16rpx;
-  padding: 24rpx;
-  margin: 20rpx 24rpx;
-  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+/* 通用容器 */
+.page-container {
+  min-height: 100vh;
+  background-color: var(--bg-secondary);
 }
 
-/* 通用按钮 */
+/* 卡片基础样式 */
+.card {
+  background: var(--bg-primary);
+  border-radius: var(--radius-md);
+  border: 1rpx solid var(--border-light);
+}
+
+/* 主按钮 */
 .btn-primary {
-  background: #4A90D9;
-  color: #fff;
-  border-radius: 12rpx;
-  padding: 20rpx 40rpx;
+  background: var(--color-brand);
+  color: var(--text-inverse);
+  border-radius: var(--radius-full);
+  height: 96rpx;
+  line-height: 96rpx;
   text-align: center;
-  font-size: 30rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+  border: none;
+}
+
+.btn-primary::after {
+  border: none;
 }
 
 .btn-primary:active {
-  opacity: 0.85;
+  opacity: 0.88;
+  transform: scale(0.99);
 }
 
-/* 弹性布局辅助 */
+/* 次按钮（描边） */
+.btn-ghost {
+  background: var(--bg-primary);
+  color: var(--color-brand-dark);
+  border: 1rpx solid var(--color-brand);
+  border-radius: var(--radius-md);
+  height: 64rpx;
+  line-height: 64rpx;
+  text-align: center;
+  font-size: 26rpx;
+  font-weight: 500;
+}
+
+.btn-ghost::after {
+  border: none;
+}
+
+/* flex 工具类 */
 .flex-row {
   display: flex;
   flex-direction: row;
@@ -45,17 +127,41 @@ page {
 
 .flex-1 {
   flex: 1;
+  min-width: 0;
 }
 
-/* 文字辅助 */
-.text-primary {
-  color: #4A90D9;
+/* 文本工具 */
+.text-primary { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-tertiary { color: var(--text-tertiary); }
+.text-brand { color: var(--color-brand); }
+.text-warning { color: var(--state-warning); }
+.text-error { color: var(--state-error); }
+.text-success { color: var(--state-success); }
+
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+
+.truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
-.text-gray {
-  color: #999;
+/* 隐藏滚动条 */
+::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
-.text-danger {
-  color: #e74c3c;
+/* 安全区底部填充 */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 通用按压反馈 */
+.tap-feedback:active {
+  background-color: var(--bg-secondary);
 }
