@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>团队详情</title>
+    <style id="theme-vars">
+    @theme inline {
+      --color-primary: var(--color-brand);
+      --color-primary-light: var(--color-brand-light);
+      --color-primary-dark: var(--color-brand-dark);
+      --color-background: var(--bg-primary);
+      --color-foreground: var(--text-primary);
+      --color-muted: var(--text-secondary);
+      --color-muted-foreground: var(--text-tertiary);
+      --color-border: var(--border-light);
+      --color-card: var(--surface-elevated);
+      --color-card-foreground: var(--text-primary);
+      --color-accent: var(--color-brand);
+      --color-accent-foreground: var(--text-inverse);
+      --color-destructive: var(--state-error);
+      --color-ring: var(--color-brand);
+      --radius: var(--radius-md);
+    }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+    @layer base {
+      body { background: var(--bg-primary); color: var(--text-primary); }
+      td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+      th { @apply whitespace-nowrap; }
+    }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1em; height: 1em;
+        -webkit-mask: var(--icon-url) no-repeat center/contain;
+        mask: var(--icon-url) no-repeat center/contain;
+        background: currentColor;
+        flex-shrink: 0;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main class="min-h-screen" style="background: var(--bg-secondary);">
+
+      <!-- Status bar spacer -->
+      <div class="h-11 bg-transparent"></div>
+
+      <!-- Custom nav bar -->
+      <header class="sticky top-0 z-30 border-b bg-white/95 backdrop-blur" style="border-color: var(--border-light);">
+        <div class="flex h-11 items-center px-4">
+          <div class="flex w-[88px] items-center justify-start">
+            <button data-dom-id="back-to-team-list" class="inline-flex h-8 w-8 items-center justify-center rounded-lg border bg-white" style="border-color: var(--border-light);" aria-label="返回">
+              <i data-lucide="chevron-left" class="h-4 w-4" style="color: var(--text-primary);"></i>
+            </button>
+          </div>
+          <div class="min-w-0 flex-1 text-center text-[16px] font-semibold tracking-[-0.02em]" style="color: var(--text-primary);">团队详情</div>
+          <div class="flex h-8 w-[88px] items-center justify-center rounded-full border bg-white/90 text-[var(--text-primary)]" aria-label="小程序菜单" style="border-color: var(--border-light);">
+            <button class="flex h-full flex-1 items-center justify-center" aria-label="更多">
+              <i data-lucide="more-horizontal" class="h-4 w-4" style="color: var(--text-secondary);"></i>
+            </button>
+            <span class="h-4 w-px bg-[var(--border-light)]" aria-hidden="true"></span>
+            <button class="flex h-full flex-1 items-center justify-center" aria-label="关闭">
+              <i data-lucide="x" class="h-4 w-4" style="color: var(--text-secondary);"></i>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Page content -->
+      <div class="px-4 pt-4 pb-6">
+
+        <!-- Team header card with subtle emerald gradient wash -->
+        <section class="rounded-lg border bg-white p-4" style="border-color: var(--border-light); border-radius: var(--radius-lg); position: relative; overflow: hidden;">
+          <!-- Subtle gradient wash behind avatar area -->
+          <div class="pointer-events-none absolute top-0 left-0 h-24 w-full" style="background: linear-gradient(135deg, var(--color-brand-lightest) 0%, transparent 70%);"></div>
+
+          <div class="relative flex items-start gap-3">
+            <!-- Team avatar -->
+            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-[20px] font-semibold" style="background: var(--color-brand); color: var(--text-inverse);">产</div>
+            <div class="min-w-0 flex-1">
+              <h1 class="brand-heading truncate" style="font-size: 20px; font-weight: 700; line-height: 30px; color: var(--text-primary);">产品设计组</h1>
+              <p class="mt-0.5 truncate" style="font-size: var(--text-sm); line-height: var(--text-sm-lh); color: var(--text-tertiary);">负责产品UI/UX设计和原型制作</p>
+            </div>
+          </div>
+
+          <!-- Stats row -->
+          <div class="relative mt-4 flex items-center justify-center gap-4" style="font-size: var(--text-sm); color: var(--text-secondary);">
+            <span class="flex items-center gap-1 whitespace-nowrap">
+              <span class="font-semibold" style="color: var(--text-primary);">8</span>
+              <span>成员</span>
+            </span>
+            <span class="h-1 w-1 rounded-full" style="background: var(--color-gray-300);"></span>
+            <span class="flex items-center gap-1 whitespace-nowrap">
+              <span class="font-semibold" style="color: var(--color-brand);">15</span>
+              <span>待办</span>
+            </span>
+            <span class="h-1 w-1 rounded-full" style="background: var(--color-gray-300);"></span>
+            <span class="flex items-center gap-1 whitespace-nowrap">
+              <span class="font-semibold" style="color: var(--text-primary);">12</span>
+              <span>已完成</span>
+            </span>
+          </div>
+        </section>
+
+        <!-- Tab bar -->
+        <div class="mt-4 flex border-b bg-white rounded-t-lg" style="border-color: var(--border-light);">
+          <button class="flex flex-1 items-center justify-center gap-1.5 py-3 text-[15px] font-medium" style="color: var(--color-brand); border-bottom: 2px solid var(--color-brand);">
+            <span>成员</span>
+          </button>
+          <button class="flex flex-1 items-center justify-center gap-1.5 py-3 text-[15px] font-medium" style="color: var(--text-tertiary); border-bottom: 2px solid transparent;">
+            <span>待办</span>
+          </button>
+        </div>
+
+        <!-- Members list -->
+        <div class="rounded-b-lg border border-t-0 bg-white" style="border-color: var(--border-light);">
+
+          <!-- Member: 张明 -->
+          <div class="flex items-center gap-3 px-4 py-3" style="border-bottom: 1px solid var(--border-light);">
+            <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[13px] font-medium" style="background: var(--color-brand); color: var(--text-inverse);">张</div>
+            <div class="min-w-0 flex-1">
+              <p class="truncate text-[15px] font-medium" style="color: var(--text-primary); line-height: 24px;">张明</p>
+            </div>
+            <span class="inline-flex items-center whitespace-nowrap rounded-full px-2 py-0.5 text-[12px] font-medium" style="background: var(--color-brand-lightest); color: var(--color-brand-dark);">创建者</span>
+          </div>
+
+          <!-- Member: 李华 -->
+          <div class="flex items-center gap-3 px-4 py-3" style="border-bottom: 1px solid var(--border-light);">
+            <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[13px] font-medium" style="background: var(--state-info); color: var(--text-inverse);">李</div>
+            <div class="min-w-0 flex-1">
+              <p class="truncate text-[15px] font-medium" style="color: var(--text-primary); line-height: 24px;">李华</p>
+            </div>
+            <span class="inline-flex items-center whitespace-nowrap rounded-full px-2 py-0.5 text-[12px] font-medium" style="background: var(--bg-tertiary); color: var(--text-secondary);">成员</span>
+          </div>
+
+          <!-- Member: 王芳 -->
+          <div class="flex items-center gap-3 px-4 py-3" style="border-bottom: 1px solid var(--border-light);">
+            <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[13px] font-medium" style="background: var(--state-warning); color: var(--text-inverse);">王</div>
+            <div class="min-w-0 flex-1">
+              <p class="truncate text-[15px] font-medium" style="color: var(--text-primary); line-height: 24px;">王芳</p>
+            </div>
+            <span class="inline-flex items-center whitespace-nowrap rounded-full px-2 py-0.5 text-[12px] font-medium" style="background: var(--bg-tertiary); color: var(--text-secondary);">成员</span>
+          </div>
+
+          <!-- Member: 赵强 -->
+          <div class="flex items-center gap-3 px-4 py-3" style="border-bottom: 1px solid var(--border-light);">
+            <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[13px] font-medium" style="background: #8b5cf6; color: var(--text-inverse);">赵</div>
+            <div class="min-w-0 flex-1">
+              <p class="truncate text-[15px] font-medium" style="color: var(--text-primary); line-height: 24px;">赵强</p>
+            </div>
+            <span class="inline-flex items-center whitespace-nowrap rounded-full px-2 py-0.5 text-[12px] font-medium" style="background: var(--bg-tertiary); color: var(--text-secondary);">成员</span>
+          </div>
+
+          <!-- Member: 陈丽 -->
+          <div class="flex items-center gap-3 px-4 py-3" style="border-bottom: 1px solid var(--border-light);">
+            <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[13px] font-medium" style="background: #ec4899; color: var(--text-inverse);">陈</div>
+            <div class="min-w-0 flex-1">
+              <p class="truncate text-[15px] font-medium" style="color: var(--text-primary); line-height: 24px;">陈丽</p>
+            </div>
+            <span class="inline-flex items-center whitespace-nowrap rounded-full px-2 py-0.5 text-[12px] font-medium" style="background: var(--bg-tertiary); color: var(--text-secondary);">成员</span>
+          </div>
+
+          <!-- Member: 刘伟 -->
+          <div class="flex items-center gap-3 px-4 py-3">
+            <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[13px] font-medium" style="background: #14b8a6; color: var(--text-inverse);">刘</div>
+            <div class="min-w-0 flex-1">
+              <p class="truncate text-[15px] font-medium" style="color: var(--text-primary); line-height: 24px;">刘伟</p>
+            </div>
+            <span class="inline-flex items-center whitespace-nowrap rounded-full px-2 py-0.5 text-[12px] font-medium" style="background: var(--bg-tertiary); color: var(--text-secondary);">成员</span>
+          </div>
+
+        </div>
+
+        <!-- Bottom action: invite button -->
+        <button class="mt-4 flex h-12 w-full items-center justify-center rounded-lg text-[16px] font-semibold" style="background: var(--color-brand); color: var(--text-inverse); border-radius: var(--radius-lg);">
+          <i data-lucide="user-plus" class="mr-2 h-[18px] w-[18px]"></i>
+          <span>邀请成员</span>
+        </button>
+
+      </div>
+
+    </main>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录</title>
+    <style id="theme-vars">
+    @theme inline {
+      --color-primary: var(--color-brand);
+      --color-primary-light: var(--color-brand-light);
+      --color-primary-dark: var(--color-brand-dark);
+      --color-background: var(--bg-primary);
+      --color-foreground: var(--text-primary);
+      --color-muted: var(--text-secondary);
+      --color-muted-foreground: var(--text-tertiary);
+      --color-border: var(--border-light);
+      --color-card: var(--surface-elevated);
+      --color-card-foreground: var(--text-primary);
+      --color-accent: var(--color-brand);
+      --color-accent-foreground: var(--text-inverse);
+      --color-destructive: var(--state-error);
+      --color-ring: var(--color-brand);
+      --radius: var(--radius-md);
+    }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+    @layer base {
+      body { background: var(--bg-primary); color: var(--text-primary); }
+      td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+      th { @apply whitespace-nowrap; }
+    }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1em; height: 1em;
+        -webkit-mask: var(--icon-url) no-repeat center/contain;
+        mask: var(--icon-url) no-repeat center/contain;
+        background: currentColor;
+        flex-shrink: 0;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+      <!-- Status bar spacer -->
+      <div class="h-11 bg-transparent"></div>
+
+      <!-- WeChat mini program navigation bar -->
+      <header class="sticky top-0 z-30 bg-[var(--bg-primary)]/95 backdrop-blur">
+        <div class="flex h-11 items-center px-4">
+          <div class="flex w-[88px] items-center justify-start">
+            <!-- Left balancing area (root page, no back button) -->
+          </div>
+          <div class="min-w-0 flex-1 text-center text-[16px] font-semibold tracking-[-0.02em]" style="color:var(--text-primary);">团队待办</div>
+          <div class="flex h-8 w-[88px] items-center justify-center rounded-full border bg-[var(--bg-primary)]/90" style="border-color:var(--border-light);" aria-label="小程序菜单">
+            <button class="flex h-full flex-1 items-center justify-center" aria-label="更多">
+              <i data-lucide="more-horizontal" class="h-4 w-4" style="color:var(--text-primary);"></i>
+            </button>
+            <span class="h-4 w-px bg-[var(--border-light)]" aria-hidden="true"></span>
+            <button class="flex h-full flex-1 items-center justify-center" aria-label="关闭">
+              <i data-lucide="x" class="h-4 w-4" style="color:var(--text-primary);"></i>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Login content area -->
+      <div class="flex flex-col items-center justify-center px-8" style="min-height:calc(100vh - 88px);">
+        <!-- Top spacer (1/4 screen) -->
+        <div class="flex-shrink-0" style="height:25vh;"></div>
+
+        <!-- App logo icon area -->
+        <div class="flex h-20 w-20 items-center justify-center" style="border-radius:var(--radius-xl); background:linear-gradient(135deg, var(--color-brand) 0%, var(--color-brand-darker) 100%);">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 11l3 3L22 4"/>
+            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+          </svg>
+        </div>
+
+        <!-- App name -->
+        <h1 class="mt-5" style="font-family:var(--font-family); font-size:var(--text-3xl); font-weight:700; line-height:var(--text-3xl-lh); letter-spacing:-0.02em; color:var(--text-primary); text-wrap:balance; word-break:keep-all;">团队待办</h1>
+
+        <!-- Tagline -->
+        <p class="mt-2" style="font-family:var(--font-family); font-size:var(--text-sm); font-weight:400; line-height:var(--text-sm-lh); color:var(--text-tertiary);">高效团队协作，从此开始</p>
+
+        <!-- Spacing -->
+        <div class="mt-10"></div>
+
+        <!-- WeChat login button -->
+        <button data-dom-id="btn-login" class="flex w-full items-center justify-center" style="height:var(--control-height-lg); border-radius:var(--radius-full); background:var(--color-brand); color:var(--text-inverse); font-family:var(--font-family); font-size:16px; font-weight:600; letter-spacing:0.02em; border:none; cursor:pointer; transition:background-color 120ms cubic-bezier(.2,.8,.2,1), transform 120ms cubic-bezier(.2,.8,.2,1);">
+          微信一键登录
+        </button>
+
+        <!-- Agreement text -->
+        <p class="mt-4 text-center" style="font-family:var(--font-family); font-size:var(--text-xs); line-height:var(--text-xs-lh); color:var(--text-tertiary);">登录即表示同意《用户协议》和《隐私政策》</p>
+
+        <!-- Bottom spacer -->
+        <div class="flex-shrink-0" style="height:25vh;"></div>
+      </div>
+    </main>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

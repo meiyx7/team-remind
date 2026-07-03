@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>待办列表</title>
+    <style id="theme-vars">
+    @theme inline {
+      --color-primary: var(--color-brand);
+      --color-primary-light: var(--color-brand-light);
+      --color-primary-dark: var(--color-brand-dark);
+      --color-background: var(--bg-primary);
+      --color-foreground: var(--text-primary);
+      --color-muted: var(--text-secondary);
+      --color-muted-foreground: var(--text-tertiary);
+      --color-border: var(--border-light);
+      --color-card: var(--surface-elevated);
+      --color-card-foreground: var(--text-primary);
+      --color-accent: var(--color-brand);
+      --color-accent-foreground: var(--text-inverse);
+      --color-destructive: var(--state-error);
+      --color-ring: var(--color-brand);
+      --radius: var(--radius-md);
+    }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+    @layer base {
+      body { background: var(--bg-primary); color: var(--text-primary); }
+      td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+      th { @apply whitespace-nowrap; }
+    }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1em; height: 1em;
+        -webkit-mask: var(--icon-url) no-repeat center/contain;
+        mask: var(--icon-url) no-repeat center/contain;
+        background: currentColor;
+        flex-shrink: 0;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main class="min-h-screen pb-[84px]">
+
+      <!-- Status Bar Spacer -->
+      <div class="h-11 bg-[var(--bg-primary)]/95"></div>
+
+      <!-- WeChat Navigation Bar -->
+      <header class="sticky top-0 z-30 border-b border-[var(--border-light)] bg-[var(--bg-primary)]/95 backdrop-blur">
+        <div class="flex h-11 items-center px-4">
+          <div class="flex w-[88px] items-center justify-start">
+            <!-- Root/tab page: no back button, balancing area -->
+          </div>
+          <div class="min-w-0 flex-1 text-center text-[16px] font-semibold tracking-[-0.02em] text-[var(--text-primary)]">我的待办</div>
+          <div class="flex h-8 w-[88px] items-center justify-center rounded-full border border-[var(--border-light)] bg-[var(--bg-primary)]/90 text-[var(--text-secondary)]">
+            <button class="flex h-full flex-1 items-center justify-center" aria-label="更多">
+              <span class="inline-flex h-4 w-4 items-center justify-center text-[13px] leading-none" aria-hidden="true">···</span>
+            </button>
+            <span class="h-4 w-px bg-[var(--border-light)]" aria-hidden="true"></span>
+            <button class="flex h-full flex-1 items-center justify-center" aria-label="关闭">
+              <span class="inline-flex h-4 w-4 items-center justify-center text-[15px] leading-none" aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Filter Tabs -->
+      <div class="flex gap-2 overflow-x-auto px-4 py-3 no-scrollbar" style="background: var(--bg-secondary);">
+        <button class="shrink-0 whitespace-nowrap rounded-[8px] bg-[var(--color-brand)] px-4 py-1.5 text-[13px] font-medium text-white">全部</button>
+        <button class="shrink-0 whitespace-nowrap rounded-[8px] border border-[var(--border-light)] bg-[var(--bg-primary)] px-4 py-1.5 text-[13px] font-medium text-[var(--text-secondary)]">进行中</button>
+        <button class="shrink-0 whitespace-nowrap rounded-[8px] border border-[var(--border-light)] bg-[var(--bg-primary)] px-4 py-1.5 text-[13px] font-medium text-[var(--text-secondary)]">待开始</button>
+        <button class="shrink-0 whitespace-nowrap rounded-[8px] border border-[var(--border-light)] bg-[var(--bg-primary)] px-4 py-1.5 text-[13px] font-medium text-[var(--text-secondary)]">已完成</button>
+        <button class="shrink-0 whitespace-nowrap rounded-[8px] border border-[var(--border-light)] bg-[var(--bg-primary)] px-4 py-1.5 text-[13px] font-medium text-[var(--text-secondary)]">已逾期</button>
+      </div>
+
+      <!-- Todo Items List -->
+      <div class="flex flex-col gap-3 px-4 pt-2">
+
+        <!-- Item 1: In Progress -->
+        <div class="flex items-start gap-3 rounded-[8px] border border-[var(--border-light)] bg-[var(--bg-primary)] p-4" style="border-left: 3px solid var(--state-warning);">
+          <div class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-[var(--color-gray-300)]">
+          </div>
+          <div class="min-w-0 flex-1">
+            <p class="truncate text-[15px] font-medium text-[var(--text-primary)]" style="line-height: var(--text-base-lh);">完成首页设计稿</p>
+            <p class="mt-0.5 truncate text-[13px] text-[var(--text-secondary)]" style="line-height: var(--text-sm-lh);">产品设计组 · 张明指派</p>
+          </div>
+          <div class="shrink-0 text-right">
+            <span class="block text-[13px] text-[var(--text-secondary)]" style="line-height: var(--text-sm-lh);">7月5日</span>
+            <span class="mt-1 inline-block whitespace-nowrap rounded-[4px] bg-[var(--state-warning)]/10 px-2 py-0.5 text-[11px] font-medium text-[var(--state-warning)]" style="line-height: var(--text-xs-lh);">进行中</span>
+          </div>
+        </div>
+
+        <!-- Item 2: Pending -->
+        <div class="flex items-start gap-3 rounded-[8px] border border-[var(--border-light)] bg-[var(--bg-primary)] p-4" style="border-left: 3px solid var(--color-gray-400);">
+          <div class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-[var(--color-gray-300)]">
+          </div>
+          <div class="min-w-0 flex-1">
+            <p class="truncate text-[15px] font-medium text-[var(--text-primary)]" style="line-height: var(--text-base-lh);">提交本周工作周报</p>
+            <p class="mt-0.5 truncate text-[13px] text-[var(--text-secondary)]" style="line-height: var(--text-sm-lh);">产品设计组 · 李华指派</p>
+          </div>
+          <div class="shrink-0 text-right">
+            <span class="block text-[13px] text-[var(--text-secondary)]" style="line-height: var(--text-sm-lh);">7月7日</span>
+            <span class="mt-1 inline-block whitespace-nowrap rounded-[4px] bg-[var(--color-gray-100)] px-2 py-0.5 text-[11px] font-medium text-[var(--text-secondary)]" style="line-height: var(--text-xs-lh);">待开始</span>
+          </div>
+        </div>
+
+        <!-- Item 3: Completed -->
+        <div class="flex items-start gap-3 rounded-[8px] border border-[var(--border-light)] bg-[var(--bg-primary)] p-4" style="border-left: 3px solid var(--state-success);">
+          <div class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--color-brand)]">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="2.5 6 5 8.5 9.5 3.5"/>
+            </svg>
+          </div>
+          <div class="min-w-0 flex-1">
+            <p class="truncate text-[15px] font-medium text-[var(--text-tertiary)] line-through" style="line-height: var(--text-base-lh);">更新产品需求文档</p>
+            <p class="mt-0.5 truncate text-[13px] text-[var(--text-secondary)]" style="line-height: var(--text-sm-lh);">产品设计组 · 王芳指派</p>
+          </div>
+          <div class="shrink-0 text-right">
+            <span class="block text-[13px] text-[var(--text-secondary)]" style="line-height: var(--text-sm-lh);">7月3日</span>
+            <span class="mt-1 inline-block whitespace-nowrap rounded-[4px] bg-[var(--state-success)]/10 px-2 py-0.5 text-[11px] font-medium text-[var(--state-success)]" style="line-height: var(--text-xs-lh);">已完成</span>
+          </div>
+        </div>
+
+        <!-- Item 4: In Progress -->
+        <div class="flex items-start gap-3 rounded-[8px] border border-[var(--border-light)] bg-[var(--bg-primary)] p-4" style="border-left: 3px solid var(--state-warning);">
+          <div class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-[var(--color-gray-300)]">
+          </div>
+          <div class="min-w-0 flex-1">
+            <p class="truncate text-[15px] font-medium text-[var(--text-primary)]" style="line-height: var(--text-base-lh);">设计用户反馈收集表</p>
+            <p class="mt-0.5 truncate text-[13px] text-[var(--text-secondary)]" style="line-height: var(--text-sm-lh);">运营推广组 · 赵强指派</p>
+          </div>
+          <div class="shrink-0 text-right">
+            <span class="block text-[13px] text-[var(--text-secondary)]" style="line-height: var(--text-sm-lh);">7月8日</span>
+            <span class="mt-1 inline-block whitespace-nowrap rounded-[4px] bg-[var(--state-warning)]/10 px-2 py-0.5 text-[11px] font-medium text-[var(--state-warning)]" style="line-height: var(--text-xs-lh);">进行中</span>
+          </div>
+        </div>
+
+        <!-- Item 5: Pending -->
+        <div class="flex items-start gap-3 rounded-[8px] border border-[var(--border-light)] bg-[var(--bg-primary)] p-4" style="border-left: 3px solid var(--color-gray-400);">
+          <div class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-[var(--color-gray-300)]">
+          </div>
+          <div class="min-w-0 flex-1">
+            <p class="truncate text-[15px] font-medium text-[var(--text-primary)]" style="line-height: var(--text-base-lh);">整理竞品分析报告</p>
+            <p class="mt-0.5 truncate text-[13px] text-[var(--text-secondary)]" style="line-height: var(--text-sm-lh);">产品设计组 · 张明指派</p>
+          </div>
+          <div class="shrink-0 text-right">
+            <span class="block text-[13px] text-[var(--text-secondary)]" style="line-height: var(--text-sm-lh);">7月12日</span>
+            <span class="mt-1 inline-block whitespace-nowrap rounded-[4px] bg-[var(--color-gray-100)] px-2 py-0.5 text-[11px] font-medium text-[var(--text-secondary)]" style="line-height: var(--text-xs-lh);">待开始</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- FAB Button -->
+      <button data-dom-id="fab-create-todo" class="fixed z-20 flex h-12 w-12 items-center justify-center rounded-full shadow-lg text-white" style="bottom: 100px; right: 16px; background: var(--color-brand); box-shadow: var(--shadow-elevated);" aria-label="新建待办">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+      </button>
+
+      <!-- Bottom Tab Bar -->
+      <nav class="fixed bottom-0 inset-x-0 z-30 border-t border-[var(--border-light)] bg-[var(--bg-primary)]" role="tablist" aria-label="主导航">
+        <div class="flex h-[50px] items-center justify-around">
+
+          <!-- Tab: 首页 (Home) -->
+          <button class="flex flex-1 flex-col items-center justify-center gap-0.5 py-1 text-[var(--text-tertiary)] transition-colors duration-150"
+                  role="tab"
+                  data-nav-key="home"
+                  aria-label="首页"
+                  aria-selected="false">
+            <span class="flex h-5 w-5 items-center justify-center text-[20px] leading-none" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9.5L12 3l9 6.5V20a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9.5z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+              </svg>
+            </span>
+            <span class="text-[10px] leading-[14px] font-medium whitespace-nowrap">首页</span>
+          </button>
+
+          <!-- Tab: 团队 (Team) -->
+          <button class="flex flex-1 flex-col items-center justify-center gap-0.5 py-1 text-[var(--text-tertiary)] transition-colors duration-150"
+                  role="tab"
+                  data-nav-key="team"
+                  aria-label="团队"
+                  aria-selected="false">
+            <span class="flex h-5 w-5 items-center justify-center text-[20px] leading-none" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </span>
+            <span class="text-[10px] leading-[14px] font-medium whitespace-nowrap">团队</span>
+          </button>
+
+          <!-- Tab: 待办 (Todo) - ACTIVE -->
+          <button class="flex flex-1 flex-col items-center justify-center gap-0.5 py-1 transition-colors duration-150"
+                  role="tab"
+                  data-nav-key="todo"
+                  data-active="true"
+                  aria-label="待办"
+                  aria-selected="true"
+                  style="color: var(--color-brand);">
+            <span class="flex h-5 w-5 items-center justify-center text-[20px] leading-none" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 11l3 3L22 4"/>
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+              </svg>
+            </span>
+            <span class="text-[10px] leading-[14px] font-medium whitespace-nowrap">待办</span>
+          </button>
+
+          <!-- Tab: 我的 (Profile) -->
+          <button class="flex flex-1 flex-col items-center justify-center gap-0.5 py-1 text-[var(--text-tertiary)] transition-colors duration-150"
+                  role="tab"
+                  data-nav-key="profile"
+                  aria-label="我的"
+                  aria-selected="false">
+            <span class="flex h-5 w-5 items-center justify-center text-[20px] leading-none" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </span>
+            <span class="text-[10px] leading-[14px] font-medium whitespace-nowrap">我的</span>
+          </button>
+
+        </div>
+
+        <!-- Safe area bottom padding for full-screen devices -->
+        <div class="h-[env(safe-area-inset-bottom,34px)] bg-[var(--bg-primary)]"></div>
+      </nav>
+
+    </main>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

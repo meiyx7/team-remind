@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>创建待办</title>
+    <style id="theme-vars">
+    @theme inline {
+      --color-primary: var(--color-brand);
+      --color-primary-light: var(--color-brand-light);
+      --color-primary-dark: var(--color-brand-dark);
+      --color-background: var(--bg-primary);
+      --color-foreground: var(--text-primary);
+      --color-muted: var(--text-secondary);
+      --color-muted-foreground: var(--text-tertiary);
+      --color-border: var(--border-light);
+      --color-card: var(--surface-elevated);
+      --color-card-foreground: var(--text-primary);
+      --color-accent: var(--color-brand);
+      --color-accent-foreground: var(--text-inverse);
+      --color-destructive: var(--state-error);
+      --color-ring: var(--color-brand);
+      --radius: var(--radius-md);
+    }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+    @layer base {
+      body { background: var(--bg-primary); color: var(--text-primary); }
+      td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+      th { @apply whitespace-nowrap; }
+    }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1em; height: 1em;
+        -webkit-mask: var(--icon-url) no-repeat center/contain;
+        mask: var(--icon-url) no-repeat center/contain;
+        background: currentColor;
+        flex-shrink: 0;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased" style="font-family: var(--font-family); background: var(--bg-secondary);">
+
+    <!-- Status bar spacer -->
+    <div class="h-11"></div>
+
+    <!-- Custom nav bar -->
+    <header class="sticky top-0 z-30 bg-[var(--bg-secondary)]/95 backdrop-blur border-b border-[var(--border-light)]">
+      <div class="flex h-11 items-center px-4">
+        <div class="flex w-[88px] items-center justify-start">
+          <button data-dom-id="back-to-todo-list" class="inline-flex h-8 w-8 items-center justify-center" aria-label="返回">
+            <i data-lucide="chevron-left" class="h-5 w-5" style="color: var(--text-primary);"></i>
+          </button>
+        </div>
+        <div class="min-w-0 flex-1 text-center" style="font-size: var(--text-lg); font-weight: 600; color: var(--text-primary);">创建待办</div>
+        <div class="flex h-8 w-[88px] items-center justify-center rounded-full border border-[var(--border-light)] bg-[var(--bg-primary)]/90" aria-label="小程序菜单">
+          <button class="flex h-full flex-1 items-center justify-center" aria-label="更多">
+            <i data-lucide="more-horizontal" class="h-4 w-4" style="color: var(--text-secondary);"></i>
+          </button>
+          <span class="h-4 w-px bg-[var(--border-light)]" aria-hidden="true"></span>
+          <button class="flex h-full flex-1 items-center justify-center" aria-label="关闭">
+            <i data-lucide="x" class="h-4 w-4" style="color: var(--text-secondary);"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="px-4 pb-[100px] pt-4">
+
+      <!-- Form card -->
+      <div class="bg-[var(--bg-primary)] rounded-[var(--radius-lg)] border border-[var(--border-light)] p-4" style="box-shadow: var(--shadow-sm);">
+
+        <!-- Section: 基本信息 -->
+        <div>
+          <div class="mb-3">
+            <label class="block mb-1.5" style="font-size: var(--text-sm); color: var(--text-secondary);">待办标题</label>
+            <input type="text" placeholder="请输入待办标题" class="w-full bg-transparent pb-2 border-b border-[var(--border-light)] outline-none placeholder:text-[var(--text-tertiary)] focus:border-b-2 focus:border-[var(--color-brand)] transition-colors" style="font-size: var(--text-base); color: var(--text-primary);">
+          </div>
+          <div>
+            <label class="block mb-1.5" style="font-size: var(--text-sm); color: var(--text-secondary);">待办描述</label>
+            <textarea rows="4" placeholder="添加详细描述..." class="w-full bg-transparent pb-2 border-b border-[var(--border-light)] outline-none resize-none placeholder:text-[var(--text-tertiary)] focus:border-b-2 focus:border-[var(--color-brand)] transition-colors" style="font-size: var(--text-base); color: var(--text-primary); line-height: 1.6;"></textarea>
+          </div>
+        </div>
+
+        <!-- Section divider -->
+        <div class="h-2"></div>
+
+        <!-- Section: 截止日期 -->
+        <div>
+          <div class="mb-1.5" style="font-size: var(--text-sm); color: var(--text-secondary);">截止日期</div>
+          <button class="w-full flex items-center justify-between py-3 border-b border-[var(--border-light)]">
+            <div class="flex items-center gap-2">
+              <i data-lucide="calendar" class="h-4 w-4" style="color: var(--text-tertiary);"></i>
+              <span style="font-size: var(--text-base); color: var(--text-tertiary);">请选择截止日期</span>
+            </div>
+            <i data-lucide="chevron-right" class="h-4 w-4" style="color: var(--text-tertiary);"></i>
+          </button>
+        </div>
+
+        <!-- Section divider -->
+        <div class="h-2"></div>
+
+        <!-- Section: 关联团队 -->
+        <div>
+          <div class="mb-2.5" style="font-size: var(--text-sm); color: var(--text-secondary);">关联团队</div>
+          <div class="flex items-center gap-2">
+            <span class="inline-flex items-center whitespace-nowrap px-3 py-1.5 rounded-full text-white" style="background: var(--color-brand); font-size: var(--text-sm); font-weight: 500;">产品设计组</span>
+            <span class="inline-flex items-center whitespace-nowrap px-3 py-1.5 rounded-full border border-[var(--border-light)] text-[var(--text-secondary)]" style="background: var(--bg-primary); font-size: var(--text-sm); font-weight: 500;">运营推广组</span>
+          </div>
+        </div>
+
+        <!-- Section divider -->
+        <div class="h-2"></div>
+
+        <!-- Section: 指派成员 -->
+        <div>
+          <div class="mb-2.5" style="font-size: var(--text-sm); color: var(--text-secondary);">指派成员</div>
+          <div class="flex items-center gap-3">
+            <!-- Selected member -->
+            <div class="flex items-center gap-1.5">
+              <div class="inline-flex items-center justify-center h-6 w-6 rounded-full text-white text-xs font-medium" style="background: var(--color-brand);">张</div>
+              <span class="whitespace-nowrap" style="font-size: var(--text-sm); color: var(--text-primary);">张明</span>
+              <button class="inline-flex items-center justify-center h-5 w-5 rounded-full" style="color: var(--text-tertiary);" aria-label="移除成员">
+                <i data-lucide="x" class="h-3 w-3"></i>
+              </button>
+            </div>
+            <!-- Add member button -->
+            <button class="flex items-center gap-1.5">
+              <span class="inline-flex items-center justify-center h-6 w-6 rounded-full border border-dashed border-[var(--border-default)]" style="color: var(--text-tertiary);">
+                <i data-lucide="plus" class="h-3 w-3"></i>
+              </span>
+              <span class="whitespace-nowrap" style="font-size: var(--text-sm); color: var(--text-tertiary);">选择成员</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- Bottom fixed submit button -->
+    <div class="fixed bottom-0 inset-x-0 z-30 bg-[var(--bg-primary)] border-t border-[var(--border-light)] px-4 pt-3">
+      <button data-dom-id="btn-submit-todo" class="w-full flex items-center justify-center rounded-lg text-white font-semibold" style="background: var(--color-brand); height: var(--control-height-lg); font-size: var(--text-base);">
+        提交待办
+      </button>
+      <div class="h-[env(safe-area-inset-bottom,34px)]"></div>
+    </div>
+
+    <script>lucide.createIcons();</script>
+</body>
+</html>

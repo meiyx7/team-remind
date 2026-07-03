@@ -1,0 +1,106 @@
+<!-- Project Shell Fragment — Team Remind (WeChat Mini Program Style) -->
+<!-- This is a PARTIAL fragment, NOT a complete page. Leaf pages include this structure. -->
+
+<!-- SLOT: statusBar -->
+<!-- Mini program status bar spacer (44px) + navigation bar (44px) -->
+<div class="sticky top-0 z-30 bg-[var(--bg-primary)]/95 backdrop-blur border-b border-[var(--border-light)]">
+  <div class="flex h-11 items-center px-4">
+    <div class="flex w-[88px] items-center justify-start">
+      <!-- SLOT: navBack — root/tab pages leave this empty for balancing -->
+    </div>
+    <div class="min-w-0 flex-1 text-center text-[16px] font-semibold tracking-[-0.02em] text-[var(--text-primary)]">
+      <!-- SLOT: navTitle -->
+    </div>
+    <div class="flex h-8 w-[88px] items-center justify-center rounded-full border border-[var(--border-light)] bg-[var(--bg-primary)]/90 text-[var(--text-secondary)]">
+      <button class="flex h-full flex-1 items-center justify-center" aria-label="更多">
+        <span class="inline-flex h-4 w-4 items-center justify-center text-[13px] leading-none" aria-hidden="true">···</span>
+      </button>
+      <span class="h-4 w-px bg-[var(--border-light)]" aria-hidden="true"></span>
+      <button class="flex h-full flex-1 items-center justify-center" aria-label="关闭">
+        <span class="inline-flex h-4 w-4 items-center justify-center text-[15px] leading-none" aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- SLOT: pageContent -->
+<!-- Main page content rendered by leaf pages goes here -->
+<!-- Bottom padding accounts for tab bar: 50px + safe area 34px = 84px -->
+<main class="min-h-[calc(100vh-176px)] pb-[84px]" style="font-family: var(--font-family);">
+
+</main>
+
+<!-- SLOT: activeTabKey -->
+<!-- Inject active tab styling here (e.g. data-active-tab="home") -->
+
+<!-- Bottom Tab Bar — fixed, full width, 4 tabs -->
+<nav class="fixed bottom-0 inset-x-0 z-30 border-t border-[var(--border-light)] bg-[var(--bg-primary)]" role="tablist" aria-label="主导航">
+  <div class="flex h-[50px] items-center justify-around">
+
+    <!-- Tab: 首页 (Home) -->
+    <button class="flex flex-1 flex-col items-center justify-center gap-0.5 py-1 text-[var(--text-tertiary)] transition-colors duration-150"
+            role="tab"
+            data-nav-key="home"
+            aria-label="首页"
+            aria-selected="false">
+      <span class="flex h-5 w-5 items-center justify-center text-[20px] leading-none" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9.5L12 3l9 6.5V20a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9.5z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </span>
+      <span class="text-[10px] leading-[14px] font-medium whitespace-nowrap">首页</span>
+    </button>
+
+    <!-- Tab: 团队 (Team) -->
+    <button class="flex flex-1 flex-col items-center justify-center gap-0.5 py-1 text-[var(--text-tertiary)] transition-colors duration-150"
+            role="tab"
+            data-nav-key="team"
+            aria-label="团队"
+            aria-selected="false">
+      <span class="flex h-5 w-5 items-center justify-center text-[20px] leading-none" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      </span>
+      <span class="text-[10px] leading-[14px] font-medium whitespace-nowrap">团队</span>
+    </button>
+
+    <!-- Tab: 待办 (Todo) -->
+    <button class="flex flex-1 flex-col items-center justify-center gap-0.5 py-1 text-[var(--text-tertiary)] transition-colors duration-150"
+            role="tab"
+            data-nav-key="todo"
+            aria-label="待办"
+            aria-selected="false">
+      <span class="flex h-5 w-5 items-center justify-center text-[20px] leading-none" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 11l3 3L22 4"/>
+          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+        </svg>
+      </span>
+      <span class="text-[10px] leading-[14px] font-medium whitespace-nowrap">待办</span>
+    </button>
+
+    <!-- Tab: 我的 (Profile) -->
+    <button class="flex flex-1 flex-col items-center justify-center gap-0.5 py-1 text-[var(--text-tertiary)] transition-colors duration-150"
+            role="tab"
+            data-nav-key="profile"
+            aria-label="我的"
+            aria-selected="false">
+      <span class="flex h-5 w-5 items-center justify-center text-[20px] leading-none" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      </span>
+      <span class="text-[10px] leading-[14px] font-medium whitespace-nowrap">我的</span>
+    </button>
+
+  </div>
+
+  <!-- Safe area bottom padding for full-screen devices -->
+  <div class="h-[env(safe-area-inset-bottom,34px)] bg-[var(--bg-primary)]"></div>
+</nav>

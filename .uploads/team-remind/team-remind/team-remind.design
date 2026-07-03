@@ -1,0 +1,179 @@
+{
+  "data": [
+    {
+      "id": "page-login",
+      "title": "登录",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1751500800000,
+      "canvasData": {
+        "x": 0,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/login.html",
+        "interactions": [
+          {
+            "domId": "btn-login",
+            "targetPageId": "page-home",
+            "transitionLabel": "登录成功"
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-home",
+      "title": "首页",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1751500800000,
+      "canvasData": {
+        "x": 420,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/home.html",
+        "interactions": [
+          {
+            "domId": "shortcut-team-list",
+            "targetPageId": "page-team-list",
+            "hideEdge": true,
+            "transitionLabel": "查看团队列表"
+          },
+          {
+            "domId": "shortcut-todo-list",
+            "targetPageId": "page-todo-list",
+            "hideEdge": true,
+            "transitionLabel": "查看待办列表"
+          },
+          {
+            "domId": "shortcut-create-todo",
+            "targetPageId": "page-create-todo",
+            "hideEdge": true,
+            "transitionLabel": "创建待办"
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-team-list",
+      "title": "团队列表",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1751500800000,
+      "canvasData": {
+        "x": 0,
+        "y": 590,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/team-list.html",
+        "interactions": [
+          {
+            "domId": "team-card-1",
+            "targetPageId": "page-team-detail",
+            "transitionLabel": "查看团队详情"
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-team-detail",
+      "title": "团队详情",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1751500800000,
+      "canvasData": {
+        "x": 420,
+        "y": 590,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/team-detail.html",
+        "interactions": [
+          {
+            "domId": "back-to-team-list",
+            "targetPageId": "page-team-list",
+            "hideEdge": true,
+            "transitionLabel": "返回"
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-todo-list",
+      "title": "待办列表",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1751500800000,
+      "canvasData": {
+        "x": 0,
+        "y": 1180,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/todo-list.html",
+        "interactions": [
+          {
+            "domId": "fab-create-todo",
+            "targetPageId": "page-create-todo",
+            "transitionLabel": "新建待办"
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-create-todo",
+      "title": "创建待办",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1751500800000,
+      "canvasData": {
+        "x": 420,
+        "y": 1180,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/create-todo.html",
+        "interactions": [
+          {
+            "domId": "back-to-todo-list",
+            "targetPageId": "page-todo-list",
+            "hideEdge": true,
+            "transitionLabel": "返回"
+          },
+          {
+            "domId": "btn-submit-todo",
+            "targetPageId": "page-todo-list",
+            "hideEdge": true,
+            "transitionLabel": "提交成功"
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-profile",
+      "title": "我的",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1751500800000,
+      "canvasData": {
+        "x": 0,
+        "y": 1770,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/profile.html",
+        "interactions": []
+      }
+    }
+  ],
+  "config": {
+    "autoLayout": true,
+    "deviceType": "mobile",
+    "projectName": "团队待办小程序",
+    "designLibrary": null
+  }
+}

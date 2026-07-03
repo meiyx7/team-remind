@@ -1,0 +1,91 @@
+{
+  "root": {
+    "nodeId": "gen-project-shell",
+    "kind": "project-shell",
+    "pageIds": ["page-home", "page-team-list", "page-team-detail", "page-todo-list", "page-create-todo", "page-profile"],
+    "output": "partials/project-shell.html",
+    "sharedRegions": ["bottom-tab-bar"],
+    "privateRegions": [],
+    "mutableSlots": ["activeTabKey"],
+    "status": "planned",
+    "children": [
+      {
+        "nodeId": "gen-page-login",
+        "kind": "page-leaf",
+        "pageIds": ["page-login"],
+        "output": "pages/login.html",
+        "sharedRegions": [],
+        "privateRegions": ["login page body"],
+        "mutableSlots": [],
+        "status": "planned",
+        "children": []
+      },
+      {
+        "nodeId": "gen-page-home",
+        "kind": "page-leaf",
+        "pageIds": ["page-home"],
+        "output": "pages/home.html",
+        "sharedRegions": ["bottom-tab-bar"],
+        "privateRegions": ["home page body"],
+        "mutableSlots": ["activeTabKey"],
+        "status": "planned",
+        "children": []
+      },
+      {
+        "nodeId": "gen-page-team-list",
+        "kind": "page-leaf",
+        "pageIds": ["page-team-list"],
+        "output": "pages/team-list.html",
+        "sharedRegions": ["bottom-tab-bar"],
+        "privateRegions": ["team list body"],
+        "mutableSlots": ["activeTabKey"],
+        "status": "planned",
+        "children": []
+      },
+      {
+        "nodeId": "gen-page-team-detail",
+        "kind": "page-leaf",
+        "pageIds": ["page-team-detail"],
+        "output": "pages/team-detail.html",
+        "sharedRegions": [],
+        "privateRegions": ["team detail body"],
+        "mutableSlots": [],
+        "status": "planned",
+        "children": []
+      },
+      {
+        "nodeId": "gen-page-todo-list",
+        "kind": "page-leaf",
+        "pageIds": ["page-todo-list"],
+        "output": "pages/todo-list.html",
+        "sharedRegions": ["bottom-tab-bar"],
+        "privateRegions": ["todo list body"],
+        "mutableSlots": ["activeTabKey"],
+        "status": "planned",
+        "children": []
+      },
+      {
+        "nodeId": "gen-page-create-todo",
+        "kind": "page-leaf",
+        "pageIds": ["page-create-todo"],
+        "output": "pages/create-todo.html",
+        "sharedRegions": [],
+        "privateRegions": ["create todo form body"],
+        "mutableSlots": [],
+        "status": "planned",
+        "children": []
+      },
+      {
+        "nodeId": "gen-page-profile",
+        "kind": "page-leaf",
+        "pageIds": ["page-profile"],
+        "output": "pages/profile.html",
+        "sharedRegions": ["bottom-tab-bar"],
+        "privateRegions": ["profile page body"],
+        "mutableSlots": ["activeTabKey"],
+        "status": "planned",
+        "children": []
+      }
+    ]
+  }
+}
