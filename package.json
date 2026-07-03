@@ -11,6 +11,6 @@
   },
   "devDependencies": {
     "miniprogram-ci": "^1.9.11",
-    "less": "^4.2.0"
+    "less": "^3.13.1"
   }
 }
