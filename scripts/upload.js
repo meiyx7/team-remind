@@ -4,7 +4,7 @@ const ci = require('miniprogram-ci')
 const path = require('path')
 
 async function main() {
-  const version = process.env.VERSION || '1.0.0'
+  const version = process.env.VERSION || '0.0.0'
   const desc = process.env.DESC || '团队待办小程序代码上传'
 
   const project = new ci.Project({
