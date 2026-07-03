@@ -10,6 +10,7 @@
     "@supabase/supabase-js": "^2.45.0"
   },
   "devDependencies": {
-    "miniprogram-ci": "^1.9.11"
+    "miniprogram-ci": "^1.9.11",
+    "less": "^4.2.0"
   }
 }
