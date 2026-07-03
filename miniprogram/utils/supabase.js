@@ -1,8 +1,8 @@
 // utils/supabase.js
 // Supabase 客户端封装 - 团队待办数据操作
 
-const SUPABASE_URL = 'YOUR_SUPABASE_URL'
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'
+const SUPABASE_URL = 'https://nrxlpnsotflmwcbdukfi.supabase.co'
+const SUPABASE_ANON_KEY = 'sb_publishable_uNj3qfHqCW3HLoQJIxNeZg_irFOz6y8'
 
 // 使用小程序版 Supabase 客户端
 // 需要先在微信开发者工具中执行：工具 -> 构建 npm

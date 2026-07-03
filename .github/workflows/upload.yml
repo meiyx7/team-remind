@@ -1,0 +1,39 @@
+name: 上传小程序
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: '版本号 (如 1.0.0)'
+        required: true
+        default: '1.0.0'
+      desc:
+        description: '版本描述'
+        required: false
+        default: '团队待办小程序代码上传'
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Write private key
+        env:
+          WX_PRIVATE_KEY: ${{ secrets.WX_PRIVATE_KEY }}
+        run: echo "$WX_PRIVATE_KEY" > private.key
+
+      - name: Upload MiniProgram
+        env:
+          WX_APPID: ${{ secrets.WX_APPID }}
+          VERSION: ${{ github.event.inputs.version }}
+          DESC: ${{ github.event.inputs.desc }}
+        run: node scripts/upload.js

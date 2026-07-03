@@ -17,3 +17,7 @@ Thumbs.db
 # 编辑器
 .vscode/
 .idea/
+
+# CI 密钥
+private.key
+private.*.key
