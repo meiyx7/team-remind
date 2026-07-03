@@ -22,3 +22,19 @@ UIUX 框架重构首版，统一处理评估出的 P0/P1/P2 问题：
 - P2 全站下拉刷新 + 关键操作触觉反馈
 - P2 暗色模式真正实现：变量集 + 根类切换 + 持久化
 - P2 设置页功能完善：关于页、帮助反馈、消息通知、用户协议、隐私政策
+
+## 0.2.0
+
+P1 几类问题全站统一处理收口 + 设置页功能逐个完善 + 关键 bug 修复：
+
+- P1 去「AI 感」装饰元素全站收口：login logo 渐变光晕、FAB 品牌色发光阴影、team-list 团队卡左侧色条、todo-card 左侧色条全部移除；shadow-elevated 改为中性高度阴影
+- P1 CSS 手绘图标统一换 SVG：team-list（search/clear/chevron）、login（check-mark）、create-todo（calendar/chevron）全部替换为 utils/icons 中的 base64 SVG；新增 plusBrand 图标
+- P1 themeClass 全站级联：9 个页面根容器接入；新增 --nav-bg token，nav-bar 随主题切换
+- P1 关键修复：TabBar 是页面同级组件，CSS 变量不会从 .page-container 级联进来 → 给 TabBar 加 updateTheme() 方法，三个 Tab 页 onShow + profile 切换时即时同步深色模式
+- P1 组件接入：team-list 接入 avatar + empty-state；create-todo 接入 SVG 图标
+- P0 create-todo 防双击：submitting 守卫 + loading/disabled 双绑定 + 失败兜底回首页
+- P0 team-detail 空态：state-view 显示「团队不存在」
+- P0 profile 设置页全部功能打通：深色模式真实切换+持久化+TabBar同步、我的团队跳转、帮助与反馈、关于（真实版本号）、用户协议、隐私政策（原生全文页）
+- P2 全站下拉刷新校验：home/team-list/team-detail 启用，create-todo 表单页显式关闭
+- P2 触觉反馈统一：筛选切换/完成/创建/登录/清空搜索 vibrateShort；补齐 team-detail switchTab/switchTodoFilter
+- 工程化：gen-icons.js / gen-tabbar.js 脚本同步更新，支持 plusBrand 与 TabBar 主题方法
