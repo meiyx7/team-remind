@@ -4,171 +4,149 @@
 
 ```mermaid
 flowchart TD
-    subgraph FE["前端层 (React + Vite)"]
-        R["React Router 路由"]
-        P["Pages 页面组件"]
-        C["Components 通用组件"]
-        S["Zustand Store 状态"]
-        H["Hooks 业务逻辑"]
+    subgraph MP["微信小程序 (WXML/WXSS/JS)"]
+        APP["app.json 全局配置"]
+        NAV["自定义导航栏 + TabBar"]
+        P["Pages 页面"]
+        C["Components 自定义组件"]
+        U["utils 工具层"]
     end
     subgraph DATA["数据层"]
-        MS["Mock Seed 种子数据"]
-        LS["localStorage 持久化"]
-    end
-    subgraph STYLING["样式层"]
-        T["Tailwind CSS v3"]
-        CV["CSS 变量 Design Tokens"]
-        DM["深色模式切换"]
+        SEED["种子数据 mock.js"]
+        STORE["store.js CRUD 封装"]
+        CACHE["wx.Storage 本地缓存"]
     end
 
-    R --> P
+    APP --> NAV
+    NAV --> P
     P --> C
-    P --> H
-    H --> S
-    S <--> LS
-    S --> MS
-    P --> STYLING
-    C --> STYLING
+    P --> U
+    U --> STORE
+    STORE <--> CACHE
+    STORE --> SEED
 ```
 
 ## 2. 技术说明
 
-- **前端框架**：React 18 + TypeScript
-- **构建工具**：Vite 5
-- **路由**：react-router-dom v6
-- **样式方案**：Tailwind CSS v3 + CSS 变量（实现深色模式与主题换肤）
-- **状态管理**：Zustand（轻量、API 简洁）
-- **图标**：lucide-react
-- **持久化**：localStorage（保存用户登录态、待办与团队数据）
-- **后端**：无（前端 Demo，使用内置 Mock 数据）
-- **包管理器**：pnpm（若环境可用），否则 npm
+- **平台**：微信小程序原生（不使用框架）
+- **语言**：WXML（结构）/ WXSS（样式，含 rpx 响应式单位）/ JavaScript（逻辑）
+- **配置**：`app.json` 全局配置，`project.config.json` 工程配置
+- **组件**：原生组件 + 自定义组件（`components/` 目录）
+- **状态管理**：基于 `wx.setStorageSync` 的本地缓存 + `app.globalData` 全局共享
+- **数据来源**：内置 Mock 种子数据（不依赖后端，保证可独立运行）
+- **图标**：使用 inline SVG / 字符 / 图片（小程序不支持外部图标字体）
+- **appid**：复用现有 `wx83fdff07a06cab30`（体验版/开发者工具可直接预览）
 
-## 3. 路由定义
+## 3. 页面路由定义
 
-| 路由 | 页面 | 说明 |
-|------|------|------|
-| `/login` | 登录页 | 未登录跳转目标 |
-| `/` | 首页 | 登录后默认页，仪表盘 |
-| `/teams` | 团队列表 | Tab「团队」对应页 |
-| `/teams/:id` | 团队详情 | 子页，需团队 ID |
-| `/todos` | 待办列表 | Tab「待办」对应页 |
-| `/todos/new` | 创建待办 | 子页，从 FAB 进入 |
-| `/profile` | 我的 | Tab「我的」对应页 |
+`app.json` 的 `pages` 数组（首个为启动页）：
 
-路由守卫：未登录用户访问除 `/login` 外的页面将被重定向至 `/login`。
+| 路径 | 页面 | 类型 | 跳转方式 |
+|------|------|------|----------|
+| `pages/home/home` | 首页 | Tab | switchTab |
+| `pages/team-list/team-list` | 团队列表 | Tab | switchTab |
+| `pages/todo-list/todo-list` | 待办列表 | Tab | switchTab |
+| `pages/profile/profile` | 我的 | Tab | switchTab |
+| `pages/login/login` | 登录页 | 普通页 | navigateTo / redirectTo |
+| `pages/team-detail/team-detail` | 团队详情 | 普通页 | navigateTo |
+| `pages/create-todo/create-todo` | 创建待办 | 普通页 | navigateTo |
+
+`tabBar` 配置 4 个 Tab（首页/团队/待办/我的），未登录用户首次进入会通过 `app.js` 检测登录态并 `redirectTo` 至登录页。
 
 ## 4. 数据模型
 
-### 4.1 实体定义
-
-```typescript
+```javascript
 // 用户
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  avatarColor: string;   // 头像背景色
-  avatarChar: string;    // 头像首字
+const User = {
+  id: 'u1',
+  name: '张明',
+  email: 'zhangming@email.com',
+  avatarChar: '我',
+  avatarColor: '#10b981'
 }
 
 // 团队
-interface Team {
-  id: string;
-  name: string;
-  description: string;
-  avatarChar: string;
-  avatarColor: string;       // 头像背景色
-  accentColor: string;       // 卡片左色条颜色
-  memberCount: number;
-  createdAt: string;
-  creatorId: string;
+const Team = {
+  id: 't1',
+  name: '产品设计组',
+  description: '负责产品UI/UX设计和原型制作',
+  avatarChar: '产',
+  avatarColor: '#10b981',     // 头像背景色
+  accentColor: '#10b981',     // 卡片左色条
+  memberCount: 8,
+  creatorId: 'u1',
+  createdAt: '2025-07-01'
 }
 
-// 成员关系
-interface TeamMember {
-  id: string;
-  teamId: string;
-  userId: string;
-  name: string;
-  avatarChar: string;
-  avatarColor: string;
-  role: 'creator' | 'member';
+// 成员
+const Member = {
+  id: 'm1',
+  teamId: 't1',
+  name: '张明',
+  avatarChar: '张',
+  avatarColor: '#10b981',
+  role: 'creator'   // 'creator' | 'member'
 }
 
 // 待办
-interface Todo {
-  id: string;
-  title: string;
-  description?: string;
-  teamId: string;
-  teamName: string;
-  assigneeId: string;
-  assigneeName: string;
-  dueDate: string;           // ISO 日期
-  status: 'pending' | 'in_progress' | 'completed' | 'overdue';
-  createdAt: string;
-  createdBy: string;
+const Todo = {
+  id: 'todo1',
+  title: '完成首页设计稿',
+  description: '',
+  teamId: 't1',
+  teamName: '产品设计组',
+  assigneeId: 'u1',
+  assigneeName: '张明',
+  dueDate: '2025-07-05',
+  status: 'in_progress',  // 'pending' | 'in_progress' | 'completed' | 'overdue'
+  createdAt: '2025-07-03',
+  createdBy: 'u1'
 }
 ```
 
-### 4.2 种子数据
+### 4.1 种子数据
 
-内置 3 个团队（产品设计组、运营推广组、技术研发组）、6 名成员、5+ 条待办，覆盖所有状态。
+内置 3 个团队（产品设计组/运营推广组/技术研发组）、6 名成员、5+ 条待办，覆盖全部状态。
 
 ## 5. 目录结构
 
 ```
-src/
-├── components/              # 通用组件
-│   ├── MiniProgramNav.tsx   # 小程序顶部导航栏（含返回/胶囊）
-│   ├── TabBar.tsx           # 底部 4 Tab 导航
-│   ├── Fab.tsx              # 悬浮新建按钮
-│   ├── StatusBadge.tsx      # 状态徽章
-│   ├── Avatar.tsx           # 头像
-│   └── PageTransition.tsx   # 页面过渡包装
-├── pages/                   # 页面
-│   ├── Login.tsx
-│   ├── Home.tsx
-│   ├── TeamList.tsx
-│   ├── TeamDetail.tsx
-│   ├── TodoList.tsx
-│   ├── CreateTodo.tsx
-│   └── Profile.tsx
-├── store/                   # Zustand 状态
-│   ├── authStore.ts
-│   ├── teamStore.ts
-│   ├── todoStore.ts
-│   └── settingsStore.ts
-├── data/                    # 种子数据
-│   └── seed.ts
-├── types/                   # TS 类型
-│   └── index.ts
-├── hooks/                   # 自定义 Hooks
-│   └── useFilteredTodos.ts
-├── utils/                   # 工具函数
-│   ├── date.ts
-│   └── status.ts
-├── styles/                  # 全局样式
-│   ├── tokens.css           # Design Tokens (CSS 变量)
-│   └── global.css           # 全局样式与 Tailwind 入口
-├── App.tsx                  # 路由与布局
-├── main.tsx                 # 入口
-└── index.html               # HTML 模板
+miniprogram/
+├── app.js                    # 小程序入口，登录态检测
+├── app.json                  # 全局配置（页面、TabBar、窗口）
+├── app.wxss                  # 全局样式 + 设计令牌 (CSS 变量)
+├── sitemap.json
+├── components/               # 自定义组件
+│   ├── nav-bar/              # 自定义导航栏（标题+返回+胶囊占位）
+│   ├── status-badge/         # 状态徽章
+│   ├── avatar/               # 头像
+│   └── empty-state/          # 空状态
+├── pages/
+│   ├── home/                 # 首页（仪表盘）
+│   ├── team-list/            # 团队列表
+│   ├── team-detail/          # 团队详情
+│   ├── todo-list/            # 待办列表
+│   ├── create-todo/          # 创建待办
+│   ├── profile/              # 我的
+│   └── login/                # 登录
+└── utils/
+    ├── store.js              # 数据 CRUD + Storage 持久化
+    ├── mock.js               # 种子数据
+    ├── auth.js               # 登录态管理
+    └── date.js               # 日期格式化工具
 ```
 
-## 6. Design Tokens 设计
+每个页面目录包含 4 个同名文件：`.wxml` / `.wxss` / `.js` / `.json`
 
-通过 CSS 变量集中管理设计令牌，深色模式通过 `:root.dark` 覆写：
+## 6. Design Tokens（app.wxss 全局变量）
 
 ```css
-:root {
+page {
   /* 品牌色 */
   --color-brand: #10b981;
   --color-brand-light: #34d399;
-  --color-brand-lighter: #6ee7b7;
   --color-brand-lightest: #d1fae5;
   --color-brand-dark: #059669;
-  --color-brand-darker: #047857;
 
   /* 状态色 */
   --state-success: #10b981;
@@ -198,90 +176,56 @@ src/
   --border-default: #d1d5db;
 
   /* 圆角 */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-full: 9999px;
+  --radius-sm: 8rpx;
+  --radius-md: 16rpx;
+  --radius-lg: 24rpx;
+  --radius-xl: 32rpx;
+  --radius-full: 9999rpx;
 
   /* 阴影 */
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-md: 0 2px 8px rgba(0,0,0,0.05);
-  --shadow-lg: 0 4px 12px rgba(0,0,0,0.10);
-  --shadow-elevated: 0 6px 16px rgba(16,185,129,0.30);
-
-  /* 控件 */
-  --control-height: 40px;
-  --control-height-lg: 48px;
-
-  /* 字号 */
-  --text-xs: 11px;
-  --text-sm: 13px;
-  --text-base: 15px;
-  --text-lg: 17px;
-  --text-xl: 20px;
-  --text-2xl: 24px;
-
-  /* 字体 */
-  --font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-}
-
-:root.dark {
-  --bg-primary: #0f172a;
-  --bg-secondary: #111827;
-  --bg-tertiary: #1f2937;
-  --text-primary: #f1f5f9;
-  --text-secondary: #cbd5e1;
-  --text-tertiary: #64748b;
-  --border-light: #1f2937;
-  --border-default: #374151;
-  /* 品牌色保持，但稍亮以适配深色背景 */
-  --color-brand-lightest: #064e3b;
+  --shadow-sm: 0 2rpx 4rpx rgba(0,0,0,0.04);
+  --shadow-md: 0 4rpx 16rpx rgba(0,0,0,0.05);
+  --shadow-lg: 0 8rpx 24rpx rgba(0,0,0,0.10);
+  --shadow-elevated: 0 12rpx 32rpx rgba(16,185,129,0.30);
 }
 ```
 
 ## 7. 关键实现要点
 
-### 7.1 移动端容器
+### 7.1 自定义导航栏
 
-- 在 `App.tsx` 外层包裹 `max-w-[480px] mx-auto` 容器
-- 桌面浏览器查看时，容器居中，背景为浅灰，营造手机预览效果
-- 移动端浏览器全屏展示
+由于设计稿采用小程序原生导航栏外观（标题居中、右侧胶囊、子页带返回箭头），采用两种方案结合：
+- **Tab 页面**：使用 `app.json` 的 `window` 默认导航栏配置（统一标题与背景色）
+- **子页面**：在页面 `.json` 中设置 `"navigationStyle": "custom"`，自定义导航栏，通过 `wx.getSystemInfoSync()` 获取状态栏高度适配
 
-### 7.2 小程序导航栏复用
+### 7.2 TabBar 配置
 
-`MiniProgramNav` 组件支持：
-- `title`：标题
-- `showBack`：是否显示返回按钮（子页面为 true，Tab 页为 false）
-- `rightSlot`：右侧操作区（如「创建团队」按钮）
-- 顶部状态栏占位 44px + 导航栏 44px
+`app.json` 中 `tabBar` 配置 4 个 Tab，使用 PNG 图标（放 `miniprogram/assets/tabbar/` 目录），选中态翡翠绿，未选中态灰。
 
-### 7.3 Tab Bar
+### 7.3 数据持久化
 
-- 固定底部，4 个 Tab
-- 通过 `useLocation` 判断当前激活 Tab
-- 点击使用 `navigate` 跳转
-- 底部预留 `safe-area-inset-bottom`
+- `utils/store.js` 封装 CRUD，内部使用 `wx.getStorageSync('todos')` / `wx.setStorageSync`
+- 首次启动时若 Storage 为空，从 `mock.js` 写入种子数据
+- 创建/更新/删除操作后同步写入 Storage，并通过页面 `onShow` 重新加载
 
-### 7.4 状态管理与持久化
+### 7.4 登录态
 
-- `authStore`：登录状态、当前用户
-- `teamStore`：团队列表、当前团队
-- `todoStore`：待办列表、筛选状态、CRUD 操作
-- `settingsStore`：深色模式开关
-- 通过 Zustand `persist` 中间件持久化到 localStorage
+- `app.js` 的 `onLaunch` 检查 `wx.getStorageSync('user')`
+- 未登录则记录目标 Tab，首页 `onShow` 中 `wx.redirectTo` 到登录页
+- 登录页点击「微信一键登录」后写入 user 信息并 `wx.switchTab` 到首页
 
-### 7.5 待办状态自动计算
+### 7.5 待办状态计算
 
 - 创建时默认 `pending`
-- 提供手动切换 `pending <-> in_progress <-> completed`
-- 「已逾期」状态由 `dueDate < today && status !== completed` 计算得出，不持久化
+- 提供「开始」按钮：`pending -> in_progress`
+- 提供圆形勾选：`in_progress -> completed`，再次点击恢复
+- 列表展示时若 `dueDate < today && status !== completed`，标记为 `overdue`（仅展示，不修改存储状态）
 
 ## 8. 多端适配验证
 
-| 端 | 视口 | 表现 |
-|----|------|------|
-| 移动浏览器 | 375px | 全屏原生小程序观感 |
-| 平板 | 768px | 内容居中 480px，两侧留白 |
-| 桌面浏览器 | ≥ 1024px | 内容居中 480px，模拟手机壳 |
-| PWA | - | 可添加到主屏幕，独立窗口 |
+| 端 | 适配方式 |
+|----|----------|
+| iPhone（含刘海） | rpx 自动适配 + safe-area-inset-bottom |
+| Android | rpx 自动适配 |
+| iPad 小程序 | rpx 自动适配，TabBar 居底 |
+| 微信开发者工具 | 直接预览调试 |
