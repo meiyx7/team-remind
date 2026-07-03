@@ -1,0 +1,148 @@
+/* pages/index/index.wxss */
+
+.container {
+  min-height: 100vh;
+  padding-bottom: 120rpx;
+}
+
+/* Tab 栏 */
+.tabs {
+  display: flex;
+  background: #fff;
+  padding: 0 24rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 24rpx 0;
+  font-size: 28rpx;
+  color: #666;
+  position: relative;
+}
+
+.tab.active {
+  color: #4A90D9;
+  font-weight: 600;
+}
+
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60rpx;
+  height: 6rpx;
+  background: #4A90D9;
+  border-radius: 3rpx;
+}
+
+/* 待办项 */
+.todo-item {
+  display: flex;
+  align-items: flex-start;
+}
+
+.checkbox {
+  width: 40rpx;
+  height: 40rpx;
+  border: 4rpx solid #ccc;
+  border-radius: 50%;
+  margin-right: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 4rpx;
+}
+
+.checkbox.checked {
+  background: #4A90D9;
+  border-color: #4A90D9;
+  color: #fff;
+}
+
+.todo-title {
+  font-size: 30rpx;
+  color: #333;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.todo-title.done-text {
+  text-decoration: line-through;
+  color: #999;
+}
+
+.todo-meta {
+  display: flex;
+  gap: 24rpx;
+}
+
+.assignee {
+  font-size: 24rpx;
+  color: #4A90D9;
+}
+
+.due-date {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 200rpx;
+}
+
+.empty-icon {
+  font-size: 100rpx;
+  margin-bottom: 24rpx;
+}
+
+.empty-text {
+  font-size: 32rpx;
+  color: #666;
+  margin-bottom: 12rpx;
+}
+
+.empty-hint {
+  font-size: 26rpx;
+  color: #bbb;
+}
+
+/* 加载中 */
+.loading {
+  text-align: center;
+  padding: 60rpx 0;
+  color: #999;
+}
+
+/* 浮动新建按钮 */
+.fab {
+  position: fixed;
+  right: 40rpx;
+  bottom: 120rpx;
+  width: 100rpx;
+  height: 100rpx;
+  background: #4A90D9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 24rpx rgba(74, 144, 217, 0.4);
+}
+
+.fab:active {
+  transform: scale(0.95);
+}
+
+.fab-icon {
+  font-size: 56rpx;
+  color: #fff;
+  line-height: 1;
+}

@@ -1,0 +1,52 @@
+/* pages/create/create.wxss */
+
+.container {
+  padding-bottom: 40rpx;
+}
+
+.form-card {
+  padding: 12rpx 24rpx;
+}
+
+.form-item {
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.form-item:last-child {
+  border-bottom: none;
+}
+
+.form-label {
+  display: block;
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+}
+
+.form-input {
+  font-size: 30rpx;
+  color: #333;
+  padding: 12rpx 0;
+}
+
+.form-textarea {
+  width: 100%;
+  font-size: 30rpx;
+  color: #333;
+  padding: 12rpx 0;
+  min-height: 120rpx;
+}
+
+.picker-value.placeholder {
+  color: #bbb;
+}
+
+.radio-label {
+  margin-right: 40rpx;
+  font-size: 28rpx;
+}
+
+.submit-btn {
+  margin: 40rpx 24rpx;
+}

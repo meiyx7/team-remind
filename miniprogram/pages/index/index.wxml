@@ -1,0 +1,44 @@
+<!-- pages/index/index.wxml -->
+<view class="container">
+  <!-- 顶部 Tab -->
+  <view class="tabs">
+    <view class="tab {{activeTab === 'all' ? 'active' : ''}}" data-tab="all" bindtap="switchTab">全部</view>
+    <view class="tab {{activeTab === 'pending' ? 'active' : ''}}" data-tab="pending" bindtap="switchTab">未完成</view>
+    <view class="tab {{activeTab === 'done' ? 'active' : ''}}" data-tab="done" bindtap="switchTab">已完成</view>
+  </view>
+
+  <!-- 待办列表 -->
+  <view wx:if="{{!loading && todos.length > 0}}" class="todo-list">
+    <view class="card todo-item" wx:for="{{todos}}" wx:key="id" data-id="{{item.id}}" bindtap="goDetail">
+      <view class="flex-row">
+        <view class="checkbox {{item.done ? 'checked' : ''}}" catchtap="onToggle" data-id="{{item.id}}" data-index="{{index}}">
+          <text wx:if="{{item.done}}">✓</text>
+        </view>
+        <view class="flex-1">
+          <text class="todo-title {{item.done ? 'done-text' : ''}}">{{item.title}}</text>
+          <view class="todo-meta">
+            <text class="assignee">{{item.assignee || '未指派'}}</text>
+            <text class="due-date {{item.overdue ? 'text-danger' : ''}}">{{item.dueDate || '无截止日期'}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:if="{{!loading && todos.length === 0}}" class="empty-state">
+    <text class="empty-icon">📝</text>
+    <text class="empty-text">暂无待办事项</text>
+    <text class="empty-hint">点击右下角按钮创建</text>
+  </view>
+
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+
+  <!-- 新建按钮 -->
+  <view class="fab" bindtap="goCreate">
+    <text class="fab-icon">+</text>
+  </view>
+</view>

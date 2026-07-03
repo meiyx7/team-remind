@@ -1,0 +1,36 @@
+<!-- pages/detail/detail.wxml -->
+<view class="container" wx:if="{{todo}}">
+  <view class="card">
+    <text class="detail-title {{todo.done ? 'done-text' : ''}}">{{todo.title}}</text>
+
+    <view class="detail-meta">
+      <view class="meta-row">
+        <text class="meta-label">状态</text>
+        <text class="meta-value {{todo.done ? 'text-primary' : 'text-danger'}}">{{todo.done ? '已完成' : '未完成'}}</text>
+      </view>
+      <view class="meta-row">
+        <text class="meta-label">指派给</text>
+        <text class="meta-value">{{todo.assignee || '未指派'}}</text>
+      </view>
+      <view class="meta-row">
+        <text class="meta-label">截止日期</text>
+        <text class="meta-value">{{todo.dueDate || '无'}}</text>
+      </view>
+      <view class="meta-row">
+        <text class="meta-label">优先级</text>
+        <text class="meta-value">{{todo.priority === 'high' ? '高' : todo.priority === 'low' ? '低' : '中'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="card" wx:if="{{todo.description}}">
+    <text class="desc-label">描述</text>
+    <text class="desc-content">{{todo.description}}</text>
+  </view>
+
+  <view class="btn-primary delete-btn" bindtap="onDelete">删除待办</view>
+</view>
+
+<view wx:if="{{!todo && !loading}}" class="empty-state">
+  <text>待办不存在或已被删除</text>
+</view>

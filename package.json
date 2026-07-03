@@ -1,0 +1,13 @@
+{
+  "name": "team-remind",
+  "version": "1.0.0",
+  "description": "团队待办小程序 - 微信原生 + Supabase",
+  "main": "miniprogram/app.js",
+  "scripts": {
+    "lint": "echo \"No linter configured\""
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0"
+  },
+  "devDependencies": {}
+}

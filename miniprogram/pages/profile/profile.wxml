@@ -1,0 +1,19 @@
+<!-- pages/profile/profile.wxml -->
+<view class="container">
+  <!-- 用户信息 -->
+  <view class="profile-header">
+    <view class="avatar">
+      <text class="avatar-text">{{userInfo ? userInfo.nickName[0] : 'U'}}</text>
+    </view>
+    <text class="nickname">{{userInfo ? userInfo.nickName : '未登录'}}</text>
+  </view>
+
+  <!-- 菜单 -->
+  <view class="card menu-list">
+    <view class="menu-item" wx:for="{{menuList}}" wx:key="key" data-key="{{item.key}}" bindtap="onMenuTap">
+      <text class="menu-icon">{{item.icon}}</text>
+      <text class="menu-text">{{item.text}}</text>
+      <text class="menu-arrow">></text>
+    </view>
+  </view>
+</view>
