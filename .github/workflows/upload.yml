@@ -29,7 +29,11 @@ jobs:
       - name: Write private key
         env:
           WX_PRIVATE_KEY: ${{ secrets.WX_PRIVATE_KEY }}
-        run: echo "$WX_PRIVATE_KEY" > private.key
+        run: |
+          printf '%s\n' "$WX_PRIVATE_KEY" > private.key
+          # 校验密钥格式
+          head -1 private.key
+          echo "密钥行数: $(wc -l < private.key)"
 
       - name: Upload MiniProgram
         env:
