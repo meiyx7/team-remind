@@ -17,6 +17,7 @@
   </view>
   <view class="todo-right">
     <text wx:if="{{dueText}}" class="todo-due {{todo.displayStatus === 'overdue' ? 'overdue' : ''}}">{{dueText}}</text>
+    <text wx:if="{{showAssign}}" class="assign-progress {{todo.assignDone === todo.assignTotal ? 'all-done' : ''}}">{{assignText}}</text>
     <status-badge status="{{todo.displayStatus}}" />
   </view>
 </view>

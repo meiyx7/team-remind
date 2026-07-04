@@ -70,15 +70,16 @@
           todo="{{item}}"
           show-team="{{false}}"
           bind:toggle="onToggleTodo"
+          bind:tap="onTapTodo"
         />
       </view>
       <empty-state wx:else text="暂无待办" />
     </view>
 
-    <!-- 邀请成员按钮（即将上线） -->
+    <!-- 邀请成员按钮 -->
     <view wx:if="{{activeTab === 'members'}}" class="invite-btn" bindtap="onInvite">
       <image class="invite-icon" src="{{plusIcon}}" />
-      <text>邀请成员（即将上线）</text>
+      <text>邀请成员</text>
     </view>
   </view>
 </view>

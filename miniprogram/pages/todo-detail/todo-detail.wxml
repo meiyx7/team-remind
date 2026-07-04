@@ -1,0 +1,87 @@
+<!-- pages/todo-detail/todo-detail.wxml 待办详情 -->
+<view class="page-container {{themeClass}}">
+  <nav-bar title="待办详情" show-back="{{true}}"></nav-bar>
+
+  <view class="detail-content">
+    <!-- 顶部信息卡 -->
+    <view class="info-card">
+      <view class="title-row">
+        <view wx:if="{{todo.priority === 'urgent' && todo.displayStatus !== 'completed'}}" class="urgent-dot"></view>
+        <text class="todo-title {{todo.displayStatus === 'completed' ? 'done' : ''}}">{{todo.title}}</text>
+      </view>
+      <text wx:if="{{todo.description}}" class="todo-desc">{{todo.description}}</text>
+
+      <view class="meta-row">
+        <view class="meta-tag {{todo.priority === 'urgent' ? 'tag-urgent' : 'tag-normal'}}">
+          {{todo.priority === 'urgent' ? '紧急' : '普通'}}
+        </view>
+        <view class="meta-tag tag-status-{{todo.displayStatus}}">
+          {{statusLabel}}
+        </view>
+        <view class="meta-tag tag-due {{todo.displayStatus === 'overdue' ? 'overdue' : ''}}">
+          <text class="meta-cal">◷</text>
+          <text>{{todo.dueLabel || todo.dueDate || '无截止'}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 团队信息 -->
+    <view class="team-row" wx:if="{{todo.teamName}}">
+      <text class="team-label">所属团队</text>
+      <view class="team-name" bindtap="goTeam">
+        <text>{{todo.teamName}}</text>
+        <text class="arrow">›</text>
+      </view>
+    </view>
+
+    <!-- 完成进度卡 -->
+    <view class="progress-card">
+      <view class="progress-header">
+        <text class="progress-title">完成进度</text>
+        <text class="progress-rate">{{todo.assignRate}}%</text>
+      </view>
+      <view class="progress-bar-track">
+        <view class="progress-bar-fill" style="width: {{todo.assignRate}}%;"></view>
+      </view>
+      <text class="progress-count">{{todo.assignDone}}/{{todo.assignTotal}} 人已完成</text>
+    </view>
+
+    <!-- 成员完成情况 -->
+    <view class="members-card">
+      <view class="card-header">
+        <text class="card-title">指派成员</text>
+        <text class="card-sub">{{todo.assignDone}}/{{todo.assignTotal}}</text>
+      </view>
+      <view class="member-list">
+        <view
+          class="member-item {{item.done ? 'is-done' : ''}} {{item.memberId === myMemberId ? 'is-me' : ''}}"
+          wx:for="{{todo.assignments}}"
+          wx:key="memberId"
+          data-member-id="{{item.memberId}}"
+          bindtap="onToggleMember"
+        >
+          <avatar text="{{item.avatarChar}}" color="{{item.avatarColor}}" size="md" />
+          <view class="member-info">
+            <text class="member-name">{{item.memberName}}{{item.memberId === myMemberId ? '（我）' : ''}}</text>
+            <text class="member-status">{{item.done ? '已完成' : '未完成'}}</text>
+          </view>
+          <view class="member-check {{item.done ? 'checked' : ''}}">
+            <text wx:if="{{item.done}}" class="check-icon">✓</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 我的状态操作 -->
+    <view class="action-bar" wx:if="{{myMemberId}}">
+      <button
+        class="action-btn {{myDone ? 'btn-done' : 'btn-do'}}"
+        bindtap="onToggleMe"
+      >{{myDone ? '标记为未完成' : '标记为已完成'}}</button>
+      <view class="safe-bottom"></view>
+    </view>
+    <view class="action-bar" wx:else>
+      <view class="not-assigned">你未被指派该待办</view>
+    </view>
+  </view>
+</view>

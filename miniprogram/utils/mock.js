@@ -67,7 +67,12 @@ const seedTodos = [
     priority: 'urgent',
     status: 'in_progress',
     createdAt: '__TODAY__',
-    createdBy: 'u1'
+    createdBy: 'u1',
+    assignments: [
+      { memberId: 'm1', memberName: '张明', avatarChar: '张', avatarColor: '#10b981', done: false },
+      { memberId: 'm2', memberName: '李华', avatarChar: '李', avatarColor: '#3b82f6', done: true },
+      { memberId: 'm3', memberName: '王芳', avatarChar: '王', avatarColor: '#f59e0b', done: false }
+    ]
   },
   {
     id: 'todo2',
@@ -81,7 +86,11 @@ const seedTodos = [
     priority: 'normal',
     status: 'pending',
     createdAt: '__TODAY__',
-    createdBy: 'u2'
+    createdBy: 'u2',
+    assignments: [
+      { memberId: 'm1', memberName: '张明', avatarChar: '张', avatarColor: '#10b981', done: false },
+      { memberId: 'm4', memberName: '赵强', avatarChar: '赵', avatarColor: '#8b5cf6', done: false }
+    ]
   },
   {
     id: 'todo3',
@@ -95,7 +104,12 @@ const seedTodos = [
     priority: 'normal',
     status: 'completed',
     createdAt: '__TODAY__',
-    createdBy: 'u3'
+    createdBy: 'u3',
+    assignments: [
+      { memberId: 'm1', memberName: '张明', avatarChar: '张', avatarColor: '#10b981', done: true },
+      { memberId: 'm2', memberName: '李华', avatarChar: '李', avatarColor: '#3b82f6', done: true },
+      { memberId: 'm5', memberName: '陈丽', avatarChar: '陈', avatarColor: '#ec4899', done: true }
+    ]
   },
   {
     id: 'todo4',
@@ -109,7 +123,10 @@ const seedTodos = [
     priority: 'urgent',
     status: 'in_progress',
     createdAt: '__TODAY__',
-    createdBy: 'u4'
+    createdBy: 'u4',
+    assignments: [
+      { memberId: 'm1', memberName: '张明', avatarChar: '张', avatarColor: '#10b981', done: false }
+    ]
   },
   {
     id: 'todo5',
@@ -123,7 +140,11 @@ const seedTodos = [
     priority: 'normal',
     status: 'pending',
     createdAt: '__TODAY__',
-    createdBy: 'u1'
+    createdBy: 'u1',
+    assignments: [
+      { memberId: 'm1', memberName: '张明', avatarChar: '张', avatarColor: '#10b981', done: false },
+      { memberId: 'm6', memberName: '刘伟', avatarChar: '刘', avatarColor: '#14b8a6', done: false }
+    ]
   },
   {
     id: 'todo6',
@@ -137,7 +158,11 @@ const seedTodos = [
     priority: 'urgent',
     status: 'in_progress',
     createdAt: '__TODAY_MINUS_2__',
-    createdBy: 'u2'
+    createdBy: 'u2',
+    assignments: [
+      { memberId: 'm1', memberName: '张明', avatarChar: '张', avatarColor: '#10b981', done: false },
+      { memberId: 'm3', memberName: '王芳', avatarChar: '王', avatarColor: '#f59e0b', done: true }
+    ]
   }
 ]
 

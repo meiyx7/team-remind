@@ -108,15 +108,13 @@ Page({
     }
 
     this.setData({ submitting: true })
-    const assignee = selectedMembers.length > 0 ? selectedMembers[0] : null
     store.createTodo({
       title: title.trim(),
       description: description.trim(),
       dueDate,
       priority: this.data.priority,
       teamId: selectedTeamId,
-      assigneeId: assignee ? assignee.id : '',
-      assigneeName: assignee ? assignee.name : '未指派'
+      selectedMembers: selectedMembers   // 多人指派，store 内生成 assignments
     })
     wx.vibrateShort({ type: 'medium' })
 

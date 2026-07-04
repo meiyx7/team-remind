@@ -96,3 +96,17 @@
 .todo-due.overdue {
   color: var(--state-error);
 }
+
+.assign-progress {
+  font-size: var(--fs-xs);
+  color: var(--text-tertiary);
+  padding: 2rpx 10rpx;
+  background: var(--bg-tertiary);
+  border-radius: 8rpx;
+  line-height: 1.4;
+}
+
+.assign-progress.all-done {
+  color: var(--color-brand);
+  background: rgba(82, 140, 255, 0.12);
+}

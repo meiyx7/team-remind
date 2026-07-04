@@ -2,14 +2,29 @@
 const { seedUser, seedTeams, seedMembers, seedTodos } = require('./mock')
 const dateUtil = require('./date')
 
-// 给 todo 附加展示状态 + 截止日期相对标签（今天/明天/N天后/已逾期N天）
+// 给 todo 附加展示状态 + 截止日期相对标签（今天/明天/N天后/已逾期N天）+ 多人完成进度
 function decorate(todo, today) {
   const ds = computeDisplayStatus(todo, today)
   let dueLabel = ''
   if (todo.dueDate) {
     dueLabel = dateUtil.relativeLabel(todo.dueDate) || dateUtil.toChineseShort(todo.dueDate)
   }
-  return { ...todo, displayStatus: ds, dueLabel }
+  const result = { ...todo, displayStatus: ds, dueLabel }
+  // 多人指派：计算完成进度
+  if (Array.isArray(todo.assignments) && todo.assignments.length > 0) {
+    const total = todo.assignments.length
+    const done = todo.assignments.filter(a => a.done).length
+    result.assignTotal = total
+    result.assignDone = done
+    result.assignRate = total === 0 ? 0 : Math.round(done / total * 100)
+  } else {
+    // 兼容旧数据：单指派按 status 推导
+    result.assignments = []
+    result.assignTotal = 1
+    result.assignDone = ds === 'completed' ? 1 : 0
+    result.assignRate = ds === 'completed' ? 100 : 0
+  }
+  return result
 }
 
 const KEYS = {
@@ -90,6 +105,47 @@ function searchTeams(keyword) {
 /* ============ 成员 ============ */
 function getMembersByTeamId(teamId) {
   return (wx.getStorageSync(KEYS.MEMBERS) || []).filter(m => m.teamId === teamId)
+}
+
+// 添加成员到团队（创建者手动加 / 通过分享加入）
+// member: { name, avatarChar, avatarColor }，自动生成 id
+function addMember(teamId, member) {
+  const members = wx.getStorageSync(KEYS.MEMBERS) || []
+  // 同团队内同姓名去重
+  const exists = members.find(m => m.teamId === teamId && m.name === member.name)
+  if (exists) return { ok: false, reason: 'duplicate', member: exists }
+  const newMember = {
+    id: 'm_' + Date.now(),
+    teamId,
+    name: member.name,
+    avatarChar: member.avatarChar || member.name.charAt(0),
+    avatarColor: member.avatarColor || '#10b981',
+    role: member.role || 'member'
+  }
+  members.push(newMember)
+  wx.setStorageSync(KEYS.MEMBERS, members)
+  // 同步团队 memberCount
+  const teams = getTeams()
+  const tIdx = teams.findIndex(t => t.id === teamId)
+  if (tIdx !== -1) {
+    teams[tIdx].memberCount = members.filter(m => m.teamId === teamId).length
+    wx.setStorageSync(KEYS.TEAMS, teams)
+  }
+  return { ok: true, member: newMember }
+}
+
+// 当前用户加入团队（通过分享进入）
+function joinTeamByShare(teamId) {
+  const user = getUser()
+  if (!user) return { ok: false, reason: 'no_login' }
+  const team = getTeamById(teamId)
+  if (!team) return { ok: false, reason: 'team_not_found' }
+  return addMember(teamId, {
+    name: user.name,
+    avatarChar: user.avatarChar,
+    avatarColor: user.avatarColor,
+    role: 'member'
+  })
 }
 
 /* ============ 待办 ============ */
@@ -217,24 +273,75 @@ function getTodayLabel() {
   return `${d.getMonth() + 1}月${d.getDate()}日 ${week}`
 }
 
+// 获取单个待办（带展示状态 + 完成进度）
+function getTodoById(id) {
+  const today = getTodayStr()
+  const todo = getTodos().find(t => t.id === id)
+  if (!todo) return null
+  return decorate(todo, today)
+}
+
+// 切换某成员在待办上的完成状态（多人指派模型）
+// 同时同步待办整体 status：全部完成 -> completed；否则 -> in_progress
+function toggleAssignment(todoId, memberId) {
+  const todos = getTodos()
+  const idx = todos.findIndex(t => t.id === todoId)
+  if (idx === -1) return null
+  const todo = todos[idx]
+  if (!Array.isArray(todo.assignments) || todo.assignments.length === 0) {
+    // 旧数据兜底：无 assignments 直接走整体切换
+    return toggleTodoComplete(todoId)
+  }
+  const assign = todo.assignments.find(a => a.memberId === memberId)
+  if (!assign) return null
+  assign.done = !assign.done
+  const allDone = todo.assignments.every(a => a.done)
+  todo.status = allDone ? 'completed' : 'in_progress'
+  todos[idx] = todo
+  wx.setStorageSync(KEYS.TODOS, todos)
+  return decorate(todo, getTodayStr())
+}
+
 // 创建待办
 function createTodo(data) {
   const user = getUser()
   const todos = getTodos()
   const team = getTeamById(data.teamId)
+  // 多人指派：从 selectedMembers 生成 assignments
+  let assignments = []
+  if (Array.isArray(data.selectedMembers) && data.selectedMembers.length > 0) {
+    assignments = data.selectedMembers.map(m => ({
+      memberId: m.id,
+      memberName: m.name,
+      avatarChar: m.avatarChar,
+      avatarColor: m.avatarColor,
+      done: false
+    }))
+  } else if (data.assigneeId) {
+    // 兼容单指派入参
+    assignments = [{
+      memberId: data.assigneeId,
+      memberName: data.assigneeName || '未指派',
+      avatarChar: data.avatarChar || '',
+      avatarColor: data.avatarColor || '#10b981',
+      done: false
+    }]
+  }
+  const firstAssign = assignments[0] || {}
   const newTodo = {
     id: 'todo_' + Date.now(),
     title: data.title,
     description: data.description || '',
     teamId: data.teamId,
     teamName: team ? team.name : '',
-    assigneeId: data.assigneeId || (user ? user.id : ''),
-    assigneeName: data.assigneeName || (user ? user.name : '未指派'),
+    assigneeId: firstAssign.memberId || (user ? user.id : ''),
+    assigneeName: firstAssign.memberName || (user ? user.name : '未指派'),
     dueDate: data.dueDate || '',
     priority: data.priority || 'normal',   // urgent | normal
     status: 'pending',
     createdAt: getTodayStr(),
-    createdBy: user ? user.id : ''
+    createdBy: user ? user.id : '',
+    assignments
   }
   todos.unshift(newTodo)
   wx.setStorageSync(KEYS.TODOS, todos)
@@ -298,6 +405,8 @@ module.exports = {
   getTeamById,
   searchTeams,
   getMembersByTeamId,
+  addMember,
+  joinTeamByShare,
   getMyTodos,
   getTeamTodos,
   getRecentTodos,
@@ -307,6 +416,8 @@ module.exports = {
   getMyTodosByRange,
   getGreeting,
   getTodayLabel,
+  getTodoById,
+  toggleAssignment,
   createTodo,
   toggleTodoComplete,
   startTodo,

@@ -63,6 +63,7 @@
         show-check="{{true}}"
         show-team="{{true}}"
         bind:toggle="onToggleTodo"
+        bind:tap="onTapTodo"
       />
     </view>
 

@@ -1,0 +1,313 @@
+/* pages/todo-detail/todo-detail.wxss */
+
+.detail-content {
+  padding: 16rpx 32rpx 240rpx;
+}
+
+/* 顶部信息卡 */
+.info-card {
+  background: var(--bg-primary);
+  border: 1rpx solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+}
+
+.title-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.urgent-dot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background: var(--state-error);
+  flex-shrink: 0;
+}
+
+.todo-title {
+  flex: 1;
+  font-size: var(--fs-xl);
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.todo-title.done {
+  text-decoration: line-through;
+  color: var(--text-tertiary);
+}
+
+.todo-desc {
+  display: block;
+  margin-top: 16rpx;
+  font-size: var(--fs-base);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.meta-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-top: 24rpx;
+}
+
+.meta-tag {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6rpx;
+  padding: 6rpx 18rpx;
+  border-radius: var(--radius-full);
+  font-size: var(--fs-xs);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+
+.tag-urgent { background: rgba(239, 68, 68, 0.1); color: var(--state-error); }
+.tag-normal { background: var(--bg-secondary); color: var(--text-secondary); }
+.tag-status-completed { background: rgba(16, 185, 129, 0.1); color: var(--state-success); }
+.tag-status-overdue { background: rgba(239, 68, 68, 0.1); color: var(--state-error); }
+.tag-status-in_progress { background: rgba(245, 158, 11, 0.1); color: var(--state-warning); }
+.tag-status-pending { background: var(--bg-secondary); color: var(--text-tertiary); }
+.tag-due.overdue { color: var(--state-error); }
+
+.meta-cal { font-size: 24rpx; }
+
+/* 团队行 */
+.team-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-primary);
+  border: 1rpx solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 24rpx 32rpx;
+  margin-bottom: 24rpx;
+}
+
+.team-label {
+  font-size: var(--fs-sm);
+  color: var(--text-tertiary);
+}
+
+.team-name {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8rpx;
+  font-size: var(--fs-base);
+  color: var(--color-brand-dark);
+  font-weight: 500;
+}
+
+.arrow {
+  font-size: 32rpx;
+  color: var(--text-tertiary);
+}
+
+/* 完成进度卡 */
+.progress-card {
+  background: var(--bg-primary);
+  border: 1rpx solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+}
+
+.progress-header {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.progress-title {
+  font-size: var(--fs-base);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.progress-rate {
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  color: var(--color-brand-dark);
+}
+
+.progress-bar-track {
+  height: 16rpx;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: 16rpx;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--color-brand);
+  border-radius: var(--radius-full);
+  transition: width 0.3s ease;
+}
+
+.progress-count {
+  font-size: var(--fs-sm);
+  color: var(--text-tertiary);
+}
+
+/* 成员卡 */
+.members-card {
+  background: var(--bg-primary);
+  border: 1rpx solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+}
+
+.card-header {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+}
+
+.card-title {
+  font-size: var(--fs-base);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.card-sub {
+  font-size: var(--fs-sm);
+  color: var(--text-tertiary);
+}
+
+.member-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.member-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20rpx;
+  padding: 16rpx;
+  border-radius: var(--radius-md);
+  transition: background 0.15s;
+}
+
+.member-item:active {
+  background: var(--bg-secondary);
+}
+
+.member-item.is-me {
+  background: var(--color-brand-lightest);
+}
+
+.member-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+  min-width: 0;
+}
+
+.member-name {
+  font-size: var(--fs-base);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.member-status {
+  font-size: var(--fs-xs);
+  color: var(--text-tertiary);
+}
+
+.member-item.is-done .member-status {
+  color: var(--state-success);
+}
+
+.member-check {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  border: 2rpx solid var(--border-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.member-check.checked {
+  background: var(--state-success);
+  border-color: var(--state-success);
+}
+
+.check-icon {
+  color: #fff;
+  font-size: 28rpx;
+  font-weight: 700;
+}
+
+/* 底部操作 */
+.action-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 24rpx 32rpx;
+  background: var(--bg-primary);
+  border-top: 1rpx solid var(--border-light);
+  z-index: 50;
+}
+
+.action-btn {
+  width: 100%;
+  height: 96rpx;
+  line-height: 96rpx;
+  border-radius: var(--radius-md);
+  font-size: 32rpx;
+  font-weight: 600;
+  border: none;
+  color: var(--text-inverse);
+}
+
+.action-btn::after { border: none; }
+
+.btn-do {
+  background: var(--color-brand);
+}
+
+.btn-do:active {
+  opacity: 0.88;
+  transform: scale(0.99);
+}
+
+.btn-done {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+
+.btn-done:active {
+  opacity: 0.88;
+}
+
+.not-assigned {
+  text-align: center;
+  font-size: var(--fs-sm);
+  color: var(--text-tertiary);
+  padding: 24rpx 0;
+}
+
+.safe-bottom {
+  height: env(safe-area-inset-bottom);
+}

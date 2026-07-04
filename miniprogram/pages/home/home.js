@@ -122,10 +122,36 @@ Page({
 
   onToggleTodo(e) {
     const { id } = e.detail
-    store.toggleTodoComplete(id)
+    // 多人指派模型：切换当前用户在该待办的完成状态
+    const todo = store.getTodoById(id)
+    if (!todo) return
+    const user = store.getUser()
+    // 找当前用户在 assignments 的 memberId（与详情页同逻辑）
+    let memberId = ''
+    if (user) {
+      const direct = (todo.assignments || []).find(a => a.memberId === user.id)
+      if (direct) {
+        memberId = direct.memberId
+      } else {
+        const members = store.getMembersByTeamId(todo.teamId)
+        const me = members.find(m => m.name === user.name)
+        const assign = me && (todo.assignments || []).find(a => a.memberId === me.id)
+        if (assign) memberId = assign.memberId
+      }
+    }
+    if (memberId) {
+      store.toggleAssignment(id, memberId)
+    } else {
+      store.toggleTodoComplete(id)
+    }
     this.loadData()
     wx.vibrateShort({ type: 'medium' })
     wx.showToast({ title: '已完成', icon: 'success', duration: 800 })
+  },
+
+  onTapTodo(e) {
+    const { id } = e.detail
+    wx.navigateTo({ url: '/pages/todo-detail/todo-detail?id=' + id })
   },
 
   goCreateTodo() {

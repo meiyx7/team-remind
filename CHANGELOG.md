@@ -5,6 +5,18 @@
 - patch（0.x.P）：bug 修复、小调整
 - minor（0.M.0）：功能新增、较大改动
 
+## 0.4.0
+
+多人协作 + 待办详情 + 团队邀请：
+
+- 待办详情页：新增独立页面 `todo-detail`，点击首页/团队详情任意待办卡进入；展示标题/描述/优先级/截止/状态、所属团队入口、整体进度条与完成率、团队内每个成员的完成状态
+- 多人指派数据模型：待办由单 assignee 改为 `assignments: [{ memberId, memberName, avatarChar, avatarColor, done }]`；`decorate()` 计算 `assignTotal/assignDone/assignRate`；`toggleAssignment(todoId, memberId)` 切换单人完成状态并自动同步整单状态（全完成→已完成，否则→进行中）
+- 创建待办支持多选成员：create-todo 改为多选 chip 列表，默认选中当前用户，提交时传 `selectedMembers` 数组由 store 生成 assignments
+- todo-card 多人进度展示：多人指派的待办卡片右下角显示 N/M 进度徽标，全员完成时高亮品牌色；副标题由「X 指派」改为「N 人指派」
+- 团队邀请（微信分享）：team-detail 接入 `onShareAppMessage`，分享卡片带 `?from=share` 参数；对方打开后弹窗确认加入，调用 `joinTeamByShare` 自动加入团队并同步 memberCount
+- 邀请入口：成员 Tab 底部「邀请成员」按钮改为可用态，点击弹窗引导使用右上角转发/分享按钮
+- 数据层：store 新增 `getTodoById / toggleAssignment / addMember / joinTeamByShare`；mock.js 6 条种子待办全部接入 assignments 数组
+
 ## 0.3.0
 
 首页体验升级 + 待办优先级 + 入口去重：

@@ -5,6 +5,7 @@
     "pages/profile/profile",
     "pages/login/login",
     "pages/team-detail/team-detail",
+    "pages/todo-detail/todo-detail",
     "pages/create-todo/create-todo",
     "pages/about/about",
     "pages/help/help",
