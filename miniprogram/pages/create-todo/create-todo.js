@@ -43,8 +43,8 @@ Page({
     }
     const members = store.getMembersByTeamId(this.data.selectedTeamId)
     const user = store.getUser()
-    // 默认选中当前用户（若存在于该团队）
-    const me = members.find(m => m.name === (user ? user.name : ''))
+    // 默认选中当前用户（若存在于该团队，身份即成员 id）
+    const me = user ? members.find(m => m.id === user.id) : null
     this.setData({
       members,
       selectedMembers: me ? [me] : []
@@ -97,7 +97,7 @@ Page({
 
   onSubmit() {
     if (this.data.submitting) return
-    const { title, description, dueDate, selectedTeamId, selectedMembers, priority } = this.data
+    const { title, description, dueDate, selectedTeamId, selectedMembers } = this.data
     if (!title.trim()) {
       wx.showToast({ title: '请输入待办标题', icon: 'none' })
       return

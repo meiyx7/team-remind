@@ -1,53 +1,77 @@
 // utils/store.js 数据 CRUD + Storage 持久化
-const { seedUser, seedTeams, seedMembers, seedTodos } = require('./mock')
+// 持久化设计：内存缓存写穿透（避免每次同步读盘）+ 读写异常保护 + 结构版本迁移
+const { seedTeams, seedMembers, seedTodos } = require('./mock')
 const dateUtil = require('./date')
 
-// 给 todo 附加展示状态 + 截止日期相对标签（今天/明天/N天后/已逾期N天）+ 多人完成进度
-function decorate(todo, today) {
-  const ds = computeDisplayStatus(todo, today)
-  let dueLabel = ''
-  if (todo.dueDate) {
-    dueLabel = dateUtil.relativeLabel(todo.dueDate) || dateUtil.toChineseShort(todo.dueDate)
-  }
-  const result = { ...todo, displayStatus: ds, dueLabel }
-  // 多人指派：计算完成进度
-  if (Array.isArray(todo.assignments) && todo.assignments.length > 0) {
-    const total = todo.assignments.length
-    const done = todo.assignments.filter(a => a.done).length
-    result.assignTotal = total
-    result.assignDone = done
-    result.assignRate = total === 0 ? 0 : Math.round(done / total * 100)
-  } else {
-    // 兼容旧数据：单指派按 status 推导
-    result.assignments = []
-    result.assignTotal = 1
-    result.assignDone = ds === 'completed' ? 1 : 0
-    result.assignRate = ds === 'completed' ? 100 : 0
-  }
-  return result
-}
+// 存储结构版本：种子数据或字段模型变化时 +1，旧数据启动时自动重置为最新种子
+const SCHEMA_VERSION = 2
 
 const KEYS = {
+  SCHEMA: 'schemaVersion',
   USER: 'user',
   TEAMS: 'teams',
   MEMBERS: 'members',
   TODOS: 'todos'
 }
 
-// 初始化：首次启动写入种子数据（待办日期占位符替换为相对今天的真实日期）
-function init() {
-  if (!wx.getStorageSync(KEYS.TEAMS)) {
-    wx.setStorageSync(KEYS.TEAMS, seedTeams)
+/* ============ 存储底层：内存缓存 + 异常保护 ============ */
+const cache = {}
+
+function sGet(key, fallback) {
+  if (key in cache) return cache[key]
+  let val = fallback
+  try {
+    const raw = wx.getStorageSync(key)
+    if (raw !== '' && raw !== undefined && raw !== null) val = raw
+  } catch (e) {
+    console.error('[store] 读取存储失败:', key, e)
   }
-  if (!wx.getStorageSync(KEYS.MEMBERS)) {
-    wx.setStorageSync(KEYS.MEMBERS, seedMembers)
-  }
-  if (!wx.getStorageSync(KEYS.TODOS)) {
-    wx.setStorageSync(KEYS.TODOS, seedTodos.map(resolveDate))
+  cache[key] = val
+  return val
+}
+
+function sSet(key, value) {
+  cache[key] = value
+  try {
+    wx.setStorageSync(key, value)
+  } catch (e) {
+    console.error('[store] 写入存储失败:', key, e)
   }
 }
 
-// 占位符 -> 真实日期（让种子数据永远贴近今天，演示效果好）
+function sRemove(key) {
+  delete cache[key]
+  try {
+    wx.removeStorageSync(key)
+  } catch (e) {
+    console.error('[store] 删除存储失败:', key, e)
+  }
+}
+
+/* ============ 初始化 / 重置 ============ */
+function init() {
+  const ver = Number(sGet(KEYS.SCHEMA, 0))
+  if (ver !== SCHEMA_VERSION) {
+    // 首次启动或旧结构数据：重新播种（迁移策略为演示应用的最优解）
+    seedAll()
+    return
+  }
+  // 完整性兜底：任一集合损坏（非数组）时重置
+  const broken = [KEYS.TEAMS, KEYS.MEMBERS, KEYS.TODOS].some(k => !Array.isArray(sGet(k, [])))
+  if (broken) seedAll()
+}
+
+// 写入种子数据并清掉登录态（init 与 reset 共用同一条管线）
+function seedAll() {
+  sRemove(KEYS.USER)
+  sSet(KEYS.TEAMS, seedTeams)
+  sSet(KEYS.MEMBERS, seedMembers)
+  // 待办日期占位符替换为相对今天的真实日期（让演示永远贴近当前时间）
+  sSet(KEYS.TODOS, seedTodos.map(resolveDate))
+  sSet(KEYS.SCHEMA, SCHEMA_VERSION)
+}
+
+// 占位符 -> 真实日期
 function resolveDate(t) {
   const map = {
     '__TODAY__': 0, '__TODAY_PLUS_1__': 1, '__TODAY_PLUS_2__': 2,
@@ -62,34 +86,34 @@ function resolveDate(t) {
   }
 }
 
-// 重置数据（用于调试）
+// 重置数据（用于调试）：与首次启动完全一致
 function reset() {
-  wx.setStorageSync(KEYS.USER, null)
-  wx.setStorageSync(KEYS.TEAMS, seedTeams)
-  wx.setStorageSync(KEYS.MEMBERS, seedMembers)
-  wx.setStorageSync(KEYS.TODOS, seedTodos)
+  seedAll()
 }
 
 /* ============ 用户 ============ */
 function getUser() {
-  return wx.getStorageSync(KEYS.USER) || null
+  return sGet(KEYS.USER, null)
 }
 
 function setUser(user) {
-  wx.setStorageSync(KEYS.USER, user)
-  const app = getApp()
-  if (app) app.globalData.userInfo = user
+  sSet(KEYS.USER, user)
+  syncGlobalUser(user)
 }
 
 function logout() {
-  wx.removeStorageSync(KEYS.USER)
-  const app = getApp()
-  if (app) app.globalData.userInfo = null
+  sRemove(KEYS.USER)
+  syncGlobalUser(null)
+}
+
+function syncGlobalUser(user) {
+  const app = typeof getApp === 'function' ? getApp() : null
+  if (app) app.globalData.userInfo = user
 }
 
 /* ============ 团队 ============ */
 function getTeams() {
-  return wx.getStorageSync(KEYS.TEAMS) || []
+  return sGet(KEYS.TEAMS, [])
 }
 
 function getTeamById(id) {
@@ -104,18 +128,20 @@ function searchTeams(keyword) {
 
 /* ============ 成员 ============ */
 function getMembersByTeamId(teamId) {
-  return (wx.getStorageSync(KEYS.MEMBERS) || []).filter(m => m.teamId === teamId)
+  return sGet(KEYS.MEMBERS, []).filter(m => m.teamId === teamId)
 }
 
 // 添加成员到团队（创建者手动加 / 通过分享加入）
-// member: { name, avatarChar, avatarColor }，自动生成 id
+// member: { id?, name, avatarChar, avatarColor, role? }；带 id 则复用（同一人多团队共享身份）
 function addMember(teamId, member) {
-  const members = wx.getStorageSync(KEYS.MEMBERS) || []
-  // 同团队内同姓名去重
-  const exists = members.find(m => m.teamId === teamId && m.name === member.name)
+  const members = sGet(KEYS.MEMBERS, [])
+  // 同团队内按 id 去重，无 id 时退化为按姓名去重
+  const exists = member.id
+    ? members.find(m => m.teamId === teamId && m.id === member.id)
+    : members.find(m => m.teamId === teamId && m.name === member.name)
   if (exists) return { ok: false, reason: 'duplicate', member: exists }
   const newMember = {
-    id: 'm_' + Date.now(),
+    id: member.id || uid('m'),
     teamId,
     name: member.name,
     avatarChar: member.avatarChar || member.name.charAt(0),
@@ -123,13 +149,13 @@ function addMember(teamId, member) {
     role: member.role || 'member'
   }
   members.push(newMember)
-  wx.setStorageSync(KEYS.MEMBERS, members)
+  sSet(KEYS.MEMBERS, members)
   // 同步团队 memberCount
   const teams = getTeams()
   const tIdx = teams.findIndex(t => t.id === teamId)
   if (tIdx !== -1) {
     teams[tIdx].memberCount = members.filter(m => m.teamId === teamId).length
-    wx.setStorageSync(KEYS.TEAMS, teams)
+    sSet(KEYS.TEAMS, teams)
   }
   return { ok: true, member: newMember }
 }
@@ -141,6 +167,7 @@ function joinTeamByShare(teamId) {
   const team = getTeamById(teamId)
   if (!team) return { ok: false, reason: 'team_not_found' }
   return addMember(teamId, {
+    id: user.id,
     name: user.name,
     avatarChar: user.avatarChar,
     avatarColor: user.avatarColor,
@@ -149,15 +176,48 @@ function joinTeamByShare(teamId) {
 }
 
 /* ============ 待办 ============ */
-function getTodos() {
-  return wx.getStorageSync(KEYS.TODOS) || []
-}
 
 // 计算实际展示状态（已逾期由 dueDate 推断）
 function computeDisplayStatus(todo, today) {
   if (todo.status === 'completed') return 'completed'
   if (todo.dueDate && todo.dueDate < today) return 'overdue'
   return todo.status
+}
+
+// 给 todo 附加展示状态 + 截止日期相对标签 + 多人完成进度
+function decorate(todo, today) {
+  const ds = computeDisplayStatus(todo, today)
+  let dueLabel = ''
+  if (todo.dueDate) {
+    dueLabel = dateUtil.relativeLabel(todo.dueDate) || dateUtil.toChineseShort(todo.dueDate)
+  }
+  const result = { ...todo, displayStatus: ds, dueLabel }
+  // 多人指派：计算完成进度
+  if (Array.isArray(todo.assignments) && todo.assignments.length > 0) {
+    const total = todo.assignments.length
+    const done = todo.assignments.filter(a => a.done).length
+    result.assignTotal = total
+    result.assignDone = done
+    result.assignRate = Math.round(done / total * 100)
+  } else {
+    // 兼容旧数据：单指派按 status 推导
+    result.assignments = []
+    result.assignTotal = 1
+    result.assignDone = ds === 'completed' ? 1 : 0
+    result.assignRate = ds === 'completed' ? 100 : 0
+  }
+  return result
+}
+
+function getTodos() {
+  return sGet(KEYS.TODOS, [])
+}
+
+// 定位当前用户在某待办 assignments 中的指派记录（身份即成员 id，全库统一）
+function findMyAssignment(todo) {
+  const user = getUser()
+  if (!user || !Array.isArray(todo.assignments)) return null
+  return todo.assignments.find(a => a.memberId === user.id) || null
 }
 
 // 获取当前用户的待办（带展示状态 + 相对日期）
@@ -197,9 +257,9 @@ function getMyStatusCounts() {
   const empty = { pending: 0, in_progress: 0, overdue: 0, completed: 0 }
   if (!user) return empty
   const today = getTodayStr()
-  const list = getTodos().filter(t => t.assigneeId === user.id)
   const counts = { ...empty }
-  list.forEach(t => {
+  getTodos().forEach(t => {
+    if (t.assigneeId !== user.id) return
     const ds = computeDisplayStatus(t, today)
     if (counts[ds] !== undefined) counts[ds]++
   })
@@ -208,7 +268,6 @@ function getMyStatusCounts() {
 
 // 获取最近待办（未完成优先，取前 N 条）
 function getRecentTodos(limit = 5) {
-  const today = getTodayStr()
   const list = getMyTodos('all').filter(t => t.displayStatus !== 'completed')
   return list.slice(0, limit)
 }
@@ -218,11 +277,11 @@ function getMyStats() {
   const user = getUser()
   if (!user) return { mine: 0, inProgress: 0, completed: 0 }
   const today = getTodayStr()
-  const list = getTodos().filter(t => t.assigneeId === user.id)
   let inProgress = 0
   let completed = 0
   let mine = 0
-  list.forEach(t => {
+  getTodos().forEach(t => {
+    if (t.assigneeId !== user.id) return
     const ds = computeDisplayStatus(t, today)
     if (ds === 'completed') completed++
     else {
@@ -239,9 +298,13 @@ function getTodayStats() {
   const empty = { total: 0, completed: 0, rate: 0 }
   if (!user) return empty
   const today = getTodayStr()
-  const list = getTodos().filter(t => t.assigneeId === user.id && t.dueDate === today)
-  const total = list.length
-  const completed = list.filter(t => t.status === 'completed').length
+  let total = 0
+  let completed = 0
+  getTodos().forEach(t => {
+    if (t.assigneeId !== user.id || t.dueDate !== today) return
+    total++
+    if (t.status === 'completed') completed++
+  })
   return { total, completed, rate: total === 0 ? 0 : Math.round(completed / total * 100) }
 }
 
@@ -298,7 +361,7 @@ function toggleAssignment(todoId, memberId) {
   const allDone = todo.assignments.every(a => a.done)
   todo.status = allDone ? 'completed' : 'in_progress'
   todos[idx] = todo
-  wx.setStorageSync(KEYS.TODOS, todos)
+  sSet(KEYS.TODOS, todos)
   return decorate(todo, getTodayStr())
 }
 
@@ -329,14 +392,14 @@ function createTodo(data) {
   }
   const firstAssign = assignments[0] || {}
   const newTodo = {
-    id: 'todo_' + Date.now(),
+    id: uid('todo'),
     title: data.title,
     description: data.description || '',
     teamId: data.teamId,
     teamName: team ? team.name : '',
     assigneeId: firstAssign.memberId || (user ? user.id : ''),
     assigneeName: firstAssign.memberName || (user ? user.name : '未指派'),
-    dueDate: data.dueDate || '',
+    dueDate: normalizeDate(data.dueDate),
     priority: data.priority || 'normal',   // urgent | normal
     status: 'pending',
     createdAt: getTodayStr(),
@@ -344,7 +407,7 @@ function createTodo(data) {
     assignments
   }
   todos.unshift(newTodo)
-  wx.setStorageSync(KEYS.TODOS, todos)
+  sSet(KEYS.TODOS, todos)
   return newTodo
 }
 
@@ -354,15 +417,9 @@ function toggleTodoComplete(id) {
   const idx = todos.findIndex(t => t.id === id)
   if (idx === -1) return null
   const todo = todos[idx]
-  if (todo.status === 'completed') {
-    // 已完成 -> 恢复为进行中
-    todo.status = 'in_progress'
-  } else {
-    // 未完成 -> 已完成
-    todo.status = 'completed'
-  }
+  todo.status = todo.status === 'completed' ? 'in_progress' : 'completed'
   todos[idx] = todo
-  wx.setStorageSync(KEYS.TODOS, todos)
+  sSet(KEYS.TODOS, todos)
   return todo
 }
 
@@ -372,11 +429,25 @@ function startTodo(id) {
   const idx = todos.findIndex(t => t.id === id)
   if (idx === -1) return null
   todos[idx].status = 'in_progress'
-  wx.setStorageSync(KEYS.TODOS, todos)
+  sSet(KEYS.TODOS, todos)
   return todos[idx]
 }
 
 /* ============ 工具 ============ */
+
+// 碰撞安全的 id 生成：毫秒时间戳 + 自增序列 + 随机数
+let uidSeq = 0
+function uid(prefix) {
+  uidSeq += 1
+  const rand = Math.floor(Math.random() * 1296).toString(36)
+  return `${prefix}_${Date.now().toString(36)}${uidSeq.toString(36)}${rand}`
+}
+
+// 日期规范化：仅接受 YYYY-MM-DD，其余视为空
+function normalizeDate(str) {
+  return typeof str === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(str) ? str : ''
+}
+
 function getTodayStr() {
   const d = new Date()
   const y = d.getFullYear()
@@ -407,6 +478,8 @@ module.exports = {
   getMembersByTeamId,
   addMember,
   joinTeamByShare,
+  findMyAssignment,
+  getTodos,
   getMyTodos,
   getTeamTodos,
   getRecentTodos,

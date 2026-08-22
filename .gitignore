@@ -1,7 +1,6 @@
 # 依赖
 node_modules/
 miniprogram_npm/
-package-lock.json
 
 # 微信开发者工具
 project.private.config.json

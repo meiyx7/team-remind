@@ -26,6 +26,7 @@ Page({
       wx.vibrateShort({ type: 'light' })
       wx.showToast({ title: '登录成功', icon: 'success', duration: 800 })
       setTimeout(() => {
+        this.setData({ loading: false })
         if (this.data.from) {
           // 来自 Tab 页的请求，使用 switchTab
           wx.switchTab({ url: this.data.from, fail: () => wx.switchTab({ url: '/pages/home/home' }) })
@@ -33,7 +34,7 @@ Page({
           wx.switchTab({ url: '/pages/home/home' })
         }
       }, 800)
-    } catch (e) {
+    } catch {
       wx.showToast({ title: '登录失败', icon: 'error' })
       this.setData({ loading: false })
     }

@@ -1,13 +1,17 @@
 {
   "name": "team-remind",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "团队待办小程序 - 微信原生开发，翡翠绿设计风格",
   "main": "miniprogram/app.js",
   "scripts": {
-    "lint": "echo \"No linter configured\""
+    "lint": "eslint .",
+    "gen:icons": "node scripts/gen-icons.js",
+    "gen:tabbar": "node scripts/gen-tabbar.js",
+    "gen:version": "node scripts/gen-version.js"
   },
-  "dependencies": {},
   "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "eslint": "^9.39.5",
     "miniprogram-ci": "^1.9.11"
   },
   "overrides": {

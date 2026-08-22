@@ -13,11 +13,10 @@ function b64(str) {
   return 'data:image/svg+xml;base64,' + Buffer.from(str, 'utf-8').toString('base64')
 }
 
-// 灰色（默认）/ 品牌色 / 警告色 / 红色 版本
+// 灰色（默认）/ 品牌色 / 警告色 版本
 const GRAY = '#94a3b8'
 const BRAND = '#10b981'
 const WARN = '#f59e0b'
-const RED = '#ef4444'
 const WHITE = '#ffffff'
 
 const defs = {

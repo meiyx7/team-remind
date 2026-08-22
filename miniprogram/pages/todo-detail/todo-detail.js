@@ -36,35 +36,13 @@ Page({
       setTimeout(() => wx.navigateBack(), 800)
       return
     }
-    // 当前用户(张明)在成员里是 m1，按 name 匹配 assignments 里的 memberId
-    // 注意：用户 id 是 u1，但 members 里张明是 m1，assignments.memberId 用的是 m1
-    const user = store.getUser()
-    let myMemberId = ''
-    let myDone = false
-    if (user && Array.isArray(todo.assignments)) {
-      // 先精确匹配 memberId = user.id；再回退按 name 匹配 member 表
-      const direct = todo.assignments.find(a => a.memberId === user.id)
-      if (direct) {
-        myMemberId = direct.memberId
-        myDone = direct.done
-      } else {
-        // 通过 name 在团队成员表里找 memberId
-        const members = store.getMembersByTeamId(todo.teamId)
-        const me = members.find(m => m.name === user.name)
-        if (me) {
-          const assign = todo.assignments.find(a => a.memberId === me.id)
-          if (assign) {
-            myMemberId = assign.memberId
-            myDone = assign.done
-          }
-        }
-      }
-    }
+    // 当前用户在 assignments 中的指派记录（身份即成员 id，全库统一）
+    const myAssign = store.findMyAssignment(todo)
     this.setData({
       todo,
       statusLabel: STATUS_LABEL[todo.displayStatus] || '',
-      myMemberId,
-      myDone
+      myMemberId: myAssign ? myAssign.memberId : '',
+      myDone: myAssign ? myAssign.done : false
     })
   },
 

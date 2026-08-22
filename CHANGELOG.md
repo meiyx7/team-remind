@@ -5,6 +5,21 @@
 - patch（0.x.P）：bug 修复、小调整
 - minor（0.M.0）：功能新增、较大改动
 
+## 0.4.1
+
+持久化层加固 + 数据一致性全量修复：
+
+- P0 修复 `reset()` 未做日期占位符解析的 Bug：重置后 `__TODAY__` 字面量导致排序/逾期判断失效；reset 与 init 共用同一条播种管线，行为完全一致
+- P0 统一身份体系：用户 id 即成员 id（同一人多团队共享同 id），移除全部「按姓名匹配身份」的兜底逻辑（同名成员不再错乱）；种子数据、assignments、createdBy 全部对齐
+- P0 持久化层加固：所有 Storage 读写包异常保护（配额满/损坏不再抛未捕获错误）；新增内存缓存写穿透层，消除高频重复读盘；启动时校验集合完整性，任一集合损坏自动重新播种
+- P0 存储结构版本号（schemaVersion）：旧结构数据升级时自动迁移重置，避免新旧字段模型混用
+- P1 id 生成改为 时间戳+自增序列+随机数，杜绝同毫秒撞车
+- P1 种子数据一致性：t2/t3 成员表补齐实际记录（16 条成员记录），memberCount 与详情页真实一致；张明同时是产品设计组创建者与运营推广组成员
+- P1 收敛三处重复的 memberId 解析逻辑为 `store.findMyAssignment(todo)`；完成/取消完成的 toast 文案按操作结果区分
+- P1 登录 loading 状态在成功跳转前复位，不再依赖页面跳走掩盖；auth.js 异常路径可真正 reject
+- P2 首页 RANGE_DEFS 取 label 增加空值保护；createTodo 对 dueDate 做 YYYY-MM-DD 规范化
+- 工程化：CI 接入 ESLint 质量门禁 + 提交 package-lock.json 改用 `npm ci` 可复现构建；移除 CI 日志中的私钥头行打印
+
 ## 0.4.0
 
 多人协作 + 待办详情 + 团队邀请：
@@ -31,7 +46,7 @@
 
 ## 0.2.0
 
-UIUX 框架重构首版，统一处理评估出的 P0/P1/P2 问题：
+UIUX 框架重构首版 + 全站统一收口，分两批处理评估出的 P0/P1/P2 问题：
 
 - P1 设计令牌补齐：新增间距令牌（space-xs~2xl）、字号令牌（fs-xs~2xl）、暗色模式变量集（.theme-dark）
 - P1 抽出 5 个公共组件：state-view（loading/error/empty 三态）、todo-card、filter-tabs、empty-state、avatar，全站替换
@@ -41,24 +56,13 @@ UIUX 框架重构首版，统一处理评估出的 P0/P1/P2 问题：
 - P0 设置页「假按钮」统一处理：深色模式真生效；主题换肤/消息通知/帮助反馈标注「即将上线」灰态；关于读真实版本号
 - P0 team-detail 团队为空时接入 state-view，修复整页空白
 - P0 create-todo 提交按钮加 loading + disabled，防重复提交
-- P0 移除「AI 感」：team-detail 渐变 wash、profile 顶部渐变条、卡片左边色条统一收口
-- P2 接入 utils/date.js 相对时间格式化（今天/明天/N天后/已逾期）全站替换原始 ISO
-- P2 全站下拉刷新 + 关键操作触觉反馈
-- P2 暗色模式真正实现：变量集 + 根类切换 + 持久化
-- P2 设置页功能完善：关于页、帮助反馈、消息通知、用户协议、隐私政策
-
-## 0.2.0
-
-P1 几类问题全站统一处理收口 + 设置页功能逐个完善 + 关键 bug 修复：
-
-- P1 去「AI 感」装饰元素全站收口：login logo 渐变光晕、FAB 品牌色发光阴影、team-list 团队卡左侧色条、todo-card 左侧色条全部移除；shadow-elevated 改为中性高度阴影
+- P0 移除「AI 感」：team-detail 渐变 wash、profile 顶部渐变条、卡片左边色条统一收口；login logo 渐变光晕、FAB 品牌色发光阴影、团队卡/待办卡左侧色条全部移除；shadow-elevated 改为中性高度阴影
 - P1 CSS 手绘图标统一换 SVG：team-list（search/clear/chevron）、login（check-mark）、create-todo（calendar/chevron）全部替换为 utils/icons 中的 base64 SVG；新增 plusBrand 图标
 - P1 themeClass 全站级联：9 个页面根容器接入；新增 --nav-bg token，nav-bar 随主题切换
 - P1 关键修复：TabBar 是页面同级组件，CSS 变量不会从 .page-container 级联进来 → 给 TabBar 加 updateTheme() 方法，三个 Tab 页 onShow + profile 切换时即时同步深色模式
 - P1 组件接入：team-list 接入 avatar + empty-state；create-todo 接入 SVG 图标
-- P0 create-todo 防双击：submitting 守卫 + loading/disabled 双绑定 + 失败兜底回首页
-- P0 team-detail 空态：state-view 显示「团队不存在」
 - P0 profile 设置页全部功能打通：深色模式真实切换+持久化+TabBar同步、我的团队跳转、帮助与反馈、关于（真实版本号）、用户协议、隐私政策（原生全文页）
-- P2 全站下拉刷新校验：home/team-list/team-detail 启用，create-todo 表单页显式关闭
-- P2 触觉反馈统一：筛选切换/完成/创建/登录/清空搜索 vibrateShort；补齐 team-detail switchTab/switchTodoFilter
+- P2 接入 utils/date.js 相对时间格式化（今天/明天/N天后/已逾期）全站替换原始 ISO
+- P2 全站下拉刷新校验：home/team-list/team-detail 启用，create-todo 表单页显式关闭；关键操作触觉反馈统一
+- P2 暗色模式真正实现：变量集 + 根类切换 + 持久化
 - 工程化：gen-icons.js / gen-tabbar.js 脚本同步更新，支持 plusBrand 与 TabBar 主题方法

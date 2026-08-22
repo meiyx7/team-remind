@@ -89,7 +89,7 @@ Page({
 
   refreshListMeta() {
     const { rangeFilter, statFilter } = this.data
-    const rangeLabel = RANGE_DEFS.find(r => r.key === rangeFilter).label
+    const rangeLabel = (RANGE_DEFS.find(r => r.key === rangeFilter) || {}).label || ''
     const statLabel = statFilter === 'all' ? '' : (STAT_DEFS.find(s => s.key === statFilter) || {}).label
     const title = statLabel ? `${rangeLabel}·${statLabel}` : rangeLabel
     // 空态文案
@@ -122,31 +122,23 @@ Page({
 
   onToggleTodo(e) {
     const { id } = e.detail
-    // 多人指派模型：切换当前用户在该待办的完成状态
+    // 多人指派模型：切换当前用户在该待办的完成状态（身份即成员 id）
     const todo = store.getTodoById(id)
     if (!todo) return
-    const user = store.getUser()
-    // 找当前用户在 assignments 的 memberId（与详情页同逻辑）
-    let memberId = ''
-    if (user) {
-      const direct = (todo.assignments || []).find(a => a.memberId === user.id)
-      if (direct) {
-        memberId = direct.memberId
-      } else {
-        const members = store.getMembersByTeamId(todo.teamId)
-        const me = members.find(m => m.name === user.name)
-        const assign = me && (todo.assignments || []).find(a => a.memberId === me.id)
-        if (assign) memberId = assign.memberId
-      }
-    }
-    if (memberId) {
-      store.toggleAssignment(id, memberId)
+    const assign = store.findMyAssignment(todo)
+    if (assign) {
+      store.toggleAssignment(id, assign.memberId)
+      wx.showToast({
+        title: assign.done ? '已取消完成' : '已完成',
+        icon: 'success',
+        duration: 800
+      })
     } else {
       store.toggleTodoComplete(id)
+      wx.showToast({ title: '已完成', icon: 'success', duration: 800 })
     }
     this.loadData()
     wx.vibrateShort({ type: 'medium' })
-    wx.showToast({ title: '已完成', icon: 'success', duration: 800 })
   },
 
   onTapTodo(e) {

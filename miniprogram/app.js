@@ -14,8 +14,8 @@ App({
     // 初始化本地数据（首次启动写入种子数据）
     store.init()
 
-    // 读取登录用户
-    this.globalData.userInfo = wx.getStorageSync('user') || null
+    // 读取登录用户（经 store 缓存层，避免绕过内存缓存）
+    this.globalData.userInfo = store.getUser()
 
     // 读取深色模式偏好
     this.globalData.darkMode = !!wx.getStorageSync('darkMode')
@@ -33,7 +33,7 @@ App({
       this.globalData.navBarHeight =
         (menuButton.top - this.globalData.statusBarHeight) * 2 + menuButton.height
       this.globalData.menuButton = menuButton
-    } catch (e) {
+    } catch {
       this.globalData.statusBarHeight = 20
       this.globalData.navBarHeight = 44
     }

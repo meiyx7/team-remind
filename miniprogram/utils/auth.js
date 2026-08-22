@@ -1,14 +1,18 @@
 // utils/auth.js 登录态管理
 const store = require('./store')
 
-// 模拟微信一键登录
+// 模拟微信一键登录（后续接真实 wx.login 时替换此实现）
 function mockWechatLogin() {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     // 模拟网络延迟
     setTimeout(() => {
-      const { seedUser } = require('./mock')
-      store.setUser(seedUser)
-      resolve(seedUser)
+      try {
+        const { seedUser } = require('./mock')
+        store.setUser(seedUser)
+        resolve(seedUser)
+      } catch (e) {
+        reject(e)
+      }
     }, 600)
   })
 }
