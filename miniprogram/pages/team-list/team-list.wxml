@@ -34,6 +34,8 @@
         wx:for="{{teams}}"
         wx:key="id"
         data-id="{{item.id}}"
+        hover-class="card-pressed"
+        hover-stay-time="80"
         bindtap="goTeamDetail"
       >
         <avatar text="{{item.avatarChar}}" color="{{item.avatarColor}}" size="md" />

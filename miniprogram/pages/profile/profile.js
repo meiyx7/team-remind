@@ -3,6 +3,7 @@ const store = require('../../utils/store')
 const auth = require('../../utils/auth')
 const version = require('../../utils/version')
 const icons = require('../../utils/icons')
+const themes = require('../../utils/themes')
 
 Page({
   data: {
@@ -10,7 +11,13 @@ Page({
     user: null,
     darkMode: false,
     version,
-    icons
+    icons,
+    unreadCount: 0,
+    // 换肤
+    showSkins: false,
+    skins: [],
+    currentSkin: themes.DEFAULT_SKIN,
+    skinLabel: '翡翠绿'
   },
 
   onShow() {
@@ -24,7 +31,10 @@ Page({
       themeClass: app.getThemeClass(),
       darkMode: app.globalData.darkMode,
       user: store.getUser(),
-      unreadCount: store.unreadNotificationCount()
+      unreadCount: store.unreadNotificationCount(),
+      currentSkin: app.globalData.skin,
+      skinLabel: themes.getSkin(app.globalData.skin).label,
+      skins: themes.SKINS.map(s => ({ key: s.key, label: s.label, brand: s.light.brand }))
     })
   },
 
@@ -45,6 +55,30 @@ Page({
 
   onComingSoon() {
     wx.showToast({ title: '该功能即将上线', icon: 'none' })
+  },
+
+  // 换肤：展开/收起面板
+  toggleSkinPanel() {
+    this.setData({ showSkins: !this.data.showSkins })
+    wx.vibrateShort({ type: 'light' })
+  },
+
+  // 选择皮肤：全局生效（页面主题类 + TabBar 同步刷新）并持久化
+  onPickSkin(e) {
+    const { key } = e.currentTarget.dataset
+    if (key === this.data.currentSkin) return
+    const app = getApp()
+    const themeClass = app.applySkin(key)
+    this.setData({
+      themeClass,
+      currentSkin: key,
+      skinLabel: themes.getSkin(key).label
+    })
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().updateTheme()
+    }
+    wx.vibrateShort({ type: 'light' })
+    wx.showToast({ title: '已切换', icon: 'success', duration: 800 })
   },
 
   goNotifications() {

@@ -1,0 +1,71 @@
+<!-- pages/create-team/create-team.wxml -->
+<view class="page-container {{themeClass}}">
+  <nav-bar title="创建团队" show-back="{{true}}"></nav-bar>
+
+  <view class="form-content">
+    <view class="form-card">
+      <!-- 团队名称 -->
+      <view class="form-section">
+        <text class="form-label">团队名称</text>
+        <input
+          class="form-input"
+          type="text"
+          placeholder="如：产品设计组"
+          placeholder-class="form-placeholder"
+          value="{{name}}"
+          bindinput="onNameInput"
+          maxlength="20"
+        />
+      </view>
+
+      <view class="divider"></view>
+
+      <!-- 团队描述 -->
+      <view class="form-section">
+        <text class="form-label">团队简介（可选）</text>
+        <textarea
+          class="form-textarea"
+          placeholder="一句话介绍这个团队做什么..."
+          placeholder-class="form-placeholder"
+          value="{{description}}"
+          bindinput="onDescInput"
+          maxlength="50"
+          auto-height
+        />
+      </view>
+
+      <view class="divider"></view>
+
+      <!-- 头像颜色 -->
+      <view class="form-section">
+        <text class="form-label">团队标识色</text>
+        <view class="color-row">
+          <view
+            wx:for="{{palette}}"
+            wx:key="*this"
+            class="color-dot {{colorIndex === index ? 'active' : ''}}"
+            style="background-color: {{item}};"
+            data-index="{{index}}"
+            bindtap="selectColor"
+          >
+            <text wx:if="{{colorIndex === index}}" class="color-check">✓</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 预览 -->
+      <view class="preview-row" wx:if="{{name}}">
+        <view class="preview-avatar" style="background-color: {{palette[colorIndex]}};">{{name[0]}}</view>
+        <view class="preview-meta">
+          <text class="preview-name">{{name}}</text>
+          <text class="preview-desc">{{description || '创建后邀请成员加入'}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="submit-bar">
+    <button class="submit-btn" bindtap="onSubmit" loading="{{submitting}}" disabled="{{submitting}}">{{submitting ? '创建中...' : '创建团队'}}</button>
+    <view class="safe-bottom"></view>
+  </view>
+</view>

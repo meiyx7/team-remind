@@ -42,14 +42,14 @@
 .notif-type {
   font-size: var(--fs-xs);
   color: var(--brand);
-  background-color: rgba(16, 185, 129, 0.1);
+  background-color: var(--brand-tint);
   border-radius: 9999rpx;
   padding: 2rpx 14rpx;
 }
 
 .notif-type.urgent {
-  color: #ef4444;
-  background-color: rgba(239, 68, 68, 0.1);
+  color: var(--state-error);
+  background-color: var(--error-tint);
 }
 
 .notif-text {

@@ -23,12 +23,30 @@
         </view>
         <switch checked="{{darkMode}}" bindchange="onToggleDark" color="#10b981" />
       </view>
-      <view class="settings-row row-coming" bindtap="onComingSoon">
+      <view class="settings-row" bindtap="toggleSkinPanel">
         <view class="row-left">
           <image class="row-icon" src="{{icons.palette}}" />
           <text class="settings-label">主题换肤</text>
         </view>
-        <view class="coming-tag">即将上线</view>
+        <view class="settings-right">
+          <text class="settings-value">{{skinLabel}}</text>
+          <image class="chevron {{showSkins ? 'chevron-open' : ''}}" src="{{icons.chevron}}" />
+        </view>
+      </view>
+      <!-- 换肤面板 -->
+      <view wx:if="{{showSkins}}" class="skin-panel">
+        <view
+          wx:for="{{skins}}"
+          wx:key="key"
+          class="skin-option {{currentSkin === item.key ? 'active' : ''}}"
+          data-key="{{item.key}}"
+          hover-class="card-pressed"
+          bindtap="onPickSkin"
+        >
+          <view class="skin-dot" style="background-color: {{item.brand}};"></view>
+          <text class="skin-name">{{item.label}}</text>
+          <text wx:if="{{currentSkin === item.key}}" class="skin-check">✓</text>
+        </view>
       </view>
       <view class="settings-row" bindtap="goNotifications">
         <view class="row-left">

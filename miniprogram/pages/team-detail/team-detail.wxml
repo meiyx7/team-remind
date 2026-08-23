@@ -92,6 +92,7 @@
           show-team="{{false}}"
           bind:toggle="onToggleTodo"
           bind:tap="onTapTodo"
+          bind:longpress="onTodoLongPress"
         />
       </view>
       <empty-state wx:else text="暂无待办" />

@@ -47,6 +47,9 @@ Component({
     onToggle(e) {
       this.triggerEvent('toggle', { id: e.currentTarget.dataset.id })
     },
+    onLongPress(e) {
+      this.triggerEvent('longpress', { id: e.currentTarget.dataset.id })
+    },
     onTap(e) {
       this.triggerEvent('tap', { id: e.currentTarget.dataset.id })
     }

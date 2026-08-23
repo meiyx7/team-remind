@@ -1,6 +1,7 @@
 // pages/team-detail/team-detail.js
 const store = require('../../utils/store')
 const icons = require('../../utils/icons')
+const sync = require('../../utils/sync')
 
 Page({
   data: {
@@ -31,9 +32,9 @@ Page({
     this.setData({ themeClass: getApp().getThemeClass() })
     if (options.id) {
       this.teamId = options.id
-      // 通过分享进入：提示可加入
+      // 通过分享进入：数据就绪后提示可加入
       if (options.from === 'share') {
-        this.checkAndPromptJoin()
+        this._pendingShareJoin = true
       }
     }
   },
@@ -43,8 +44,10 @@ Page({
   },
 
   onPullDownRefresh() {
-    this.loadData()
-    wx.stopPullDownRefresh()
+    sync.syncNow().finally(() => {
+      this.loadData()
+      wx.stopPullDownRefresh()
+    })
   },
 
   loadData() {
@@ -80,6 +83,19 @@ Page({
       isAdmin,
       isCreator,
       myRole
+    })
+
+    // 分享进入：数据就绪后再弹加入确认（替代不可靠的 setTimeout）
+    if (this._pendingShareJoin) {
+      this._pendingShareJoin = false
+      this.promptJoinIfGuest()
+    }
+  },
+
+  // 分享直达页返回兜底：页面栈可能只有当前页
+  safeBack() {
+    wx.navigateBack({
+      fail: () => wx.switchTab({ url: '/pages/team-list/team-list' })
     })
   },
 
@@ -125,7 +141,7 @@ Page({
         if (result.ok) {
           wx.showToast({ title: archiving ? '已归档' : '已恢复', icon: 'success' })
           if (archiving) {
-            setTimeout(() => wx.navigateBack(), 600)
+            setTimeout(() => this.safeBack(), 600)
           } else {
             this.loadData()
           }
@@ -172,7 +188,7 @@ Page({
         const result = store.quitTeam(this.teamId)
         if (result.ok) {
           wx.showToast({ title: '已退出', icon: 'success' })
-          setTimeout(() => wx.navigateBack(), 600)
+          setTimeout(() => this.safeBack(), 600)
         } else {
           const tips = {
             creator_cannot_quit: '创建者暂不能退出，可先归档团队',
@@ -208,37 +224,34 @@ Page({
     }
   },
 
-  // 通过分享进入：若未加入则弹窗确认
-  checkAndPromptJoin() {
-    // loadData 在 onLoad 后执行，这里延迟到数据就绪后判断
-    setTimeout(() => {
-      const team = this.data.team
-      if (!team) return
-      if (this.data.isMember) {
-        wx.showToast({ title: '你已在团队中', icon: 'none' })
-        return
-      }
-      wx.showModal({
-        title: '加入团队',
-        content: `是否加入「${team.name}」？`,
-        confirmText: '加入',
-        success: (res) => {
-          if (res.confirm) {
-            const result = store.joinTeamByShare(this.teamId)
-            if (result.ok) {
-              wx.showToast({ title: '加入成功', icon: 'success' })
-              this.loadData()
-            } else if (result.reason === 'duplicate') {
-              wx.showToast({ title: '你已在团队中', icon: 'none' })
-            } else if (result.reason === 'no_login') {
-              wx.showToast({ title: '请先登录', icon: 'none' })
-            } else {
-              wx.showToast({ title: '加入失败', icon: 'none' })
-            }
+  // 通过分享进入：若未加入则弹窗确认（由 loadData 数据就绪后调用）
+  promptJoinIfGuest() {
+    const team = this.data.team
+    if (!team) return
+    if (this.data.isMember) {
+      wx.showToast({ title: '你已在团队中', icon: 'none' })
+      return
+    }
+    wx.showModal({
+      title: '加入团队',
+      content: `是否加入「${team.name}」？`,
+      confirmText: '加入',
+      success: (res) => {
+        if (res.confirm) {
+          const result = store.joinTeamByShare(this.teamId)
+          if (result.ok) {
+            wx.showToast({ title: '加入成功', icon: 'success' })
+            this.loadData()
+          } else if (result.reason === 'duplicate') {
+            wx.showToast({ title: '你已在团队中', icon: 'none' })
+          } else if (result.reason === 'no_login') {
+            wx.showToast({ title: '请先登录', icon: 'none' })
+          } else {
+            wx.showToast({ title: '加入失败', icon: 'none' })
           }
         }
-      })
-    }, 300)
+      }
+    })
   },
 
   /* ---- 待办 ---- */
@@ -278,5 +291,59 @@ Page({
     const { id } = e.currentTarget.dataset
     if (!id) return
     wx.navigateTo({ url: '/pages/todo-detail/todo-detail?id=' + id })
+  },
+
+  // 卡片长按快捷操作：催办 / 删除
+  onTodoLongPress(e) {
+    const { id } = e.detail
+    const todo = store.getTodoById(id)
+    const user = store.getUser()
+    if (!todo || !user) return
+
+    const nudgeTargets = (todo.assignments || [])
+      .filter(a => a.memberId && a.memberId !== user.id && !a.done).length
+    const canDelete = todo.createdBy === user.id || store.isTeamAdmin(todo.teamId, user.id)
+
+    const actions = []
+    const handlers = []
+    if (todo.displayStatus !== 'completed' && nudgeTargets > 0) {
+      actions.push(`催办 ${nudgeTargets} 位未完成成员`)
+      handlers.push(() => {
+        const n = store.nudgeTodo(id)
+        wx.showToast({ title: `已提醒 ${n} 位成员`, icon: 'none' })
+      })
+    }
+    if (canDelete) {
+      actions.push('删除待办')
+      handlers.push(() => this._confirmDelete(todo))
+    }
+    if (actions.length === 0) return
+
+    wx.showActionSheet({
+      itemList: actions,
+      success: (res) => {
+        const fn = handlers[res.tapIndex]
+        if (fn) fn()
+        this.loadData()
+      }
+    })
+  },
+
+  _confirmDelete(todo) {
+    wx.showModal({
+      title: '删除待办',
+      content: `确定删除「${todo.title}」吗？`,
+      confirmColor: '#ef4444',
+      success: (res) => {
+        if (!res.confirm) return
+        const result = store.deleteTodo(todo.id)
+        if (result.ok) {
+          wx.showToast({ title: '已删除', icon: 'success' })
+        } else {
+          wx.showToast({ title: '删除失败', icon: 'none' })
+        }
+        this.loadData()
+      }
+    })
   }
 })

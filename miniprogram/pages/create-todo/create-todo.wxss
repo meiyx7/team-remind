@@ -379,7 +379,7 @@
 }
 
 .repeat-chip.active {
-  background-color: rgba(16, 185, 129, 0.12);
+  background-color: var(--brand-tint);
   color: var(--color-brand);
   font-weight: 600;
 }

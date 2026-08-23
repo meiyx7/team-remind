@@ -2,31 +2,35 @@
 <view class="page-container {{themeClass}}">
   <nav-bar title="团队待办"></nav-bar>
 
-  <!-- 消息铃铛（带未读角标） -->
-  <view class="notif-entry" style="top: {{navTop}}px;" bindtap="goNotifications">
+  <!-- 消息铃铛（对齐胶囊左侧，带未读角标） -->
+  <view class="notif-entry" style="top: {{bellTop}}px; right: {{bellRight}}px;" bindtap="goNotifications">
     <image class="notif-bell" src="{{bellIcon}}" />
     <view wx:if="{{unreadCount > 0}}" class="notif-badge">{{unreadCount > 99 ? '99+' : unreadCount}}</view>
   </view>
 
   <view class="home-content">
-    <!-- 顶部问候卡：日期 + 今日进度条 -->
+    <!-- 顶部问候卡：日期 + 今日环形进度 -->
     <view class="greeting-card">
       <view class="greeting-row">
         <view class="greeting-main">
           <text class="greeting-text">{{greeting}}，{{userName}}</text>
           <text class="greeting-date">{{todayLabel}}</text>
         </view>
-        <view class="today-progress" wx:if="{{todayStats.total > 0}}">
-          <text class="progress-num">{{todayStats.completed}}/{{todayStats.total}}</text>
-          <text class="progress-label">今日完成</text>
+        <view class="today-ring-wrap" wx:if="{{todayStats.total > 0}}">
+          <view class="ring-box">
+            <image class="ring-svg" src="{{ringUri}}" />
+            <text class="ring-num">{{todayStats.rate}}<text class="ring-pct">%</text></text>
+          </view>
+          <text class="ring-label">{{todayStats.completed}}/{{todayStats.total}} 今日完成</text>
         </view>
       </view>
-      <view class="progress-bar-wrap" wx:if="{{todayStats.total > 0}}">
-        <view class="progress-bar-track">
-          <view class="progress-bar-fill" style="width: {{todayStats.rate}}%;"></view>
-        </view>
-        <text class="progress-rate">{{todayStats.rate}}%</text>
-      </view>
+    </view>
+
+    <!-- 逾期警示条 -->
+    <view wx:if="{{overdueCount > 0}}" class="overdue-strip" bindtap="goOverdueFilter" hover-class="card-pressed">
+      <view class="overdue-dot"></view>
+      <text class="overdue-strip-text">{{overdueCount}} 项待办已逾期</text>
+      <text class="overdue-strip-action">去处理 ›</text>
     </view>
 
     <!-- 时间维度视图切换 -->
@@ -70,6 +74,7 @@
         show-team="{{true}}"
         bind:toggle="onToggleTodo"
         bind:tap="onTapTodo"
+        bind:longpress="onTodoLongPress"
       />
     </view>
 

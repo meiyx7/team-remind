@@ -29,8 +29,22 @@ Page({
     const app = getApp()
     if (!app.ensureLogin('/pages/notifications/notifications')) return
     this.loadData()
-    // 进入即清角标
-    notify.markAllRead()
+    // 延迟标记已读：给用户一点时间看到未读状态
+    if (this._readTimer) clearTimeout(this._readTimer)
+    this._readTimer = setTimeout(() => notify.markAllRead(), 1500)
+  },
+
+  onHide() {
+    // 离开前确保已读落盘
+    if (this._readTimer) {
+      clearTimeout(this._readTimer)
+      notify.markAllRead()
+      this._readTimer = null
+    }
+  },
+
+  onUnload() {
+    if (this._readTimer) clearTimeout(this._readTimer)
   },
 
   onPullDownRefresh() {

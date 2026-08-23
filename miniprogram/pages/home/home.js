@@ -1,6 +1,8 @@
 // pages/home/home.js 首页 = 待办（问候+进度+视图切换+统计筛选）
 const store = require('../../utils/store')
 const icons = require('../../utils/icons')
+const themes = require('../../utils/themes')
+const sync = require('../../utils/sync')
 
 // 时间维度视图
 const RANGE_DEFS = [
@@ -17,6 +19,22 @@ const STAT_DEFS = [
   { key: 'completed', label: '已完成' }
 ]
 
+// 环形进度 SVG（皮肤品牌色 + 暗色适配轨道）
+function buildRingUri(rate, brandHex, trackHex) {
+  const r = 30
+  const c = 2 * Math.PI * r
+  const clamped = Math.min(100, Math.max(0, rate))
+  const off = c * (1 - clamped / 100)
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72">` +
+    `<circle cx="36" cy="36" r="${r}" fill="none" stroke="${trackHex}" stroke-width="8"/>` +
+    (clamped > 0
+      ? `<circle cx="36" cy="36" r="${r}" fill="none" stroke="${brandHex}" stroke-width="8" stroke-linecap="round" stroke-dasharray="${c.toFixed(2)}" stroke-dashoffset="${off.toFixed(2)}" transform="rotate(-90 36 36)"/>`
+      : '') +
+    `</svg>`
+  return 'data:image/svg+xml,' + encodeURIComponent(svg)
+}
+
 Page({
   data: {
     themeClass: '',
@@ -24,7 +42,9 @@ Page({
     userName: '',
     todayLabel: '',
     todayStats: { total: 0, completed: 0, rate: 0 },
-    rangeFilter: 'today',       // today | week | all
+    overdueCount: 0,
+    ringUri: '',
+    rangeFilter: 'today',       // today | week | all（记忆用户上次选择）
     statFilter: 'all',          // 'all' = 全部；其余为具体状态
     rangeDefs: RANGE_DEFS,
     stats: [],
@@ -36,7 +56,20 @@ Page({
     plusIcon: icons.plus,
     bellIcon: icons.bell,
     unreadCount: 0,
-    navTop: 90
+    bellTop: 50,                // px，胶囊左侧对齐
+    bellRight: 110              // px
+  },
+
+  onLoad() {
+    // 恢复上次的筛选状态
+    try {
+      const range = wx.getStorageSync('homeRangeFilter')
+      const stat = wx.getStorageSync('homeStatFilter')
+      if (range) this.setData({ rangeFilter: range })
+      if (stat) this.setData({ statFilter: stat })
+    } catch {
+      // 忽略恢复失败，走默认值
+    }
   },
 
   onShow() {
@@ -46,26 +79,44 @@ Page({
       this.getTabBar().setData({ selected: 0 })
       this.getTabBar().updateTheme()
     }
-    const user = store.getUser()
-    // 铃铛位置 = 状态栏 + 导航栏高度（对齐胶囊按钮）
+    // 铃铛对齐到系统胶囊左侧（避免与胶囊热区重叠）
     const g = app.globalData || {}
+    let bellTop = 50
+    let bellRight = 110
+    if (g.menuButton && g.windowWidth) {
+      const mb = g.menuButton
+      bellRight = Math.round(g.windowWidth - mb.left + 8)
+      bellTop = Math.round(mb.top + (mb.height - 18) / 2)
+    }
+    const user = store.getUser()
     this.setData({
       themeClass: app.getThemeClass(),
       greeting: store.getGreeting(),
       userName: user ? user.name : '',
       todayLabel: store.getTodayLabel(),
-      navTop: (g.statusBarHeight || 20) + (g.navBarHeight || 44) - 30,
-      unreadCount: store.unreadNotificationCount()
+      unreadCount: store.unreadNotificationCount(),
+      bellTop,
+      bellRight
     })
     this.loadData()
   },
 
   onPullDownRefresh() {
+    // 云端模式下先同步再渲染（本地模式静默跳过）
+    sync.syncNow().finally(() => {
+      this.refreshThemeAndData()
+      wx.stopPullDownRefresh()
+    })
+  },
+
+  refreshThemeAndData() {
+    const app = getApp()
+    this.setData({ themeClass: app.getThemeClass() })
     this.loadData()
-    wx.stopPullDownRefresh()
   },
 
   loadData() {
+    const app = getApp()
     const counts = store.getMyStatusCounts()
     const todayStats = store.getTodayStats()
     // 已完成卡用完成率展示
@@ -74,8 +125,14 @@ Page({
       count: counts[d.key] || 0,
       rate: d.key === 'completed' ? todayStats.rate : 0
     }))
+    // 环形进度：颜色跟随皮肤与暗色模式
+    const skin = themes.getSkin(app.globalData.skin)
+    const palette = app.globalData.darkMode ? skin.dark : skin.light
+    const trackHex = app.globalData.darkMode ? '#334155' : '#e5e7eb'
+    const ringUri = buildRingUri(todayStats.rate, palette.brand, trackHex)
+
     const todos = this.fetchTodos(this.data.rangeFilter, this.data.statFilter)
-    this.setData({ stats, todayStats, todos })
+    this.setData({ stats, todayStats, todos, overdueCount: counts.overdue || 0, ringUri })
     this.refreshListMeta()
   },
 
@@ -115,6 +172,7 @@ Page({
     const { key } = e.currentTarget.dataset
     if (key === this.data.rangeFilter) return
     this.setData({ rangeFilter: key, statFilter: 'all' })
+    this.saveFilters()
     this.loadData()
     wx.vibrateShort({ type: 'light' })
   },
@@ -123,6 +181,24 @@ Page({
     const { key } = e.currentTarget.dataset
     const next = this.data.statFilter === key ? 'all' : key
     this.setData({ statFilter: next })
+    this.saveFilters()
+    this.loadData()
+    wx.vibrateShort({ type: 'light' })
+  },
+
+  saveFilters() {
+    try {
+      wx.setStorageSync('homeRangeFilter', this.data.rangeFilter)
+      wx.setStorageSync('homeStatFilter', this.data.statFilter)
+    } catch {
+      // 存储失败不影响功能
+    }
+  },
+
+  // 逾期警示条点击：切到全部+已逾期视图
+  goOverdueFilter() {
+    this.setData({ rangeFilter: 'all', statFilter: 'overdue' })
+    this.saveFilters()
     this.loadData()
     wx.vibrateShort({ type: 'light' })
   },
@@ -151,6 +227,60 @@ Page({
   onTapTodo(e) {
     const { id } = e.detail
     wx.navigateTo({ url: '/pages/todo-detail/todo-detail?id=' + id })
+  },
+
+  // 卡片长按快捷操作：催办 / 删除
+  onTodoLongPress(e) {
+    const { id } = e.detail
+    const todo = store.getTodoById(id)
+    const user = store.getUser()
+    if (!todo || !user) return
+
+    const nudgeTargets = (todo.assignments || [])
+      .filter(a => a.memberId && a.memberId !== user.id && !a.done).length
+    const canDelete = todo.createdBy === user.id || store.isTeamAdmin(todo.teamId, user.id)
+
+    const actions = []
+    const handlers = []
+    if (todo.displayStatus !== 'completed' && nudgeTargets > 0) {
+      actions.push(`催办 ${nudgeTargets} 位未完成成员`)
+      handlers.push(() => {
+        const n = store.nudgeTodo(id)
+        wx.showToast({ title: `已提醒 ${n} 位成员`, icon: 'none' })
+      })
+    }
+    if (canDelete) {
+      actions.push('删除待办')
+      handlers.push(() => this._confirmDelete(todo))
+    }
+    if (actions.length === 0) return
+
+    wx.showActionSheet({
+      itemList: actions,
+      success: (res) => {
+        const fn = handlers[res.tapIndex]
+        if (fn) fn()
+        this.loadData()
+      }
+    })
+  },
+
+  _confirmDelete(todo) {
+    wx.showModal({
+      title: '删除待办',
+      content: `确定删除「${todo.title}」吗？`,
+      confirmColor: '#ef4444',
+      success: (res) => {
+        if (!res.confirm) return
+        const result = store.deleteTodo(todo.id)
+        if (result.ok) {
+          wx.showToast({ title: '已删除', icon: 'success' })
+        } else {
+          wx.showToast({ title: '删除失败', icon: 'none' })
+        }
+        this.loadData()
+      }
+    })
   },
 
   goNotifications() {

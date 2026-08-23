@@ -110,3 +110,8 @@
   color: var(--color-brand);
   background: rgba(82, 140, 255, 0.12);
 }
+
+/* 0.9 按压反馈 */
+.card-pressed {
+  opacity: 0.72;
+}

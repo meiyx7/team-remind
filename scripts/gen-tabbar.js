@@ -1,13 +1,10 @@
-// scripts/gen-tabbar.js 生成 TabBar SVG 图标 base64 并写入 custom-tab-bar/index.js
+// scripts/gen-tabbar.js 生成 TabBar 组件（SVG 模板内置 __COLOR__ 占位符，选中色由主题运行时注入）
 const fs = require('fs')
 const path = require('path')
 
-function svg(content, color) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${content}</svg>`
+function svg(content) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="__COLOR__" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${content}</svg>`
 }
-
-const INACTIVE = '#94a3b8'
-const ACTIVE = '#10b981'
 
 const icons = {
   home: '<path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1V9.5z"/>',
@@ -19,8 +16,6 @@ function b64(str) {
   return Buffer.from(str, 'utf-8').toString('base64')
 }
 
-const dataUri = (name, color) => 'data:image/svg+xml;base64,' + b64(svg(icons[name], color))
-
 const list = [
   { key: 'home', text: '首页', pagePath: '/pages/home/home' },
   { key: 'team', text: '团队', pagePath: '/pages/team-list/team-list' },
@@ -28,8 +23,8 @@ const list = [
 ].map(item => ({
   pagePath: item.pagePath,
   text: item.text,
-  icon: dataUri(item.key, INACTIVE),
-  activeIcon: dataUri(item.key, ACTIVE)
+  icon: 'data:image/svg+xml;base64,' + b64(svg(icons[item.key]).replace('__COLOR__', '#94a3b8')),
+  svgTemplate: svg(icons[item.key])   // 保留模板，选中态颜色运行时注入
 }))
 
 const js = `// 自动生成于 scripts/gen-tabbar.js，请勿手改。3 Tab：首页/团队/我的
@@ -51,10 +46,27 @@ Component({
       this.setData({ selected: index })
       wx.switchTab({ url: path })
     },
-    // 同步深色模式（TabBar 是页面同级组件，CSS 变量不会从 .page-container 级联进来）
+    // 同步深色模式与皮肤（TabBar 是页面同级组件，CSS 变量不会从 .page-container 级联进来）
+    // 选中图标颜色由当前皮肤品牌色运行时注入
     updateTheme() {
       const app = getApp()
-      this.setData({ themeClass: app && app.getThemeClass ? app.getThemeClass() : '' })
+      const themeClass = app && app.getThemeClass ? app.getThemeClass() : ''
+      const brandHex = app && app.getSkinBrandHex ? app.getSkinBrandHex() : '#10b981'
+      if (this._lastBrand === brandHex && this._lastTheme === themeClass) return
+      this._lastBrand = brandHex
+      this._lastTheme = themeClass
+      const list = this.data.list.map(item => ({
+        ...item,
+        activeIcon: 'data:image/svg+xml;base64,' + wx.arrayBufferToBase64(
+          this._str2ab(item.svgTemplate.replace('__COLOR__', brandHex))
+        )
+      }))
+      this.setData({ themeClass, list })
+    },
+    _str2ab(str) {
+      const buf = new Uint8Array(str.length)
+      for (let i = 0; i < str.length; i++) buf[i] = str.charCodeAt(i) & 0xff
+      return buf.buffer
     }
   }
 })

@@ -1,6 +1,7 @@
 // pages/team-list/team-list.js
 const store = require('../../utils/store')
 const icons = require('../../utils/icons')
+const sync = require('../../utils/sync')
 
 Page({
   data: {
@@ -27,8 +28,10 @@ Page({
   },
 
   onPullDownRefresh() {
-    this.loadData()
-    wx.stopPullDownRefresh()
+    sync.syncNow().finally(() => {
+      this.loadData()
+      wx.stopPullDownRefresh()
+    })
   },
 
   loadData() {
@@ -65,6 +68,6 @@ Page({
   },
 
   onCreateTeam() {
-    wx.showToast({ title: '创建团队功能即将上线', icon: 'none' })
+    wx.navigateTo({ url: '/pages/create-team/create-team' })
   }
 })

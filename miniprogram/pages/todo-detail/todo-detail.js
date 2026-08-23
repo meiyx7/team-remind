@@ -173,7 +173,11 @@ Page({
         const result = store.deleteTodo(this.todoId)
         if (result.ok) {
           wx.showToast({ title: '已删除', icon: 'success' })
-          setTimeout(() => wx.navigateBack(), 600)
+          setTimeout(() => {
+            wx.navigateBack({
+              fail: () => wx.switchTab({ url: '/pages/home/home' })
+            })
+          }, 600)
         } else {
           const tips = { forbidden: '没有删除权限', not_found: '待办不存在' }
           wx.showToast({ title: tips[result.reason] || '删除失败', icon: 'none' })

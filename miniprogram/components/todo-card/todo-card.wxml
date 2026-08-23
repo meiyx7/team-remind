@@ -1,5 +1,5 @@
 <!-- components/todo-card/todo-card.wxml 待办卡片 -->
-<view class="todo-card todo-card-{{todo.displayStatus}}" data-id="{{todo.id}}" bindtap="onTap">
+<view class="todo-card todo-card-{{todo.displayStatus}}" data-id="{{todo.id}}" hover-class="card-pressed" hover-stay-time="80" bindtap="onTap" bindlongpress="onLongPress">
   <view
     wx:if="{{showCheck}}"
     class="todo-check {{todo.displayStatus === 'completed' ? 'checked' : ''}}"

@@ -71,6 +71,15 @@ page {
   /* 导航栏背景（带半透明 + 模糊） */
   --nav-bg: rgba(255, 255, 255, 0.95);
 
+  /* 品牌淡色底（换肤跟随令牌） */
+  --brand-tint: rgba(16, 185, 129, 0.10);
+  --brand-tint-strong: rgba(16, 185, 129, 0.16);
+
+  /* 状态色淡色底 */
+  --warning-tint: rgba(245, 158, 11, 0.10);
+  --error-tint: rgba(239, 68, 68, 0.10);
+  --info-tint: rgba(59, 130, 246, 0.12);
+
   background-color: var(--bg-secondary);
   color: var(--text-primary);
   font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
@@ -110,6 +119,53 @@ page {
   --shadow-elevated: 0 12rpx 32rpx rgba(0,0,0,0.50);
 
   --nav-bg: rgba(15, 23, 42, 0.92);
+
+  --brand-tint: rgba(52, 211, 153, 0.14);
+  --brand-tint-strong: rgba(52, 211, 153, 0.20);
+  --warning-tint: rgba(245, 158, 11, 0.14);
+  --error-tint: rgba(239, 68, 68, 0.14);
+  --info-tint: rgba(96, 165, 250, 0.16);
+}
+
+/* ============ 换肤：品牌色族覆盖（默认翡翠绿无需类名） ============ */
+.skin-ocean {
+  --color-brand: #3b82f6;
+  --color-brand-light: #60a5fa;
+  --color-brand-lightest: #dbeafe;
+  --color-brand-dark: #2563eb;
+  --color-brand-darker: #1d4ed8;
+  --brand-tint: rgba(59, 130, 246, 0.10);
+  --brand-tint-strong: rgba(59, 130, 246, 0.16);
+}
+
+.theme-dark.skin-ocean {
+  --color-brand: #60a5fa;
+  --color-brand-light: #93c5fd;
+  --color-brand-lightest: #1e3a8a;
+  --color-brand-dark: #60a5fa;
+  --color-brand-darker: #93c5fd;
+  --brand-tint: rgba(96, 165, 250, 0.14);
+  --brand-tint-strong: rgba(96, 165, 250, 0.20);
+}
+
+.skin-sunset {
+  --color-brand: #f97316;
+  --color-brand-light: #fb923c;
+  --color-brand-lightest: #ffedd5;
+  --color-brand-dark: #ea580c;
+  --color-brand-darker: #c2410c;
+  --brand-tint: rgba(249, 115, 22, 0.10);
+  --brand-tint-strong: rgba(249, 115, 22, 0.16);
+}
+
+.theme-dark.skin-sunset {
+  --color-brand: #fb923c;
+  --color-brand-light: #fdba74;
+  --color-brand-lightest: #7c2d12;
+  --color-brand-dark: #fb923c;
+  --color-brand-darker: #fdba74;
+  --brand-tint: rgba(251, 146, 60, 0.14);
+  --brand-tint-strong: rgba(251, 146, 60, 0.20);
 }
 
 view, text, image, input, textarea, button, scroll-view {

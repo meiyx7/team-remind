@@ -248,6 +248,44 @@ function searchTeams(keyword) {
   return getTeams().filter(t => t.name.toLowerCase().includes(kw))
 }
 
+// 创建团队：建团 + 创建者入队一步完成
+const TEAM_PALETTE = ['#10b981', '#3b82f6', '#f59e0b', '#8b5cf6', '#ec4899', '#14b8a6']
+
+function createTeam(data) {
+  const user = getUser()
+  if (!user) return { ok: false, reason: 'no_login' }
+  const name = (data.name || '').trim()
+  if (!name) return { ok: false, reason: 'empty_name' }
+
+  const teams = sGet(KEYS.TEAMS, [])
+  const color = data.avatarColor || TEAM_PALETTE[teams.length % TEAM_PALETTE.length]
+  const newTeam = hydrate({
+    id: uid('t'),
+    name,
+    description: (data.description || '').trim(),
+    avatarChar: name.charAt(0).toUpperCase(),
+    avatarColor: color,
+    accentColor: color,
+    memberCount: 1,
+    creatorId: user.id,
+    archived: false,
+    createdAt: getTodayStr()
+  })
+  teams.push(newTeam)
+  sSet(KEYS.TEAMS, teams)
+
+  // 创建者以 creator 角色写入成员表（身份即成员 id）
+  addMember(newTeam.id, {
+    id: user.id,
+    name: user.name,
+    avatarChar: user.avatarChar,
+    avatarColor: user.avatarColor,
+    role: 'creator'
+  })
+  queueSync()
+  return { ok: true, team: newTeam }
+}
+
 // 归档 / 取消归档（仅创建者）
 function archiveTeam(teamId, archived) {
   const user = getUser()
@@ -557,6 +595,8 @@ function claimSlot(todoId) {
     teamId: todo.teamId,
     todoId,
     todoTitle: todo.title,
+    // 定向通知发起人（认领者本人除外）
+    targetId: todo.createdBy && todo.createdBy !== user.id ? todo.createdBy : '',
     content: '认领了「' + todo.title + '」的名额'
   })
   queueSync()
@@ -956,6 +996,7 @@ module.exports = {
   setUser,
   logout,
   // 团队
+  createTeam,
   getTeams,
   getArchivedTeams,
   getTeamById,

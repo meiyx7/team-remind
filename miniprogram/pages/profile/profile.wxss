@@ -140,10 +140,58 @@
   padding: 0 8rpx;
   margin-left: 12rpx;
   border-radius: 9999rpx;
-  background-color: #ef4444;
+  background-color: var(--state-error);
   color: #ffffff;
   font-size: 18rpx;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* ---- 0.9 新增：换肤面板 ---- */
+.chevron-open {
+  transform: rotate(90deg);
+}
+
+.skin-panel {
+  padding: 8rpx 24rpx 20rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.skin-option {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 18rpx 20rpx;
+  border-radius: var(--radius-md);
+  border: 2rpx solid transparent;
+}
+
+.skin-option.active {
+  background-color: var(--bg-tertiary);
+  border-color: var(--color-brand);
+}
+
+.skin-dot {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: var(--radius-full);
+}
+
+.skin-name {
+  flex: 1;
+  font-size: var(--fs-sm);
+  color: var(--text-primary);
+}
+
+.skin-check {
+  font-size: var(--fs-sm);
+  color: var(--color-brand);
+  font-weight: 700;
+}
+
+.card-pressed {
+  opacity: 0.72;
 }

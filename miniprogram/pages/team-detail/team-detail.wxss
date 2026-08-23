@@ -194,15 +194,15 @@
   margin-left: auto;
   font-size: var(--fs-sm);
   color: var(--color-brand);
-  background-color: rgba(16, 185, 129, 0.1);
+  background-color: var(--brand-tint);
   padding: 10rpx 28rpx;
   border-radius: var(--radius-full);
   font-weight: 600;
 }
 
 .member-badge.admin {
-  background-color: rgba(59, 130, 246, 0.12);
-  color: #3b82f6;
+  background-color: var(--info-tint);
+  color: var(--state-info);
 }
 
 .remove-member-btn {
@@ -276,7 +276,7 @@
 }
 
 .event-complete .event-action { color: var(--color-brand); }
-.event-nudge { color: #f59e0b !important; }
+.event-nudge { color: var(--state-warning) !important; }
 
 .event-time {
   display: block;

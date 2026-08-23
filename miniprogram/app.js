@@ -1,6 +1,7 @@
 // app.js
 const store = require('./utils/store')
 const sync = require('./utils/sync')
+const themes = require('./utils/themes')
 
 App({
   globalData: {
@@ -8,7 +9,9 @@ App({
     statusBarHeight: 0,
     navBarHeight: 0,
     menuButton: null,
-    darkMode: false
+    windowWidth: 375,
+    darkMode: false,
+    skin: themes.DEFAULT_SKIN
   },
 
   onLaunch() {
@@ -21,8 +24,12 @@ App({
     // 云端模式下启动即触发一次增量同步（本地模式静默跳过）
     sync.syncNow()
 
-    // 读取深色模式偏好
+    // 读取深色模式偏好 + 皮肤
     this.globalData.darkMode = !!wx.getStorageSync('darkMode')
+    const savedSkin = wx.getStorageSync('skin')
+    if (savedSkin && themes.getSkin(savedSkin).key === savedSkin) {
+      this.globalData.skin = savedSkin
+    }
 
     // 计算导航栏相关尺寸
     this.initLayout()
@@ -33,6 +40,7 @@ App({
       const sysInfo = wx.getWindowInfo ? wx.getWindowInfo() : wx.getSystemInfoSync()
       const menuButton = wx.getMenuButtonBoundingClientRect()
       this.globalData.statusBarHeight = sysInfo.statusBarHeight || 20
+      this.globalData.windowWidth = sysInfo.windowWidth || 375
       // 导航栏高度 = 胶囊上下边距 + 胶囊高度，并居中对齐
       this.globalData.navBarHeight =
         (menuButton.top - this.globalData.statusBarHeight) * 2 + menuButton.height
@@ -62,8 +70,24 @@ App({
     return next
   },
 
-  // 供页面绑定根容器 class
+  // 换肤：切换并持久化，返回新的主题类
+  applySkin(key) {
+    const skin = themes.getSkin(key)
+    this.globalData.skin = skin.key
+    wx.setStorageSync('skin', skin.key)
+    return this.getThemeClass()
+  },
+
+  // 当前皮肤的选中态品牌色（供 TabBar 图标着色）
+  getSkinBrandHex() {
+    const skin = themes.getSkin(this.globalData.skin)
+    return this.globalData.darkMode ? skin.dark.brand : skin.light.brand
+  },
+
+  // 供页面绑定根容器 class（暗色 + 皮肤组合）
   getThemeClass() {
-    return this.globalData.darkMode ? 'theme-dark' : ''
+    const dark = this.globalData.darkMode ? 'theme-dark' : ''
+    const skinClass = this.globalData.skin !== themes.DEFAULT_SKIN ? 'skin-' + this.globalData.skin : ''
+    return (dark + ' ' + skinClass).trim()
   }
 })

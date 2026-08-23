@@ -153,3 +153,8 @@
 .archived-cards {
   opacity: 0.65;
 }
+
+/* ---- 0.9 新增：按压反馈（全局通用类，页面内生效） ---- */
+.card-pressed {
+  opacity: 0.72;
+}

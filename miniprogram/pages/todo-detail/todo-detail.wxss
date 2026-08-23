@@ -69,11 +69,11 @@
   color: var(--text-secondary);
 }
 
-.tag-urgent { background: rgba(239, 68, 68, 0.1); color: var(--state-error); }
+.tag-urgent { background: var(--error-tint); color: var(--state-error); }
 .tag-normal { background: var(--bg-secondary); color: var(--text-secondary); }
-.tag-status-completed { background: rgba(16, 185, 129, 0.1); color: var(--state-success); }
-.tag-status-overdue { background: rgba(239, 68, 68, 0.1); color: var(--state-error); }
-.tag-status-in_progress { background: rgba(245, 158, 11, 0.1); color: var(--state-warning); }
+.tag-status-completed { background: var(--brand-tint); color: var(--state-success); }
+.tag-status-overdue { background: var(--error-tint); color: var(--state-error); }
+.tag-status-in_progress { background: var(--warning-tint); color: var(--state-warning); }
 .tag-status-pending { background: var(--bg-secondary); color: var(--text-tertiary); }
 .tag-due.overdue { color: var(--state-error); }
 
@@ -314,8 +314,8 @@
 
 /* ---- 0.8 新增：认领池 / 催办 / 评论 / 删除 ---- */
 .tag-claim {
-  background-color: rgba(59, 130, 246, 0.12);
-  color: #3b82f6;
+  background-color: var(--info-tint);
+  color: var(--state-info);
 }
 
 .tag-repeat {
@@ -347,7 +347,7 @@
 
 .slot-btn,
 .btn-claim {
-  background-color: rgba(16, 185, 129, 0.12);
+  background-color: var(--brand-tint);
   color: var(--color-brand);
 }
 
@@ -372,7 +372,7 @@
 
 .nudge-link {
   font-size: var(--fs-sm);
-  color: #f59e0b;
+  color: var(--state-warning);
 }
 
 .danger-link {
