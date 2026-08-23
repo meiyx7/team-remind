@@ -5,7 +5,9 @@
 }
 
 .form-card {
-  background: var(--bg-primary);
+  background: var(--surface);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);
   border: 1rpx solid var(--border-light);
   border-radius: var(--radius-lg);
   padding: 32rpx;
@@ -125,7 +127,9 @@
   padding: 14rpx 32rpx;
   border-radius: var(--radius-full);
   border: 1rpx solid var(--border-light);
-  background: var(--bg-primary);
+  background: var(--surface);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);
   color: var(--text-secondary);
   font-size: 26rpx;
   font-weight: 500;
@@ -154,7 +158,9 @@
   padding: 12rpx 24rpx;
   border-radius: var(--radius-full);
   border: 1rpx solid var(--border-light);
-  background: var(--bg-primary);
+  background: var(--surface);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);
   color: var(--text-secondary);
   font-size: 26rpx;
   font-weight: 500;
@@ -264,7 +270,9 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--bg-primary);
+  background: var(--surface);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);
   border-top: 1rpx solid var(--border-light);
   padding: 24rpx 32rpx;
   z-index: 50;

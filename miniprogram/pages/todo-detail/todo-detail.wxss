@@ -6,7 +6,9 @@
 
 /* 顶部信息卡 */
 .info-card {
-  background: var(--bg-primary);
+  background: var(--surface);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);
   border: 1rpx solid var(--border-light);
   border-radius: var(--radius-lg);
   padding: 32rpx;
@@ -85,7 +87,9 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  background: var(--bg-primary);
+  background: var(--surface);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);
   border: 1rpx solid var(--border-light);
   border-radius: var(--radius-md);
   padding: 24rpx 32rpx;
@@ -114,7 +118,9 @@
 
 /* 完成进度卡 */
 .progress-card {
-  background: var(--bg-primary);
+  background: var(--surface);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);
   border: 1rpx solid var(--border-light);
   border-radius: var(--radius-lg);
   padding: 32rpx;
@@ -163,7 +169,9 @@
 
 /* 成员卡 */
 .members-card {
-  background: var(--bg-primary);
+  background: var(--surface);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);
   border: 1rpx solid var(--border-light);
   border-radius: var(--radius-lg);
   padding: 32rpx;
@@ -265,7 +273,9 @@
   right: 0;
   bottom: 0;
   padding: 24rpx 32rpx;
-  background: var(--bg-primary);
+  background: var(--surface);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);
   border-top: 1rpx solid var(--border-light);
   z-index: 50;
 }

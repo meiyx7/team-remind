@@ -5,7 +5,9 @@
 
 /* 用户卡 */
 .profile-card {
-  background: var(--bg-primary);
+  background: var(--surface);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);
   border: 1rpx solid var(--border-light);
   border-radius: var(--radius-lg);
   padding: 32rpx;
@@ -40,7 +42,9 @@
 
 /* 设置分组 */
 .settings-group {
-  background: var(--bg-primary);
+  background: var(--surface);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);
   border: 1rpx solid var(--border-light);
   border-radius: var(--radius-lg);
   margin-top: 24rpx;
@@ -121,7 +125,9 @@
   height: 96rpx;
   line-height: 96rpx;
   text-align: center;
-  background: var(--bg-primary);
+  background: var(--surface);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);
   border: 1rpx solid var(--state-error);
   border-radius: var(--radius-lg);
   color: var(--state-error);
@@ -194,4 +200,52 @@
 
 .card-pressed {
   opacity: 0.72;
+}
+
+/* ---- 0.10 新增：界面风格选择 ---- */
+.style-section {
+  margin-top: 24rpx;
+  padding-top: 8rpx;
+}
+
+.style-title {
+  font-size: var(--fs-xs);
+  color: var(--text-tertiary);
+}
+
+.style-options {
+  margin-top: 16rpx;
+  display: flex;
+  gap: 16rpx;
+}
+
+.style-option {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4rpx;
+  padding: 20rpx 0;
+  border-radius: var(--radius-md);
+  border: 2rpx solid var(--border-light);
+}
+
+.style-option.active {
+  background-color: var(--brand-tint);
+  border-color: var(--color-brand);
+}
+
+.style-name {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.style-option.active .style-name {
+  color: var(--color-brand-dark);
+}
+
+.style-desc {
+  font-size: 20rpx;
+  color: var(--text-tertiary);
 }

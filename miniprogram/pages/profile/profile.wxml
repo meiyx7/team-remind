@@ -47,6 +47,31 @@
           <text class="skin-name">{{item.label}}</text>
           <text wx:if="{{currentSkin === item.key}}" class="skin-check">✓</text>
         </view>
+
+        <!-- 界面风格 -->
+        <view class="style-section">
+          <text class="style-title">界面风格</text>
+          <view class="style-options">
+            <view
+              class="style-option {{uiStyle === 'classic' ? 'active' : ''}}"
+              data-mode="classic"
+              hover-class="card-pressed"
+              bindtap="onPickUiStyle"
+            >
+              <text class="style-name">经典</text>
+              <text class="style-desc">简洁扁平</text>
+            </view>
+            <view
+              class="style-option {{uiStyle === 'glass' ? 'active' : ''}}"
+              data-mode="glass"
+              hover-class="card-pressed"
+              bindtap="onPickUiStyle"
+            >
+              <text class="style-name">液态玻璃</text>
+              <text class="style-desc">iOS 质感</text>
+            </view>
+          </view>
+        </view>
       </view>
       <view class="settings-row" bindtap="goNotifications">
         <view class="row-left">

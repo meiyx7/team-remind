@@ -11,7 +11,8 @@ App({
     menuButton: null,
     windowWidth: 375,
     darkMode: false,
-    skin: themes.DEFAULT_SKIN
+    skin: themes.DEFAULT_SKIN,
+    uiStyle: 'classic'   // classic=经典扁平 | glass=液态玻璃(iOS 风格)
   },
 
   onLaunch() {
@@ -24,11 +25,15 @@ App({
     // 云端模式下启动即触发一次增量同步（本地模式静默跳过）
     sync.syncNow()
 
-    // 读取深色模式偏好 + 皮肤
+    // 读取深色模式偏好 + 皮肤 + 界面风格
     this.globalData.darkMode = !!wx.getStorageSync('darkMode')
     const savedSkin = wx.getStorageSync('skin')
     if (savedSkin && themes.getSkin(savedSkin).key === savedSkin) {
       this.globalData.skin = savedSkin
+    }
+    const savedUiStyle = wx.getStorageSync('uiStyle')
+    if (savedUiStyle === 'glass' || savedUiStyle === 'classic') {
+      this.globalData.uiStyle = savedUiStyle
     }
 
     // 计算导航栏相关尺寸
@@ -78,16 +83,24 @@ App({
     return this.getThemeClass()
   },
 
+  // 切换界面风格（经典 / 液态玻璃），返回新的主题类
+  applyUiStyle(mode) {
+    this.globalData.uiStyle = mode === 'glass' ? 'glass' : 'classic'
+    wx.setStorageSync('uiStyle', this.globalData.uiStyle)
+    return this.getThemeClass()
+  },
+
   // 当前皮肤的选中态品牌色（供 TabBar 图标着色）
   getSkinBrandHex() {
     const skin = themes.getSkin(this.globalData.skin)
     return this.globalData.darkMode ? skin.dark.brand : skin.light.brand
   },
 
-  // 供页面绑定根容器 class（暗色 + 皮肤组合）
+  // 供页面绑定根容器 class（暗色 + 皮肤 + 界面风格组合）
   getThemeClass() {
     const dark = this.globalData.darkMode ? 'theme-dark' : ''
     const skinClass = this.globalData.skin !== themes.DEFAULT_SKIN ? 'skin-' + this.globalData.skin : ''
-    return (dark + ' ' + skinClass).trim()
+    const styleClass = this.globalData.uiStyle === 'glass' ? 'style-glass' : ''
+    return [dark, skinClass, styleClass].filter(Boolean).join(' ')
   }
 })

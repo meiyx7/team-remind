@@ -13,11 +13,12 @@ Page({
     version,
     icons,
     unreadCount: 0,
-    // 换肤
+    // 换肤 + 界面风格
     showSkins: false,
     skins: [],
     currentSkin: themes.DEFAULT_SKIN,
-    skinLabel: '翡翠绿'
+    skinLabel: '翡翠绿',
+    uiStyle: 'classic'
   },
 
   onShow() {
@@ -34,7 +35,8 @@ Page({
       unreadCount: store.unreadNotificationCount(),
       currentSkin: app.globalData.skin,
       skinLabel: themes.getSkin(app.globalData.skin).label,
-      skins: themes.SKINS.map(s => ({ key: s.key, label: s.label, brand: s.light.brand }))
+      skins: themes.SKINS.map(s => ({ key: s.key, label: s.label, brand: s.light.brand })),
+      uiStyle: app.globalData.uiStyle
     })
   },
 
@@ -79,6 +81,24 @@ Page({
     }
     wx.vibrateShort({ type: 'light' })
     wx.showToast({ title: '已切换', icon: 'success', duration: 800 })
+  },
+
+  // 切换界面风格（经典 / 液态玻璃）
+  onPickUiStyle(e) {
+    const { mode } = e.currentTarget.dataset
+    if (mode === this.data.uiStyle) return
+    const app = getApp()
+    const themeClass = app.applyUiStyle(mode)
+    this.setData({ themeClass, uiStyle: mode })
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().updateTheme()
+    }
+    wx.vibrateShort({ type: 'light' })
+    wx.showToast({
+      title: mode === 'glass' ? '已切换液态玻璃' : '已切换经典风格',
+      icon: 'none',
+      duration: 800
+    })
   },
 
   goNotifications() {

@@ -80,6 +80,12 @@ page {
   --error-tint: rgba(239, 68, 68, 0.10);
   --info-tint: rgba(59, 130, 246, 0.12);
 
+  /* 表面材质令牌：经典=实色；液态玻璃(style-glass)下为半透明+模糊+高光边 */
+  --surface: #ffffff;
+  --surface-2: #ffffff;
+  --surface-blur: none;
+  --surface-edge: rgba(255, 255, 255, 0);
+
   background-color: var(--bg-secondary);
   color: var(--text-primary);
   font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
@@ -125,6 +131,28 @@ page {
   --warning-tint: rgba(245, 158, 11, 0.14);
   --error-tint: rgba(239, 68, 68, 0.14);
   --info-tint: rgba(96, 165, 250, 0.16);
+
+  --surface: #1e293b;
+  --surface-2: #1e293b;
+}
+
+/* ============ 界面风格：液态玻璃（iOS 风格） ============ */
+/* 卡片/导航/TabBar 换为半透明毛玻璃材质；颜色皮肤(skin-*)仍独立叠加 */
+.style-glass {
+  --surface: rgba(255, 255, 255, 0.58);
+  --surface-2: rgba(255, 255, 255, 0.40);
+  --surface-blur: blur(40rpx);
+  --surface-edge: rgba(255, 255, 255, 0.50);
+  --nav-bg: rgba(255, 255, 255, 0.55);
+  --shadow-md: 0 4rpx 20rpx rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 8rpx 32rpx rgba(15, 23, 42, 0.10);
+}
+
+.theme-dark.style-glass {
+  --surface: rgba(30, 41, 59, 0.52);
+  --surface-2: rgba(51, 65, 85, 0.38);
+  --surface-edge: rgba(255, 255, 255, 0.10);
+  --nav-bg: rgba(15, 23, 42, 0.55);
 }
 
 /* ============ 换肤：品牌色族覆盖（默认翡翠绿无需类名） ============ */
@@ -180,7 +208,9 @@ view, text, image, input, textarea, button, scroll-view {
 
 /* 卡片基础样式 */
 .card {
-  background: var(--bg-primary);
+  background: var(--surface);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);
   border-radius: var(--radius-md);
   border: 1rpx solid var(--border-light);
 }

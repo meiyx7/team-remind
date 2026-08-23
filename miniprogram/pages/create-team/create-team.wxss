@@ -4,7 +4,9 @@
 }
 
 .form-card {
-  background-color: var(--bg-secondary);
+  background-color: var(--surface);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);;
   border-radius: var(--radius-xl);
   padding: 32rpx;
   box-shadow: var(--shadow-sm);

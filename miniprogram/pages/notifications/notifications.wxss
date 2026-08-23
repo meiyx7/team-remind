@@ -13,7 +13,9 @@
   display: flex;
   align-items: flex-start;
   gap: 20rpx;
-  background-color: var(--bg-secondary);
+  background-color: var(--surface);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);;
   border-radius: var(--radius-lg, 16rpx);
   padding: 28rpx 24rpx;
   box-shadow: var(--shadow-sm);

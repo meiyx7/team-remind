@@ -10,7 +10,7 @@
   padding: 12rpx 32rpx;
   margin-right: 16rpx;
   border: 1rpx solid var(--border-light);
-  background: var(--bg-primary);
+  background: var(--surface);
   border-radius: 16rpx;
   font-size: var(--fs-sm);
   font-weight: 500;

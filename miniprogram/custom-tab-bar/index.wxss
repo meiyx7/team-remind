@@ -37,3 +37,19 @@
 .tabbar-safe {
   background: var(--bg-primary);
 }
+
+/* ---- 0.10 液态玻璃风格：浮动胶囊 TabBar ---- */
+.tabbar.style-glass {
+  margin: 0 24rpx;
+  padding-bottom: env(safe-area-inset-bottom);
+  border: 1rpx solid var(--surface-edge);
+  border-radius: 44rpx;
+  background: var(--surface);
+  backdrop-filter: blur(48rpx);
+  -webkit-backdrop-filter: blur(48rpx);
+  box-shadow: var(--shadow-elevated);
+}
+
+.tabbar-safe.style-glass {
+  background: transparent;
+}

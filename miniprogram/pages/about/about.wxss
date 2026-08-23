@@ -45,7 +45,9 @@
 }
 
 .about-group {
-  background: var(--bg-primary);
+  background: var(--surface);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);
   border: 1rpx solid var(--border-light);
   border-radius: var(--radius-lg);
   overflow: hidden;

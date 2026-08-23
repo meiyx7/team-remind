@@ -5,7 +5,9 @@
 
 /* 头部卡 */
 .team-header-card {
-  background: var(--bg-primary);
+  background: var(--surface);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);
   border: 1rpx solid var(--border-light);
   border-radius: var(--radius-lg);
   padding: 32rpx;
@@ -77,7 +79,9 @@
   display: flex;
   flex-direction: row;
   margin-top: 32rpx;
-  background: var(--bg-primary);
+  background: var(--surface);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);
   border: 1rpx solid var(--border-light);
   border-bottom: none;
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
@@ -103,7 +107,9 @@
 
 /* 成员列表 */
 .members-list {
-  background: var(--bg-primary);
+  background: var(--surface);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);
   border: 1rpx solid var(--border-light);
   border-top: none;
   border-radius: 0 0 var(--radius-lg) var(--radius-lg);
@@ -149,7 +155,9 @@
 
 /* 待办列表 */
 .todos-pane {
-  background: var(--bg-primary);
+  background: var(--surface);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);
   border: 1rpx solid var(--border-light);
   border-top: none;
   border-radius: 0 0 var(--radius-lg) var(--radius-lg);
@@ -172,7 +180,9 @@
   gap: 12rpx;
   margin-top: 32rpx;
   height: 96rpx;
-  background: var(--bg-primary);
+  background: var(--surface);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);
   color: var(--text-tertiary);
   border: 1rpx dashed var(--border-default);
   border-radius: var(--radius-lg);
