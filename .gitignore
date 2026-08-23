@@ -20,3 +20,6 @@ Thumbs.db
 # CI 密钥
 private.key
 private.*.key
+
+# Supabase CLI 本地状态
+supabase/.temp/
