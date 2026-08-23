@@ -290,13 +290,12 @@
   opacity: 0.72;
 }
 
-/* ---- 0.10 液态玻璃风格：FAB 玻璃胶囊化（品牌 tint 底 + 模糊） ---- */
+/* ---- 0.11 玻璃模式：FAB 品牌渐变糖果按钮（高存在感，不再半透明） ---- */
 .style-glass .fab {
-  background: var(--brand-tint-strong);
-  backdrop-filter: blur(40rpx);
-  -webkit-backdrop-filter: blur(40rpx);
-  border: 1rpx solid var(--surface-edge);
-  box-shadow: var(--shadow-lg);
+  background: linear-gradient(180deg, var(--color-brand-light) 0%, var(--color-brand) 100%);
+  box-shadow:
+    0 14rpx 36rpx var(--brand-tint-strong),
+    inset 0 2rpx 0 rgba(255, 255, 255, 0.40);
 }
 
 /* ---- 0.11 玻璃模式：铃铛悬浮玻璃圆钮 ---- */

@@ -33,6 +33,8 @@ const defs = {
   calendar: svg('<rect x="3" y="4.5" width="18" height="17" rx="2"/><line x1="3" y1="9.5" x2="21" y2="9.5"/><line x1="8" y1="2.5" x2="8" y2="6.5"/><line x1="16" y1="2.5" x2="16" y2="6.5"/>', { color: GRAY, sw: 1.8 }),
   // 时钟（截止时间选择）
   clock: svg('<circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/>', { color: GRAY, sw: 1.8 }),
+  // 铃铛品牌色版（首页消息入口，浅底上清晰可辨）
+  bellBrand: svg('<path d="M18 16v-5a6 6 0 0 0-12 0v5l-2 2.5h16z"/><path d="M10 21a2 2 0 0 0 4 0"/>', { color: BRAND, sw: 1.9 }),
   // 搜索
   search: svg('<circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/>', { color: GRAY, sw: 2 }),
   // 返回

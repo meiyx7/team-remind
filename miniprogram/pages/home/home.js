@@ -54,7 +54,7 @@ Page({
     emptyHint: '',
     emptyAction: '',
     plusIcon: icons.plus,
-    bellIcon: icons.bell,
+    bellIcon: icons.bellBrand || icons.bell,
     unreadCount: 0,
     bellTop: 50,                // px，胶囊左侧对齐
     bellRight: 110              // px
@@ -79,14 +79,15 @@ Page({
       this.getTabBar().setData({ selected: 0 })
       this.getTabBar().updateTheme()
     }
-    // 铃铛对齐到系统胶囊左侧（避免与胶囊热区重叠）
+    // 铃铛玻璃圆钮：垂直居中对齐系统胶囊、右缘与胶囊保持 8px 间距
     const g = app.globalData || {}
     let bellTop = 50
     let bellRight = 110
     if (g.menuButton && g.windowWidth) {
       const mb = g.menuButton
+      const circlePx = Math.round(76 * g.windowWidth / 750)   // 76rpx -> px
       bellRight = Math.round(g.windowWidth - mb.left + 8)
-      bellTop = Math.round(mb.top + (mb.height - 18) / 2)
+      bellTop = Math.round(mb.top + (mb.height - circlePx) / 2)
     }
     const user = store.getUser()
     this.setData({

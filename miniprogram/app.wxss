@@ -218,7 +218,7 @@ page {
 .style-glass .stat-card,
 .style-glass .search-wrap {
   border-color: rgba(255, 255, 255, 0.35);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--card-shadow), inset 0 1rpx 0 var(--surface-edge);
 }
 
 /* ---- 主按钮：品牌渐变糖果质感 + 光晕投影 ---- */
