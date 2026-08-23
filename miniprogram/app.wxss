@@ -140,11 +140,11 @@ page {
 /* ============ 界面风格：液态玻璃（iOS 风格） ============ */
 /* 卡片/导航/TabBar 换为半透明毛玻璃材质；颜色皮肤(skin-*)仍独立叠加 */
 .style-glass {
-  --surface: rgba(255, 255, 255, 0.58);
-  --surface-2: rgba(255, 255, 255, 0.40);
-  --surface-blur: blur(40rpx);
-  --surface-edge: rgba(255, 255, 255, 0.50);
-  --nav-bg: rgba(255, 255, 255, 0.55);
+  --surface: rgba(255, 255, 255, 0.48);
+  --surface-2: rgba(255, 255, 255, 0.34);
+  --surface-blur: blur(40rpx) saturate(160%);
+  --surface-edge: rgba(255, 255, 255, 0.60);
+  --nav-bg: rgba(255, 255, 255, 0.50);
   --shadow-sm: 0 2rpx 12rpx rgba(15, 23, 42, 0.06);
   --shadow-md: 0 8rpx 24rpx rgba(15, 23, 42, 0.10);
   --shadow-lg: 0 16rpx 40rpx rgba(15, 23, 42, 0.15);
@@ -172,14 +172,30 @@ page {
   left: -20%;
   right: -20%;
   top: -14vh;
-  height: 80vh;
+  height: 96vh;
   z-index: -1;
   pointer-events: none;
+  /* 同心双叠层模拟更高饱和度：品牌色光斑叠加两次 */
   background:
-    radial-gradient(56% 42% at 20% 14%, var(--brand-tint-strong) 0%, transparent 66%),
-    radial-gradient(50% 38% at 86% 2%, var(--info-tint) 0%, transparent 60%),
-    radial-gradient(44% 34% at 62% 34%, var(--brand-tint) 0%, transparent 64%),
-    radial-gradient(40% 30% at 30% 52%, var(--warning-tint) 0%, transparent 66%);
+    radial-gradient(56% 40% at 20% 10%, var(--brand-tint-strong) 0%, transparent 64%),
+    radial-gradient(56% 42% at 22% 14%, var(--brand-tint-strong) 0%, transparent 70%),
+    radial-gradient(50% 38% at 88% 2%, var(--info-tint) 0%, transparent 58%),
+    radial-gradient(48% 36% at 66% 26%, var(--brand-tint) 0%, transparent 62%),
+    radial-gradient(44% 32% at 30% 46%, var(--warning-tint) 0%, transparent 64%),
+    radial-gradient(60% 34% at 78% 58%, var(--info-tint) 0%, transparent 68%);
+}
+
+/* 页面底部再铺一层品牌色渐升的底光，滚动区域同样有色彩可透 */
+.page-container.style-glass::after {
+  content: '';
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 46vh;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent 0%, var(--brand-tint) 70%, var(--brand-tint-strong) 100%);
 }
 
 /* 分段筛选容器在玻璃下去底色，让胶囊浮于环境光之上 */

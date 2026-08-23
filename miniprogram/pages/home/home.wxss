@@ -226,12 +226,13 @@
 /* ---- 0.8 新增：消息铃铛入口 ---- */
 .notif-entry {
   position: fixed;
-  width: 72rpx;
-  height: 72rpx;
+  /* 高于导航栏(fixed z:100)，圆钮悬浮在导航玻璃面之上 */
+  z-index: 200;
+  width: 76rpx;
+  height: 76rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 20;
 }
 
 .notif-bell {
