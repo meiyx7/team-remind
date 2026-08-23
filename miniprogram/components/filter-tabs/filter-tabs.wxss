@@ -11,6 +11,8 @@
   margin-right: 16rpx;
   border: 1rpx solid var(--border-light);
   background: var(--surface);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);
   border-radius: 16rpx;
   font-size: var(--fs-sm);
   font-weight: 500;

@@ -9,7 +9,7 @@
   backdrop-filter: var(--surface-blur);
   -webkit-backdrop-filter: var(--surface-blur);
   border: 1rpx solid var(--border-light);
-  box-shadow: inset 0 1rpx 0 var(--surface-edge);
+  box-shadow: var(--card-shadow), inset 0 1rpx 0 var(--surface-edge);
   border-radius: var(--radius-md);
 }
 

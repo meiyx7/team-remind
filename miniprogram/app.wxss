@@ -85,6 +85,7 @@ page {
   --surface-2: #ffffff;
   --surface-blur: none;
   --surface-edge: rgba(255, 255, 255, 0);
+  --card-shadow: none;
 
   background-color: var(--bg-secondary);
   color: var(--text-primary);
@@ -144,8 +145,10 @@ page {
   --surface-blur: blur(40rpx);
   --surface-edge: rgba(255, 255, 255, 0.50);
   --nav-bg: rgba(255, 255, 255, 0.55);
-  --shadow-md: 0 4rpx 20rpx rgba(15, 23, 42, 0.08);
-  --shadow-lg: 0 8rpx 32rpx rgba(15, 23, 42, 0.10);
+  --shadow-sm: 0 2rpx 12rpx rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 8rpx 24rpx rgba(15, 23, 42, 0.10);
+  --shadow-lg: 0 16rpx 40rpx rgba(15, 23, 42, 0.15);
+  --card-shadow: var(--shadow-md);
 }
 
 .theme-dark.style-glass {
@@ -153,6 +156,88 @@ page {
   --surface-2: rgba(51, 65, 85, 0.38);
   --surface-edge: rgba(255, 255, 255, 0.10);
   --nav-bg: rgba(15, 23, 42, 0.55);
+}
+
+/* ---- 环境光背景：页面顶部铺品牌色/信息色柔光，让毛玻璃「有东西可透」 ---- */
+.page-container.style-glass,
+.login-page.style-glass {
+  position: relative;
+  z-index: 0;
+}
+
+.page-container.style-glass::before,
+.login-page.style-glass::before {
+  content: '';
+  position: fixed;
+  left: -20%;
+  right: -20%;
+  top: -14vh;
+  height: 76vh;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(52% 40% at 22% 16%, var(--brand-tint-strong) 0%, transparent 68%),
+    radial-gradient(46% 36% at 84% 4%, var(--info-tint) 0%, transparent 62%),
+    radial-gradient(38% 30% at 58% 42%, var(--warning-tint) 0%, transparent 64%);
+}
+
+/* ---- 悬浮分层：卡片浮起、层次分明 ---- */
+.style-glass .greeting-card,
+.style-glass .form-card,
+.style-glass .info-card,
+.style-glass .progress-card,
+.style-glass .members-card,
+.style-glass .comments-card,
+.style-glass .team-header-card,
+.style-glass .profile-card,
+.style-glass .settings-group,
+.style-glass .overview-card,
+.style-glass .chart-card,
+.style-glass .member-card,
+.style-glass .notif-item,
+.style-glass .event-item,
+.style-glass .preview-row {
+  box-shadow: var(--card-shadow), inset 0 1rpx 0 var(--surface-edge);
+}
+
+/* 胶囊筛选器本体也玻璃化，选中白色药丸浮在其上 */
+.style-glass .range-tabs {
+  background: var(--surface);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);
+  border: 1rpx solid var(--surface-edge);
+  box-shadow: var(--shadow-sm);
+}
+
+.style-glass .stat-card,
+.style-glass .search-wrap {
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ---- 主按钮：品牌渐变糖果质感 + 光晕投影 ---- */
+.style-glass .submit-btn,
+.style-glass .action-btn.btn-do,
+.style-glass .btn-primary {
+  background: linear-gradient(180deg, var(--color-brand-light) 0%, var(--color-brand) 100%);
+  box-shadow:
+    0 10rpx 28rpx var(--brand-tint-strong),
+    inset 0 2rpx 0 rgba(255, 255, 255, 0.40);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);
+}
+
+.style-glass .submit-btn[disabled],
+.style-glass .btn-primary[disabled] {
+  background: var(--color-gray-300);
+  box-shadow: none;
+}
+
+/* FAB 光晕加强 */
+.style-glass .fab {
+  box-shadow:
+    0 12rpx 32rpx var(--brand-tint-strong),
+    inset 0 2rpx 0 rgba(255, 255, 255, 0.35);
 }
 
 /* ============ 换肤：品牌色族覆盖（默认翡翠绿无需类名） ============ */
@@ -312,4 +397,12 @@ view, text, image, input, textarea, button, scroll-view {
 /* 通用按压反馈 */
 .tap-feedback:active {
   background-color: var(--bg-secondary);
+}
+
+/* 登录按钮同样获得玻璃糖果质感 */
+.style-glass .login-btn {
+  background: linear-gradient(180deg, var(--color-brand-light) 0%, var(--color-brand) 100%);
+  box-shadow:
+    0 10rpx 28rpx var(--brand-tint-strong),
+    inset 0 2rpx 0 rgba(255, 255, 255, 0.40);
 }

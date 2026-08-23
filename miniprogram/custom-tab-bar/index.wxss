@@ -1,12 +1,15 @@
 /* custom-tab-bar/index.wxss */
+/* 结构说明：高度由内容撑开（图标44+文字+内边距），不再固定 100rpx，
+   彻底修复安全区设备上图标溢出底栏的问题 */
+
 .tabbar {
   display: flex;
   flex-direction: row;
-  align-items: center;
-  height: 100rpx;
+  align-items: stretch;
+  padding: 12rpx 12rpx;
+  padding-bottom: calc(12rpx + env(safe-area-inset-bottom));
   background: var(--bg-primary);
   border-top: 1rpx solid var(--border-light);
-  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .tab-item {
@@ -16,11 +19,13 @@
   align-items: center;
   justify-content: center;
   padding: 8rpx 0;
+  border-radius: var(--radius-full);
 }
 
 .tab-icon {
   width: 44rpx;
   height: 44rpx;
+  display: block;
 }
 
 .tab-text {
@@ -28,28 +33,39 @@
   font-weight: 500;
   color: var(--text-tertiary);
   margin-top: 4rpx;
+  line-height: 1.2;
 }
 
 .tab-item.active .tab-text {
   color: var(--color-brand);
+  font-weight: 600;
 }
 
 .tabbar-safe {
   background: var(--bg-primary);
 }
 
-/* ---- 0.10 液态玻璃风格：浮动胶囊 TabBar ---- */
+/* ---- 液态玻璃风格：悬浮胶囊 TabBar ---- */
+/* 底边距含安全区：胶囊整体脱离屏幕下缘，透出页面环境光 */
 .tabbar.style-glass {
-  margin: 0 24rpx;
-  padding-bottom: env(safe-area-inset-bottom);
+  margin: 0 24rpx calc(env(safe-area-inset-bottom) + 16rpx);
+  padding: 10rpx 16rpx;
   border: 1rpx solid var(--surface-edge);
-  border-radius: 44rpx;
+  border-radius: 52rpx;
   background: var(--surface);
-  backdrop-filter: blur(48rpx);
-  -webkit-backdrop-filter: blur(48rpx);
-  box-shadow: var(--shadow-elevated);
+  backdrop-filter: blur(56rpx) saturate(160%);
+  -webkit-backdrop-filter: blur(56rpx) saturate(160%);
+  box-shadow:
+    0 12rpx 36rpx rgba(15, 23, 42, 0.14),
+    inset 0 1rpx 0 var(--surface-edge);
 }
 
+/* 选中项品牌色胶囊底 */
+.tabbar.style-glass .tab-item.active {
+  background: var(--brand-tint-strong);
+}
+
+/* 玻璃模式下底部安全条隐藏（间距已并入胶囊外边距） */
 .tabbar-safe.style-glass {
-  background: transparent;
+  display: none;
 }
