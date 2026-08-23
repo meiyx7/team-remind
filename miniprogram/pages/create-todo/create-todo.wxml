@@ -165,7 +165,7 @@
             bindtap="selectRepeat"
           >{{item.label}}</view>
         </view>
-        <text class="mode-hint" wx:if="{{repeat !== 'none'}}'>完成后自动创建下一期任务</text>
+        <text class="mode-hint" wx:if="{{repeat !== 'none'}}">完成后自动创建下一期任务</text>
       </view>
     </view>
   </view>
