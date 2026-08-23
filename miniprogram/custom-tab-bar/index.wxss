@@ -6,9 +6,13 @@
   display: flex;
   flex-direction: row;
   align-items: stretch;
+  position: relative;
+  z-index: 10;
   padding: 12rpx 12rpx;
   padding-bottom: calc(12rpx + env(safe-area-inset-bottom));
-  background: var(--bg-primary);
+  /* 字面色兜底在前，变量解析失败也不会透明 */
+  background: #ffffff;
+  background: var(--bg-primary, #ffffff);
   border-top: 1rpx solid var(--border-light);
 }
 
@@ -42,7 +46,8 @@
 }
 
 .tabbar-safe {
-  background: var(--bg-primary);
+  background: #ffffff;
+  background: var(--bg-primary, #ffffff);
 }
 
 /* ---- 液态玻璃风格：悬浮胶囊 TabBar ---- */
@@ -50,19 +55,29 @@
 .tabbar.style-glass {
   margin: 0 24rpx calc(env(safe-area-inset-bottom) + 16rpx);
   padding: 10rpx 16rpx;
-  border: 1rpx solid var(--surface-edge);
+  border: 1rpx solid rgba(255, 255, 255, 0.70);
   border-radius: 52rpx;
-  background: var(--surface);
-  backdrop-filter: blur(56rpx) saturate(160%);
-  -webkit-backdrop-filter: blur(56rpx) saturate(160%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.52) 100%);
+  backdrop-filter: blur(56rpx) saturate(180%);
+  -webkit-backdrop-filter: blur(56rpx) saturate(180%);
   box-shadow:
-    0 12rpx 36rpx rgba(15, 23, 42, 0.14),
-    inset 0 1rpx 0 var(--surface-edge);
+    0 16rpx 44rpx rgba(15, 23, 42, 0.22),
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.70);
 }
 
-/* 选中项品牌色胶囊底 */
+/* 暗色玻璃胶囊 */
+.tabbar.theme-dark.style-glass {
+  background: linear-gradient(180deg, rgba(51, 65, 85, 0.78) 0%, rgba(30, 41, 59, 0.60) 100%);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow:
+    0 16rpx 44rpx rgba(0, 0, 0, 0.45),
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.12);
+}
+
+/* 选中项品牌色药丸底 + 光晕 */
 .tabbar.style-glass .tab-item.active {
   background: var(--brand-tint-strong);
+  box-shadow: 0 4rpx 16rpx var(--brand-tint-strong);
 }
 
 /* 玻璃模式下底部安全条隐藏（间距已并入胶囊外边距） */

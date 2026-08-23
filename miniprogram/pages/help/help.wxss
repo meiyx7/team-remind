@@ -16,7 +16,9 @@
 }
 
 .faq-list {
-  background: var(--bg-primary);
+  background: var(--surface);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);
   border: 1rpx solid var(--border-light);
   border-radius: var(--radius-lg);
   padding: 8rpx 32rpx;
@@ -52,7 +54,9 @@
   width: 100%;
   min-height: 160rpx;
   padding: 24rpx;
-  background: var(--bg-primary);
+  background: var(--surface);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);
   border: 1rpx solid var(--border-light);
   border-radius: var(--radius-md);
   font-size: var(--fs-base);

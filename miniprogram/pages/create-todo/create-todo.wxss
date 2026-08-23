@@ -330,7 +330,7 @@
 }
 
 .mode-item.active {
-  background-color: var(--bg-secondary);
+  background-color: var(--surface);
   color: var(--color-brand);
   font-weight: 600;
   box-shadow: var(--shadow-sm);
