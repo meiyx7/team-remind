@@ -1,15 +1,13 @@
 // utils/config.js 环境配置（Supabase 对接入口）
-// 使用方法：填入 Supabase 项目信息后，小程序自动切换为云端模式；
-// 留空则运行在本地模式（数据存 wx.Storage，功能完整可演示）。
+// 云端模式已启用：2026-08-23 对接 team-remind Project（ap-northeast-2）
 //
-// 还需要：
-// 1. 在 supabase/migrations/0001_init.sql 中初始化数据库
-// 2. 部署 supabase/functions/ 下的两个 Edge Function（wx-login / remind-cron）
-// 3. 微信公众平台「开发设置-服务器域名」添加你的 supabase.co 域名
-// 详细步骤见 supabase/README.md
+// 剩余运维项：
+// 1. 微信公众平台「开发设置-服务器域名」添加 https://nkjtksvxfguzefslcuyb.supabase.co
+// 2. Edge Function 密钥：WX_APPID / WX_APP_SECRET（真实登录与订阅消息推送依赖）
+// 3. 订阅消息模板 ID（可选，到期提醒推送用）
 
-const SUPABASE_URL = ''          // 例：https://xxxxxxxxxxxx.supabase.co
-const SUPABASE_ANON_KEY = ''     // Project Settings -> API -> anon public key
+const SUPABASE_URL = 'https://nkjtksvxfguzefslcuyb.supabase.co'
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ranRrc3Z4Zmd1emVmc2xjdXliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc0MjM5MDgsImV4cCI6MjEwMjk5OTkwOH0.w-hWNU9DlEFgqow8afNJJvHWk_IMWT-WcHFrwwDX108'
 
 // 订阅消息模板 ID（微信公众平台申请后填入，留空则不拉起订阅授权）
 const SUBSCRIBE_TMPL_IDS = []

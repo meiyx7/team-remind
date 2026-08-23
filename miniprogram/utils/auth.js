@@ -7,9 +7,15 @@ const api = require('./api')
 const sync = require('./sync')
 
 // 登录（自动选择云端 / 本地模式）
+// 云端失败（如域名白名单未配置、弱网）时自动降级本地登录，不阻塞使用
 async function login() {
   if (config.cloudEnabled()) {
-    return loginViaWx()
+    try {
+      return await loginViaWx()
+    } catch (e) {
+      console.warn('[auth] 云端登录失败，降级本地模式:', e && e.message)
+      return mockWechatLogin()
+    }
   }
   return mockWechatLogin()
 }
