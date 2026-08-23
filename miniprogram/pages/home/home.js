@@ -33,7 +33,10 @@ Page({
     emptyText: '',
     emptyHint: '',
     emptyAction: '',
-    plusIcon: icons.plus
+    plusIcon: icons.plus,
+    bellIcon: icons.bell,
+    unreadCount: 0,
+    navTop: 90
   },
 
   onShow() {
@@ -44,11 +47,15 @@ Page({
       this.getTabBar().updateTheme()
     }
     const user = store.getUser()
+    // 铃铛位置 = 状态栏 + 导航栏高度（对齐胶囊按钮）
+    const g = app.globalData || {}
     this.setData({
       themeClass: app.getThemeClass(),
       greeting: store.getGreeting(),
       userName: user ? user.name : '',
-      todayLabel: store.getTodayLabel()
+      todayLabel: store.getTodayLabel(),
+      navTop: (g.statusBarHeight || 20) + (g.navBarHeight || 44) - 30,
+      unreadCount: store.unreadNotificationCount()
     })
     this.loadData()
   },
@@ -144,6 +151,10 @@ Page({
   onTapTodo(e) {
     const { id } = e.detail
     wx.navigateTo({ url: '/pages/todo-detail/todo-detail?id=' + id })
+  },
+
+  goNotifications() {
+    wx.navigateTo({ url: '/pages/notifications/notifications' })
   },
 
   goCreateTodo() {

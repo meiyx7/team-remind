@@ -2,6 +2,12 @@
 <view class="page-container {{themeClass}}">
   <nav-bar title="团队待办"></nav-bar>
 
+  <!-- 消息铃铛（带未读角标） -->
+  <view class="notif-entry" style="top: {{navTop}}px;" bindtap="goNotifications">
+    <image class="notif-bell" src="{{bellIcon}}" />
+    <view wx:if="{{unreadCount > 0}}" class="notif-badge">{{unreadCount > 99 ? '99+' : unreadCount}}</view>
+  </view>
+
   <view class="home-content">
     <!-- 顶部问候卡：日期 + 今日进度条 -->
     <view class="greeting-card">

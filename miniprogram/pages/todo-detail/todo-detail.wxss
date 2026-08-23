@@ -311,3 +311,165 @@
 .safe-bottom {
   height: env(safe-area-inset-bottom);
 }
+
+/* ---- 0.8 新增：认领池 / 催办 / 评论 / 删除 ---- */
+.tag-claim {
+  background-color: rgba(59, 130, 246, 0.12);
+  color: #3b82f6;
+}
+
+.tag-repeat {
+  background-color: rgba(139, 92, 246, 0.12);
+  color: #8b5cf6;
+}
+
+.slot-open {
+  border: 2rpx dashed var(--border-default);
+  border-radius: var(--radius-md);
+  background-color: transparent !important;
+}
+
+.slot-avatar {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: var(--radius-full);
+  background-color: var(--bg-tertiary);
+  color: var(--text-tertiary);
+  font-size: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slot-text {
+  color: var(--text-tertiary);
+}
+
+.slot-btn,
+.btn-claim {
+  background-color: rgba(16, 185, 129, 0.12);
+  color: var(--color-brand);
+}
+
+.slot-btn {
+  font-size: var(--fs-sm);
+  padding: 10rpx 28rpx;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+}
+
+.btn-claim {
+  width: 100%;
+  font-weight: 600;
+}
+
+.sub-actions {
+  margin-top: 32rpx;
+  display: flex;
+  justify-content: center;
+  gap: 48rpx;
+}
+
+.nudge-link {
+  font-size: var(--fs-sm);
+  color: #f59e0b;
+}
+
+.danger-link {
+  font-size: var(--fs-sm);
+  color: var(--state-error);
+}
+
+/* 评论区 */
+.comments-card {
+  margin-top: 24rpx;
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-xl);
+  padding: 32rpx;
+  box-shadow: var(--shadow-sm);
+}
+
+.comment-list {
+  margin-top: 20rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.comment-item {
+  display: flex;
+  gap: 16rpx;
+}
+
+.comment-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.comment-top {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.comment-author {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.comment-time {
+  font-size: var(--fs-xs);
+  color: var(--text-tertiary);
+}
+
+.comment-content {
+  display: block;
+  margin-top: 6rpx;
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+  line-height: 1.5;
+  word-break: break-all;
+}
+
+.comment-input-row {
+  margin-top: 24rpx;
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.mention-btn {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: var(--radius-full);
+  background-color: var(--bg-tertiary);
+  color: var(--color-brand);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.comment-input {
+  flex: 1;
+  height: 64rpx;
+  background-color: var(--bg-tertiary);
+  border-radius: var(--radius-full);
+  padding: 0 24rpx;
+  font-size: var(--fs-sm);
+  color: var(--text-primary);
+}
+
+.send-btn {
+  font-size: var(--fs-sm);
+  color: var(--text-tertiary);
+  padding: 10rpx 8rpx;
+  flex-shrink: 0;
+}
+
+.send-btn.active {
+  color: var(--color-brand);
+  font-weight: 600;
+}

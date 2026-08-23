@@ -30,12 +30,13 @@
         </view>
         <view class="coming-tag">即将上线</view>
       </view>
-      <view class="settings-row row-coming" bindtap="onComingSoon">
+      <view class="settings-row" bindtap="goNotifications">
         <view class="row-left">
           <image class="row-icon" src="{{icons.bell}}" />
           <text class="settings-label">消息通知</text>
+          <view wx:if="{{unreadCount > 0}}" class="row-badge">{{unreadCount > 99 ? '99+' : unreadCount}}</view>
         </view>
-        <view class="coming-tag">即将上线</view>
+        <image class="chevron" src="{{icons.chevron}}" />
       </view>
     </view>
 

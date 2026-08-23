@@ -7,6 +7,8 @@
     "pages/team-detail/team-detail",
     "pages/todo-detail/todo-detail",
     "pages/create-todo/create-todo",
+    "pages/notifications/notifications",
+    "pages/team-report/team-report",
     "pages/about/about",
     "pages/help/help",
     "pages/agreement/agreement"

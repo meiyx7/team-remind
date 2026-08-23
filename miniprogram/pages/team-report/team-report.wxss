@@ -1,0 +1,157 @@
+/* pages/team-report/team-report.wxss */
+.report-content {
+  padding: 24rpx 32rpx calc(40rpx + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.overview-card,
+.chart-card,
+.member-card {
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-xl);
+  padding: 32rpx;
+  box-shadow: var(--shadow-sm);
+}
+
+.report-title {
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.card-title {
+  font-size: var(--fs-md);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.text-brand {
+  color: var(--color-brand);
+}
+
+.text-danger {
+  color: var(--state-error);
+}
+
+/* 概览 */
+.overview-grid {
+  margin-top: 28rpx;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16rpx;
+}
+
+.ov-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.ov-num {
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.ov-label {
+  font-size: var(--fs-xs);
+  color: var(--text-tertiary);
+}
+
+/* 趋势图 */
+.trend-row {
+  margin-top: 28rpx;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.trend-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+  width: 60rpx;
+}
+
+.trend-count {
+  font-size: var(--fs-xs);
+  color: var(--text-tertiary);
+  height: 28rpx;
+}
+
+.trend-bar-wrap {
+  height: 120rpx;
+  display: flex;
+  align-items: flex-end;
+}
+
+.trend-bar {
+  width: 28rpx;
+  min-height: 6rpx;
+  border-radius: 8rpx 8rpx 4rpx 4rpx;
+  background-color: var(--color-brand-light);
+}
+
+.trend-date {
+  font-size: 20rpx;
+  color: var(--text-tertiary);
+}
+
+/* 成员贡献 */
+.member-rows {
+  margin-top: 24rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.member-row {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.mr-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+}
+
+.mr-top {
+  display: flex;
+  justify-content: space-between;
+}
+
+.mr-name {
+  font-size: var(--fs-sm);
+  color: var(--text-primary);
+}
+
+.mr-num {
+  font-size: var(--fs-xs);
+  color: var(--text-secondary);
+}
+
+.mr-track {
+  height: 12rpx;
+  border-radius: 9999rpx;
+  background-color: var(--bg-tertiary);
+  overflow: hidden;
+}
+
+.mr-fill {
+  height: 100%;
+  border-radius: 9999rpx;
+  background-color: var(--color-brand);
+}
+
+.footnote {
+  text-align: center;
+  font-size: var(--fs-xs);
+  color: var(--text-tertiary);
+}

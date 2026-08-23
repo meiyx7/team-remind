@@ -1,0 +1,33 @@
+<!-- pages/notifications/notifications.wxml 消息中心 -->
+<view class="page-container {{themeClass}}">
+  <nav-bar title="消息中心" show-back="{{true}}"></nav-bar>
+
+  <view class="notif-content">
+    <view wx:if="{{list.length > 0}}" class="notif-list">
+      <view
+        class="notif-item"
+        wx:for="{{list}}"
+        wx:key="id"
+        data-todo-id="{{item.todoId}}"
+        bindtap="onTapItem"
+      >
+        <avatar text="{{item.actorAvatarChar}}" color="{{item.actorAvatarColor}}" size="sm" />
+        <view class="notif-body">
+          <view class="notif-line">
+            <text class="notif-actor">{{item.actorName}}</text>
+            <view class="notif-type {{item.type === 'nudge' ? 'urgent' : ''}}">{{item.typeLabel}}</view>
+          </view>
+          <text class="notif-text">{{item.content}}</text>
+          <text class="notif-time">{{item.timeLabel}}</text>
+        </view>
+        <text wx:if="{{item.todoId}}" class="notif-arrow">›</text>
+      </view>
+    </view>
+
+    <empty-state
+      wx:else
+      text="暂无消息"
+      hint="被催办、被 @ 提及时会出现在这里"
+    />
+  </view>
+</view>

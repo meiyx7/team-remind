@@ -1,0 +1,69 @@
+/* pages/notifications/notifications.wxss */
+.notif-content {
+  padding: 24rpx 32rpx calc(40rpx + env(safe-area-inset-bottom));
+}
+
+.notif-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.notif-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 20rpx;
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-lg, 16rpx);
+  padding: 28rpx 24rpx;
+  box-shadow: var(--shadow-sm);
+}
+
+.notif-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.notif-line {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.notif-actor {
+  font-size: var(--fs-md);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.notif-type {
+  font-size: var(--fs-xs);
+  color: var(--brand);
+  background-color: rgba(16, 185, 129, 0.1);
+  border-radius: 9999rpx;
+  padding: 2rpx 14rpx;
+}
+
+.notif-type.urgent {
+  color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.notif-text {
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.notif-time {
+  font-size: var(--fs-xs);
+  color: var(--text-tertiary);
+}
+
+.notif-arrow {
+  font-size: 36rpx;
+  color: var(--text-tertiary);
+}

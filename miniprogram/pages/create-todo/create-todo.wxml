@@ -35,9 +35,9 @@
 
       <view class="divider"></view>
 
-      <!-- 截止日期 -->
+      <!-- 截止日期 + 时间 -->
       <view class="form-section">
-        <text class="form-label">截止日期</text>
+        <text class="form-label">截止时间</text>
         <picker mode="date" value="{{dueDate}}" start="{{today}}" bindchange="onDateChange">
           <view class="date-row">
             <view class="date-left">
@@ -45,6 +45,15 @@
               <text class="date-text {{dueDate ? '' : 'placeholder'}}">{{dueDate ? dueDate : '请选择截止日期'}}</text>
             </view>
             <image class="chevron-icon" src="{{chevronIcon}}" />
+          </view>
+        </picker>
+        <picker mode="time" value="{{dueTime}}" disabled="{{!dueDate}}" bindchange="onTimeChange">
+          <view class="date-row time-row {{dueDate ? '' : 'disabled'}}">
+            <view class="date-left">
+              <image class="calendar-icon" src="{{clockIcon}}" />
+              <text class="date-text {{dueTime ? '' : 'placeholder'}}">{{dueDate ? (dueTime ? dueTime : '选择提醒时间（可选）') : '先选择日期'}}</text>
+            </view>
+            <view class="time-right" wx:if="{{dueTime}}" catchtap="onClearTime">清除</view>
           </view>
         </picker>
       </view>
@@ -70,6 +79,25 @@
 
       <view class="divider"></view>
 
+      <!-- 指派方式 -->
+      <view class="form-section">
+        <text class="form-label">指派方式</text>
+        <view class="mode-seg">
+          <view
+            class="mode-item {{mode === item.key ? 'active' : ''}}"
+            wx:for="{{modeDefs}}"
+            wx:key="key"
+            data-key="{{item.key}}"
+            bindtap="selectMode"
+          >
+            <text>{{item.label}}</text>
+          </view>
+        </view>
+        <text class="mode-hint">{{mode === 'claim' ? '发布后团队成员可自行认领名额' : '直接指派给指定成员'}}</text>
+      </view>
+
+      <view class="divider"></view>
+
       <!-- 关联团队 -->
       <view class="form-section">
         <text class="form-label">关联团队</text>
@@ -86,8 +114,8 @@
 
       <view class="divider"></view>
 
-      <!-- 指派成员 -->
-      <view class="form-section">
+      <!-- 成员 / 名额 -->
+      <view class="form-section" wx:if="{{mode === 'assign'}}">
         <text class="form-label">指派成员</text>
         <!-- 已选成员 -->
         <view class="selected-members" wx:if="{{selectedMembers.length > 0}}">
@@ -111,6 +139,33 @@
           </view>
         </view>
         <view wx:else class="empty-members">该团队暂无可指派成员</view>
+      </view>
+
+      <!-- 认领名额 -->
+      <view class="form-section" wx:if="{{mode === 'claim'}}">
+        <text class="form-label">认领名额</text>
+        <view class="slot-stepper">
+          <view class="step-btn {{slotCount <= 1 ? 'disabled' : ''}}" bindtap="onSlotMinus">−</view>
+          <text class="slot-num">{{slotCount}} 人</text>
+          <view class="step-btn {{slotCount >= 10 ? 'disabled' : ''}}" bindtap="onSlotPlus">＋</view>
+        </view>
+      </view>
+
+      <view class="divider"></view>
+
+      <!-- 重复规则 -->
+      <view class="form-section">
+        <text class="form-label">重复规则</text>
+        <view class="repeat-chips">
+          <view
+            class="repeat-chip {{repeat === item.key ? 'active' : ''}}"
+            wx:for="{{repeatDefs}}"
+            wx:key="key"
+            data-key="{{item.key}}"
+            bindtap="selectRepeat"
+          >{{item.label}}</view>
+        </view>
+        <text class="mode-hint" wx:if="{{repeat !== 'none'}}'>完成后自动创建下一期任务</text>
       </view>
     </view>
   </view>

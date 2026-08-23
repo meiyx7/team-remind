@@ -7,6 +7,8 @@ Page({
     themeClass: '',
     keyword: '',
     teams: [],
+    archivedTeams: [],
+    showArchived: false,
     searchIcon: icons.search,
     clearIcon: icons.clear,
     chevronIcon: icons.chevron,
@@ -30,12 +32,19 @@ Page({
   },
 
   loadData() {
-    const teams = store.searchTeams(this.data.keyword).map(t => {
+    const decorate = t => {
       const teamTodos = store.getTeamTodos(t.id, 'all')
       const inProgress = teamTodos.filter(x => x.displayStatus === 'in_progress').length
       return { ...t, inProgressCount: inProgress }
-    })
-    this.setData({ teams })
+    }
+    const teams = store.searchTeams(this.data.keyword).map(decorate)
+    const archivedTeams = store.getArchivedTeams().map(decorate)
+    this.setData({ teams, archivedTeams })
+  },
+
+  toggleArchived() {
+    this.setData({ showArchived: !this.data.showArchived })
+    wx.vibrateShort({ type: 'light' })
   },
 
   onSearch(e) {

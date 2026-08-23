@@ -19,6 +19,8 @@
           <text class="team-name">{{team.name}}</text>
           <text class="team-desc">{{team.description}}</text>
         </view>
+        <!-- 周报入口 -->
+        <view class="report-btn" bindtap="goReport">周报</view>
       </view>
       <view class="stats-row">
         <view class="stat-item">
@@ -46,6 +48,9 @@
       <view class="tab-item {{activeTab === 'todos' ? 'active' : ''}}" data-tab="todos" bindtap="switchTab">
         <text>待办</text>
       </view>
+      <view class="tab-item {{activeTab === 'events' ? 'active' : ''}}" data-tab="events" bindtap="switchTab">
+        <text>动态</text>
+      </view>
     </view>
 
     <!-- 成员列表 -->
@@ -53,9 +58,25 @@
       <view class="member-row" wx:for="{{members}}" wx:key="id">
         <avatar text="{{item.avatarChar}}" color="{{item.avatarColor}}" size="sm" />
         <text class="member-name">{{item.name}}</text>
-        <view class="member-badge {{item.role === 'creator' ? 'creator' : 'member'}}">
-          {{item.role === 'creator' ? '创建者' : '成员'}}
-        </view>
+        <view class="member-badge {{item.role}}">{{item.roleLabel}}</view>
+        <view
+          wx:if="{{item.canRemove}}"
+          class="remove-member-btn"
+          data-id="{{item.id}}"
+          data-name="{{item.name}}"
+          bindtap="onRemoveMember"
+        >移除</view>
+      </view>
+
+      <!-- 邀请 / 退出 / 归档 -->
+      <view class="invite-btn" bindtap="onInvite">
+        <image class="invite-icon" src="{{plusIcon}}" />
+        <text>邀请成员</text>
+      </view>
+
+      <view class="danger-actions">
+        <view wx:if="{{isCreator}}" class="ghost-link" bindtap="onToggleArchive">{{team.archived ? '取消归档团队' : '归档团队'}}</view>
+        <view wx:if="{{isMember && !isCreator}}" class="ghost-link danger" bindtap="onQuitTeam">退出团队</view>
       </view>
     </view>
 
@@ -76,10 +97,27 @@
       <empty-state wx:else text="暂无待办" />
     </view>
 
-    <!-- 邀请成员按钮 -->
-    <view wx:if="{{activeTab === 'members'}}" class="invite-btn" bindtap="onInvite">
-      <image class="invite-icon" src="{{plusIcon}}" />
-      <text>邀请成员</text>
+    <!-- 动态流 -->
+    <view wx:if="{{activeTab === 'events'}}" class="events-pane">
+      <view wx:if="{{events.length > 0}}" class="event-list">
+        <view class="event-item" wx:for="{{events}}" wx:key="id">
+          <avatar text="{{item.actorAvatarChar}}" color="{{item.actorAvatarColor}}" size="sm" />
+          <view class="event-body">
+            <view class="event-line">
+              <text class="event-actor">{{item.actorName}}</text>
+              <text class="event-action event-{{item.type}}">{{item.content}}</text>
+            </view>
+            <text class="event-time">{{item.timeLabel}}</text>
+          </view>
+          <text
+            wx:if="{{item.todoId}}"
+            class="event-link"
+            data-id="{{item.todoId}}"
+            catchtap="onTapTodoFromEvent"
+          >查看</text>
+        </view>
+      </view>
+      <empty-state wx:else text="暂无动态" hint="创建、完成、认领、评论都会记录在这里" />
     </view>
   </view>
 </view>

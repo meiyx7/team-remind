@@ -290,3 +290,96 @@
   opacity: 0.88;
   transform: scale(0.99);
 }
+
+/* ---- 0.8 新增：截止时间 / 指派方式 / 名额 / 重复规则 ---- */
+.time-row {
+  margin-top: 16rpx;
+}
+
+.time-row.disabled {
+  opacity: 0.5;
+}
+
+.time-right {
+  font-size: var(--fs-sm);
+  color: var(--color-brand);
+}
+
+.mode-seg {
+  display: flex;
+  background-color: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  padding: 6rpx;
+}
+
+.mode-item {
+  flex: 1;
+  text-align: center;
+  padding: 14rpx 0;
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+}
+
+.mode-item.active {
+  background-color: var(--bg-secondary);
+  color: var(--color-brand);
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+}
+
+.mode-hint {
+  display: block;
+  margin-top: 12rpx;
+  font-size: var(--fs-xs);
+  color: var(--text-tertiary);
+}
+
+.slot-stepper {
+  display: flex;
+  align-items: center;
+  gap: 32rpx;
+}
+
+.step-btn {
+  width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background-color: var(--bg-tertiary);
+  font-size: 36rpx;
+  color: var(--text-primary);
+}
+
+.step-btn.disabled {
+  opacity: 0.35;
+}
+
+.slot-num {
+  min-width: 96rpx;
+  text-align: center;
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.repeat-chips {
+  display: flex;
+  gap: 16rpx;
+}
+
+.repeat-chip {
+  padding: 12rpx 32rpx;
+  border-radius: var(--radius-full);
+  background-color: var(--bg-tertiary);
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+}
+
+.repeat-chip.active {
+  background-color: rgba(16, 185, 129, 0.12);
+  color: var(--color-brand);
+  font-weight: 600;
+}

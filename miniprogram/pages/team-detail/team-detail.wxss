@@ -188,3 +188,104 @@
   width: 28rpx;
   height: 28rpx;
 }
+
+/* ---- 0.8 新增：周报 / 成员管理 / 动态流 ---- */
+.report-btn {
+  margin-left: auto;
+  font-size: var(--fs-sm);
+  color: var(--color-brand);
+  background-color: rgba(16, 185, 129, 0.1);
+  padding: 10rpx 28rpx;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+}
+
+.member-badge.admin {
+  background-color: rgba(59, 130, 246, 0.12);
+  color: #3b82f6;
+}
+
+.remove-member-btn {
+  font-size: var(--fs-xs);
+  color: var(--state-error);
+  padding: 8rpx 20rpx;
+}
+
+.danger-actions {
+  display: flex;
+  justify-content: center;
+  gap: 64rpx;
+  padding: 32rpx 0 8rpx;
+}
+
+.ghost-link {
+  font-size: var(--fs-sm);
+  color: var(--text-tertiary);
+  padding: 12rpx 24rpx;
+}
+
+.ghost-link.danger,
+.event-link {
+  font-size: var(--fs-xs);
+}
+
+.ghost-link.danger {
+  color: var(--state-error);
+}
+
+/* 动态流 */
+.events-pane {
+  padding-top: 24rpx;
+}
+
+.event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.event-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16rpx;
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: 24rpx;
+  box-shadow: var(--shadow-sm);
+}
+
+.event-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.event-line {
+  line-height: 1.5;
+}
+
+.event-actor {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-right: 8rpx;
+}
+
+.event-action {
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+}
+
+.event-complete .event-action { color: var(--color-brand); }
+.event-nudge { color: #f59e0b !important; }
+
+.event-time {
+  display: block;
+  margin-top: 6rpx;
+  font-size: var(--fs-xs);
+  color: var(--text-tertiary);
+}
+
+.event-link {
+  color: var(--color-brand);
+  padding: 4rpx 8rpx;
+}

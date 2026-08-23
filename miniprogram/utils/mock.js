@@ -18,6 +18,7 @@ const seedTeams = [
     accentColor: '#10b981',
     memberCount: 6,
     creatorId: 'm1',
+    archived: false,
     createdAt: '2025-07-01'
   },
   {
@@ -29,6 +30,7 @@ const seedTeams = [
     accentColor: '#3b82f6',
     memberCount: 5,
     creatorId: 'n1',
+    archived: false,
     createdAt: '2025-06-20'
   },
   {
@@ -40,6 +42,7 @@ const seedTeams = [
     accentColor: '#f59e0b',
     memberCount: 5,
     creatorId: 'r1',
+    archived: false,
     createdAt: '2025-05-15'
   }
 ]
@@ -78,6 +81,9 @@ const seedTodos = [
     dueDate: '__TODAY__',
     priority: 'urgent',
     status: 'in_progress',
+    mode: 'assign',
+    repeat: 'none',
+    dueTime: '',
     createdAt: '__TODAY__',
     createdBy: 'm1',
     assignments: [
@@ -97,6 +103,9 @@ const seedTodos = [
     dueDate: '__TODAY__',
     priority: 'normal',
     status: 'pending',
+    mode: 'assign',
+    repeat: 'none',
+    dueTime: '',
     createdAt: '__TODAY__',
     createdBy: 'm2',
     assignments: [
@@ -115,6 +124,9 @@ const seedTodos = [
     dueDate: '__TODAY__',
     priority: 'normal',
     status: 'completed',
+    mode: 'assign',
+    repeat: 'none',
+    dueTime: '',
     createdAt: '__TODAY__',
     createdBy: 'm3',
     assignments: [
@@ -134,6 +146,9 @@ const seedTodos = [
     dueDate: '__TODAY_PLUS_2__',
     priority: 'urgent',
     status: 'in_progress',
+    mode: 'assign',
+    repeat: 'none',
+    dueTime: '',
     createdAt: '__TODAY__',
     createdBy: 'n1',
     assignments: [
@@ -151,6 +166,9 @@ const seedTodos = [
     dueDate: '__TODAY_PLUS_5__',
     priority: 'normal',
     status: 'pending',
+    mode: 'assign',
+    repeat: 'none',
+    dueTime: '',
     createdAt: '__TODAY__',
     createdBy: 'm1',
     assignments: [
@@ -169,11 +187,36 @@ const seedTodos = [
     dueDate: '__TODAY_MINUS_1__',
     priority: 'urgent',
     status: 'in_progress',
+    mode: 'assign',
+    repeat: 'none',
+    dueTime: '',
     createdAt: '__TODAY_MINUS_2__',
     createdBy: 'm2',
     assignments: [
       { memberId: 'm1', memberName: '张明', avatarChar: '张', avatarColor: '#10b981', done: false },
       { memberId: 'm3', memberName: '王芳', avatarChar: '王', avatarColor: '#f59e0b', done: true }
+    ]
+  },
+  {
+    id: 'todo7',
+    title: '布置下周团建场地',
+    description: '认领后负责联系场地、比价并预定（3 个名额）',
+    teamId: 't1',
+    teamName: '产品设计组',
+    assigneeId: '',
+    assigneeName: '待认领',
+    dueDate: '__TODAY_PLUS_3__',
+    priority: 'normal',
+    status: 'pending',
+    mode: 'claim',
+    repeat: 'none',
+    dueTime: '',
+    createdAt: '__TODAY__',
+    createdBy: 'm1',
+    assignments: [
+      { memberId: '', memberName: '', avatarChar: '', avatarColor: '#94a3b8', done: false, open: true },
+      { memberId: '', memberName: '', avatarChar: '', avatarColor: '#94a3b8', done: false, open: true },
+      { memberId: '', memberName: '', avatarChar: '', avatarColor: '#94a3b8', done: false, open: true }
     ]
   }
 ]

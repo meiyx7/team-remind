@@ -219,3 +219,36 @@
   width: 40rpx;
   height: 40rpx;
 }
+
+/* ---- 0.8 新增：消息铃铛入口 ---- */
+.notif-entry {
+  position: fixed;
+  right: 32rpx;
+  width: 72rpx;
+  height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}
+
+.notif-bell {
+  width: 44rpx;
+  height: 44rpx;
+}
+
+.notif-badge {
+  position: absolute;
+  top: -4rpx;
+  right: -8rpx;
+  min-width: 30rpx;
+  height: 30rpx;
+  padding: 0 6rpx;
+  border-radius: 9999rpx;
+  background-color: #ef4444;
+  color: #ffffff;
+  font-size: 18rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

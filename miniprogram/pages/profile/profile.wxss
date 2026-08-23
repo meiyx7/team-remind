@@ -132,3 +132,18 @@
 .logout-btn:active {
   opacity: 0.85;
 }
+
+/* ---- 0.8 新增：消息通知未读角标 ---- */
+.row-badge {
+  min-width: 30rpx;
+  height: 30rpx;
+  padding: 0 8rpx;
+  margin-left: 12rpx;
+  border-radius: 9999rpx;
+  background-color: #ef4444;
+  color: #ffffff;
+  font-size: 18rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

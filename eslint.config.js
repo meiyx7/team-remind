@@ -6,6 +6,7 @@ module.exports = [
     ignores: [
       'node_modules/**',
       'miniprogram_npm/**',
+      'supabase/**',
       // 生成物不参与 lint（来源 scripts/gen-*.js）
       'miniprogram/utils/icons.js',
       'miniprogram/custom-tab-bar/index.js',

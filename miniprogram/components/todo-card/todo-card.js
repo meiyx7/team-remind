@@ -30,9 +30,12 @@ Component({
       const showAssign = total > 1
       const assignText = showAssign ? `${done}/${total}` : ''
 
-      // 单人指派时使用 assigneeName；多人时显示「N 人指派」
+      // 单人指派时使用 assigneeName；多人时显示「N 人指派」；认领池显示空位
       let assigneeLabel = t.assigneeName || '未指派'
-      if (total > 1) {
+      if (t.mode === 'claim') {
+        const unclaimed = t.unclaimed || 0
+        assigneeLabel = unclaimed > 0 ? `认领池 · 剩 ${unclaimed} 个名额` : '认领池 · 已满员'
+      } else if (total > 1) {
         assigneeLabel = `${total} 人指派`
       }
       const subText = this.data.showTeam && t.teamName

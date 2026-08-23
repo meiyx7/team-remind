@@ -1,16 +1,32 @@
 // pages/create-todo/create-todo.js
 const store = require('../../utils/store')
 const icons = require('../../utils/icons')
+const notify = require('../../utils/notify')
 
 Page({
   data: {
     title: '',
     description: '',
     dueDate: '',
+    dueTime: '',                 // HH:mm，可选
     priority: 'normal',          // urgent | normal
     priorityDefs: [
       { key: 'normal', label: '普通' },
       { key: 'urgent', label: '紧急' }
+    ],
+    // 指派方式：assign=指派成员；claim=认领池（发 N 个名额大家抢）
+    mode: 'assign',
+    modeDefs: [
+      { key: 'assign', label: '指派成员' },
+      { key: 'claim', label: '认领池' }
+    ],
+    slotCount: 3,
+    // 重复：none | daily | weekly（完成后自动生成下一期）
+    repeat: 'none',
+    repeatDefs: [
+      { key: 'none', label: '不重复' },
+      { key: 'daily', label: '每天' },
+      { key: 'weekly', label: '每周' }
     ],
     teams: [],
     selectedTeamId: '',
@@ -20,7 +36,8 @@ Page({
     submitting: false,
     themeClass: '',
     calendarIcon: icons.calendar,
-    chevronIcon: icons.chevron
+    chevronIcon: icons.chevron,
+    clockIcon: icons.clock || icons.calendar
   },
 
   onLoad() {
@@ -63,10 +80,12 @@ Page({
     this.setData({ dueDate: e.detail.value })
   },
 
-  selectTeam(e) {
-    const { id } = e.currentTarget.dataset
-    this.setData({ selectedTeamId: id })
-    this.loadMembers()
+  onTimeChange(e) {
+    this.setData({ dueTime: e.detail.value })
+  },
+
+  onClearTime() {
+    this.setData({ dueTime: '' })
   },
 
   selectPriority(e) {
@@ -74,6 +93,36 @@ Page({
     if (key === this.data.priority) return
     this.setData({ priority: key })
     wx.vibrateShort({ type: 'light' })
+  },
+
+  selectMode(e) {
+    const { key } = e.currentTarget.dataset
+    if (key === this.data.mode) return
+    this.setData({ mode: key })
+    wx.vibrateShort({ type: 'light' })
+  },
+
+  onSlotMinus() {
+    if (this.data.slotCount <= 1) return
+    this.setData({ slotCount: this.data.slotCount - 1 })
+  },
+
+  onSlotPlus() {
+    if (this.data.slotCount >= 10) return
+    this.setData({ slotCount: this.data.slotCount + 1 })
+  },
+
+  selectRepeat(e) {
+    const { key } = e.currentTarget.dataset
+    if (key === this.data.repeat) return
+    this.setData({ repeat: key })
+    wx.vibrateShort({ type: 'light' })
+  },
+
+  selectTeam(e) {
+    const { id } = e.currentTarget.dataset
+    this.setData({ selectedTeamId: id })
+    this.loadMembers()
   },
 
   toggleMember(e) {
@@ -97,7 +146,7 @@ Page({
 
   onSubmit() {
     if (this.data.submitting) return
-    const { title, description, dueDate, selectedTeamId, selectedMembers } = this.data
+    const { title, description, dueDate, dueTime, selectedTeamId, selectedMembers, mode, slotCount, repeat } = this.data
     if (!title.trim()) {
       wx.showToast({ title: '请输入待办标题', icon: 'none' })
       return
@@ -112,13 +161,19 @@ Page({
       title: title.trim(),
       description: description.trim(),
       dueDate,
+      dueTime,
       priority: this.data.priority,
       teamId: selectedTeamId,
-      selectedMembers: selectedMembers   // 多人指派，store 内生成 assignments
+      mode,
+      slotCount,
+      repeat,
+      selectedMembers: mode === 'assign' ? selectedMembers : []   // 认领池由 store 生成空名额
     })
     wx.vibrateShort({ type: 'medium' })
 
     wx.showToast({ title: '创建成功', icon: 'success', duration: 800 })
+    // 云端模式下顺带请求订阅消息授权（到期提醒），静默失败不打扰
+    notify.requestRemindPermission()
     setTimeout(() => {
       this.setData({ submitting: false })
       wx.navigateBack({

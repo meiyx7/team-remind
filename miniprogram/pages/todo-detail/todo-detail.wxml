@@ -18,6 +18,9 @@
         <view class="meta-tag tag-status-{{todo.displayStatus}}">
           {{statusLabel}}
         </view>
+        <view wx:if="{{isClaimMode}}" class="meta-tag tag-claim">认领池</view>
+        <view wx:if="{{todo.repeat === 'daily'}}" class="meta-tag tag-repeat">每天</view>
+        <view wx:if="{{todo.repeat === 'weekly'}}" class="meta-tag tag-repeat">每周</view>
         <view class="meta-tag tag-due {{todo.displayStatus === 'overdue' ? 'overdue' : ''}}">
           <text class="meta-cal">◷</text>
           <text>{{todo.dueLabel || todo.dueDate || '无截止'}}</text>
@@ -43,45 +46,100 @@
       <view class="progress-bar-track">
         <view class="progress-bar-fill" style="width: {{todo.assignRate}}%;"></view>
       </view>
-      <text class="progress-count">{{todo.assignDone}}/{{todo.assignTotal}} 人已完成</text>
+      <text class="progress-count">{{todo.assignDone}}/{{todo.assignTotal}}{{isClaimMode ? ' 个名额已完成' : ' 人已完成'}}</text>
     </view>
 
-    <!-- 成员完成情况 -->
+    <!-- 成员完成情况 / 认领名额 -->
     <view class="members-card">
       <view class="card-header">
-        <text class="card-title">指派成员</text>
-        <text class="card-sub">{{todo.assignDone}}/{{todo.assignTotal}}</text>
+        <text class="card-title">{{isClaimMode ? '认领情况' : '指派成员'}}</text>
+        <text class="card-sub">{{todo.assignDone}}/{{todo.assignTotal}}{{isClaimMode && todo.unclaimed > 0 ? ' · 待认领 ' + todo.unclaimed : ''}}</text>
       </view>
       <view class="member-list">
-        <view
-          class="member-item {{item.done ? 'is-done' : ''}} {{item.memberId === myMemberId ? 'is-me' : ''}}"
-          wx:for="{{todo.assignments}}"
-          wx:key="memberId"
-          data-member-id="{{item.memberId}}"
-          bindtap="onToggleMember"
-        >
-          <avatar text="{{item.avatarChar}}" color="{{item.avatarColor}}" size="md" />
-          <view class="member-info">
-            <text class="member-name">{{item.memberName}}{{item.memberId === myMemberId ? '（我）' : ''}}</text>
-            <text class="member-status">{{item.done ? '已完成' : '未完成'}}</text>
+        <!-- 已认领/已指派成员 -->
+        <block wx:for="{{todo.assignments}}" wx:key="index">
+          <view
+            wx:if="{{item.memberId}}"
+            class="member-item {{item.done ? 'is-done' : ''}} {{item.memberId === myMemberId ? 'is-me' : ''}}"
+            data-member-id="{{item.memberId}}"
+            bindtap="onToggleMember"
+          >
+            <avatar text="{{item.avatarChar}}" color="{{item.avatarColor}}" size="md" />
+            <view class="member-info">
+              <text class="member-name">{{item.memberName}}{{item.memberId === myMemberId ? '（我）' : ''}}</text>
+              <text class="member-status">{{item.done ? '已完成' : '未完成'}}</text>
+            </view>
+            <view class="member-check {{item.done ? 'checked' : ''}}">
+              <text wx:if="{{item.done}}" class="check-icon">✓</text>
+            </view>
           </view>
-          <view class="member-check {{item.done ? 'checked' : ''}}">
-            <text wx:if="{{item.done}}" class="check-icon">✓</text>
+
+          <!-- 空余名额（认领池） -->
+          <view wx:else class="member-item slot-open">
+            <view class="slot-avatar">?</view>
+            <view class="member-info">
+              <text class="member-name slot-text">待认领</text>
+            </view>
+            <view class="slot-btn" catchtap="onClaim">认领</view>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <!-- 评论区 -->
+    <view class="comments-card">
+      <view class="card-header">
+        <text class="card-title">评论 {{commentCount > 0 ? commentCount : ''}}</text>
+      </view>
+
+      <view wx:if="{{comments.length > 0}}" class="comment-list">
+        <view class="comment-item" wx:for="{{comments}}" wx:key="id">
+          <avatar text="{{item.authorAvatarChar}}" color="{{item.authorAvatarColor}}" size="sm" />
+          <view class="comment-body">
+            <view class="comment-top">
+              <text class="comment-author">{{item.authorName}}</text>
+              <text class="comment-time">{{item.timeLabel}}</text>
+            </view>
+            <text class="comment-content">{{item.content}}</text>
           </view>
         </view>
       </view>
+
+      <view class="comment-input-row">
+        <view class="mention-btn" bindtap="onMention">@</view>
+        <input
+          class="comment-input"
+          value="{{commentInput}}"
+          placeholder="写评论，@成员 可提醒对方"
+          placeholder-class="form-placeholder"
+          confirm-type="send"
+          bindinput="onCommentInput"
+          bindconfirm="onAddComment"
+          maxlength="200"
+        />
+        <view class="send-btn {{commentInput ? 'active' : ''}}" bindtap="onAddComment">发送</view>
+      </view>
     </view>
 
-    <!-- 我的状态操作 -->
-    <view class="action-bar" wx:if="{{myMemberId}}">
+    <!-- 操作区 -->
+    <view class="action-bar" wx:if="{{canClaim}}">
+      <button class="action-btn btn-claim" bindtap="onClaim">我要认领（剩 {{todo.unclaimed}} 位）</button>
+    </view>
+    <view class="action-bar" wx:elif="{{myMemberId}}">
       <button
         class="action-btn {{myDone ? 'btn-done' : 'btn-do'}}"
         bindtap="onToggleMe"
       >{{myDone ? '标记为未完成' : '标记为已完成'}}</button>
-      <view class="safe-bottom"></view>
     </view>
-    <view class="action-bar" wx:else>
+    <view class="action-bar" wx:elif="{{!isClaimMode}}">
       <view class="not-assigned">你未被指派该待办</view>
     </view>
+
+    <!-- 催办 + 删除 -->
+    <view class="sub-actions">
+      <view wx:if="{{canNudge}}" class="nudge-link" bindtap="onNudge">催一下未完成的成员</view>
+      <view wx:if="{{canDelete}}" class="danger-link" bindtap="onDeleteTodo">删除待办</view>
+    </view>
+    <view class="safe-bottom"></view>
   </view>
 </view>

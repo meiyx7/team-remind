@@ -23,7 +23,8 @@ Page({
     this.setData({
       themeClass: app.getThemeClass(),
       darkMode: app.globalData.darkMode,
-      user: store.getUser()
+      user: store.getUser(),
+      unreadCount: store.unreadNotificationCount()
     })
   },
 
@@ -44,6 +45,10 @@ Page({
 
   onComingSoon() {
     wx.showToast({ title: '该功能即将上线', icon: 'none' })
+  },
+
+  goNotifications() {
+    wx.navigateTo({ url: '/pages/notifications/notifications' })
   },
 
   goHelp() {

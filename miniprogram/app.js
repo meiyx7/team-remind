@@ -1,5 +1,6 @@
 // app.js
 const store = require('./utils/store')
+const sync = require('./utils/sync')
 
 App({
   globalData: {
@@ -16,6 +17,9 @@ App({
 
     // 读取登录用户（经 store 缓存层，避免绕过内存缓存）
     this.globalData.userInfo = store.getUser()
+
+    // 云端模式下启动即触发一次增量同步（本地模式静默跳过）
+    sync.syncNow()
 
     // 读取深色模式偏好
     this.globalData.darkMode = !!wx.getStorageSync('darkMode')

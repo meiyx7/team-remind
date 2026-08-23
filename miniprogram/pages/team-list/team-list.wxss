@@ -126,3 +126,30 @@
   height: 32rpx;
   flex-shrink: 0;
 }
+
+/* ---- 0.8 新增：已归档分组 ---- */
+.archived-section {
+  margin-top: 32rpx;
+}
+
+.archived-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16rpx 8rpx;
+  font-size: var(--fs-sm);
+  color: var(--text-tertiary);
+}
+
+.toggle-arrow {
+  font-size: 28rpx;
+  transition: transform 0.2s;
+}
+
+.toggle-arrow.open {
+  transform: rotate(90deg);
+}
+
+.archived-cards {
+  opacity: 0.65;
+}

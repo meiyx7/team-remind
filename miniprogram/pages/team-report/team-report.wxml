@@ -1,0 +1,68 @@
+<!-- pages/team-report/team-report.wxml 团队周报 -->
+<view class="page-container {{themeClass}}">
+  <nav-bar title="团队周报" show-back="{{true}}"></nav-bar>
+
+  <view wx:if="{{report}}" class="report-content">
+    <!-- 概览卡 -->
+    <view class="overview-card">
+      <text class="report-title">{{teamName}} · 近 7 天</text>
+      <view class="overview-grid">
+        <view class="ov-item">
+          <text class="ov-num">{{report.createdTotal}}</text>
+          <text class="ov-label">新建待办</text>
+        </view>
+        <view class="ov-item">
+          <text class="ov-num text-brand">{{report.completionRate}}%</text>
+          <text class="ov-label">完成率</text>
+        </view>
+        <view class="ov-item">
+          <text class="ov-num">{{report.completedCount}}</text>
+          <text class="ov-label">已完成</text>
+        </view>
+        <view class="ov-item">
+          <text class="ov-num {{report.overdueOpen > 0 ? 'text-danger' : ''}}">{{report.overdueOpen}}</text>
+          <text class="ov-label">逾期未清</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 每日趋势 -->
+    <view class="chart-card">
+      <text class="card-title">每日新建趋势</text>
+      <view class="trend-row">
+        <view class="trend-col" wx:for="{{report.trend}}" wx:key="date">
+          <text class="trend-count">{{item.total || ''}}</text>
+          <view class="trend-bar-wrap">
+            <view class="trend-bar" style="height: {{item.total / report.maxTrend * 120}}rpx;"></view>
+          </view>
+          <text class="trend-date">{{item.label}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 成员贡献 -->
+    <view class="member-card">
+      <text class="card-title">成员贡献（按已完成数排序）</text>
+      <view wx:if="{{report.perMember.length > 0}}" class="member-rows">
+        <view class="member-row" wx:for="{{report.perMember}}" wx:key="memberId">
+          <avatar text="{{item.avatarChar}}" color="{{item.avatarColor}}" size="sm" />
+          <view class="mr-body">
+            <view class="mr-top">
+              <text class="mr-name">{{item.name}}</text>
+              <text class="mr-num">{{item.completed}}/{{item.total}}</text>
+            </view>
+            <view class="mr-track">
+              <view class="mr-fill" style="width: {{item.total === 0 ? 0 : item.completed / item.total * 100}}%;"></view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <empty-state wx:else text="近 7 天暂无任务记录" />
+    </view>
+
+    <!-- 存量提示 -->
+    <view class="footnote" wx:if="{{report.openTotal > 0}}">
+      当前团队仍有 {{report.openTotal}} 项未完成，其中逾期 {{report.overdueOpen}} 项
+    </view>
+  </view>
+</view>
