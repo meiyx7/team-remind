@@ -79,77 +79,90 @@
 
       <view class="divider"></view>
 
-      <!-- 指派方式 -->
-      <view class="form-section">
-        <text class="form-label">指派方式</text>
-        <view class="mode-seg">
-          <view
-            class="mode-item {{mode === item.key ? 'active' : ''}}"
-            wx:for="{{modeDefs}}"
-            wx:key="key"
-            data-key="{{item.key}}"
-            bindtap="selectMode"
-          >
-            <text>{{item.label}}</text>
-          </view>
-        </view>
-        <text class="mode-hint">{{mode === 'claim' ? '发布后团队成员可自行认领名额' : '直接指派给指定成员'}}</text>
-      </view>
-
-      <view class="divider"></view>
-
       <!-- 关联团队 -->
       <view class="form-section">
         <text class="form-label">关联团队</text>
-        <view class="team-chips">
-          <view
-            class="team-chip {{selectedTeamId === item.id ? 'active' : ''}}"
-            wx:for="{{teams}}"
-            wx:key="id"
-            data-id="{{item.id}}"
-            bindtap="selectTeam"
-          >{{item.name}}</view>
+        <block wx:if="{{!locked}}">
+          <view class="team-chips">
+            <view
+              class="team-chip {{selectedTeamId === item.id ? 'active' : ''}}"
+              wx:for="{{teams}}"
+              wx:key="id"
+              data-id="{{item.id}}"
+              bindtap="selectTeam"
+            >{{item.name}}</view>
+          </view>
+        </block>
+        <view wx:else class="lock-team-row">
+          <text class="lock-team-name">{{lockTeamName}}</text>
+          <text class="lock-tag">不可更改</text>
         </view>
       </view>
 
-      <view class="divider"></view>
+      <!-- 指派方式 + 成员/名额（编辑模式下锁定隐藏） -->
+      <block wx:if="{{!locked}}">
+        <view class="divider"></view>
 
-      <!-- 成员 / 名额 -->
-      <view class="form-section" wx:if="{{mode === 'assign'}}">
-        <text class="form-label">指派成员</text>
-        <!-- 已选成员 -->
-        <view class="selected-members" wx:if="{{selectedMembers.length > 0}}">
-          <view class="selected-member" wx:for="{{selectedMembers}}" wx:key="id">
-            <view class="member-avatar-sm" style="background-color: {{item.avatarColor}};">{{item.avatarChar}}</view>
-            <text class="member-name-sm">{{item.name}}</text>
-            <view class="remove-btn" data-id="{{item.id}}" catchtap="removeMember">×</view>
+        <!-- 指派方式 -->
+        <view class="form-section">
+          <text class="form-label">指派方式</text>
+          <view class="mode-seg">
+            <view
+              class="mode-item {{mode === item.key ? 'active' : ''}}"
+              wx:for="{{modeDefs}}"
+              wx:key="key"
+              data-key="{{item.key}}"
+              bindtap="selectMode"
+            >
+              <text>{{item.label}}</text>
+            </view>
+          </view>
+          <text class="mode-hint">{{mode === 'claim' ? '发布后团队成员可自行认领名额' : '直接指派给指定成员'}}</text>
+        </view>
+
+        <view class="divider"></view>
+
+        <!-- 成员 / 名额 -->
+        <view class="form-section" wx:if="{{mode === 'assign'}}">
+          <text class="form-label">指派成员</text>
+          <!-- 已选成员 -->
+          <view class="selected-members" wx:if="{{selectedMembers.length > 0}}">
+            <view class="selected-member" wx:for="{{selectedMembers}}" wx:key="id">
+              <view class="member-avatar-sm" style="background-color: {{item.avatarColor}};">{{item.avatarChar}}</view>
+              <text class="member-name-sm">{{item.name}}</text>
+              <view class="remove-btn" data-id="{{item.id}}" catchtap="removeMember">×</view>
+            </view>
+          </view>
+          <!-- 可选成员 -->
+          <view class="member-pool" wx:if="{{members.length > 0}}">
+            <view
+              class="member-chip"
+              wx:for="{{members}}"
+              wx:key="id"
+              data-id="{{item.id}}"
+              bindtap="toggleMember"
+            >
+              <view class="member-avatar-xs" style="background-color: {{item.avatarColor}};">{{item.avatarChar}}</view>
+              <text class="member-name-xs">{{item.name}}</text>
+            </view>
+          </view>
+          <view wx:else class="empty-members">该团队暂无可指派成员</view>
+        </view>
+
+        <!-- 认领名额 -->
+        <view class="form-section" wx:if="{{mode === 'claim'}}">
+          <text class="form-label">认领名额</text>
+          <view class="slot-stepper">
+            <view class="step-btn {{slotCount <= 1 ? 'disabled' : ''}}" bindtap="onSlotMinus">−</view>
+            <text class="slot-num">{{slotCount}} 人</text>
+            <view class="step-btn {{slotCount >= 10 ? 'disabled' : ''}}" bindtap="onSlotPlus">＋</view>
           </view>
         </view>
-        <!-- 可选成员 -->
-        <view class="member-pool" wx:if="{{members.length > 0}}">
-          <view
-            class="member-chip"
-            wx:for="{{members}}"
-            wx:key="id"
-            data-id="{{item.id}}"
-            bindtap="toggleMember"
-          >
-            <view class="member-avatar-xs" style="background-color: {{item.avatarColor}};">{{item.avatarChar}}</view>
-            <text class="member-name-xs">{{item.name}}</text>
-          </view>
-        </view>
-        <view wx:else class="empty-members">该团队暂无可指派成员</view>
-      </view>
-
-      <!-- 认领名额 -->
-      <view class="form-section" wx:if="{{mode === 'claim'}}">
-        <text class="form-label">认领名额</text>
-        <view class="slot-stepper">
-          <view class="step-btn {{slotCount <= 1 ? 'disabled' : ''}}" bindtap="onSlotMinus">−</view>
-          <text class="slot-num">{{slotCount}} 人</text>
-          <view class="step-btn {{slotCount >= 10 ? 'disabled' : ''}}" bindtap="onSlotPlus">＋</view>
-        </view>
-      </view>
+      </block>
+      <block wx:else>
+        <view class="divider"></view>
+        <view class="edit-lock-hint">团队与成员指派创建后不可修改，如需调整请删除后重新创建</view>
+      </block>
 
       <view class="divider"></view>
 

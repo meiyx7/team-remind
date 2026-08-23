@@ -5,6 +5,9 @@ const notify = require('../../utils/notify')
 
 Page({
   data: {
+    pageTitle: '创建待办',
+    locked: false,               // 编辑模式：团队与成员锁定
+    lockTeamName: '',
     title: '',
     description: '',
     dueDate: '',
@@ -40,10 +43,40 @@ Page({
     clockIcon: icons.clock || icons.calendar
   },
 
-  onLoad() {
+  onLoad(options) {
     const app = getApp()
     const today = store.getTodayStr()
     const teams = store.getTeams()
+
+    // 编辑模式：?id=xxx 载入既有待办（团队与成员不可改）
+    if (options && options.id) {
+      const todo = store.getTodoById(options.id)
+      if (!todo) {
+        wx.showToast({ title: '待办不存在', icon: 'none' })
+        setTimeout(() => wx.navigateBack(), 800)
+        return
+      }
+      this.editId = todo.id
+      this.setData({
+        themeClass: app.getThemeClass(),
+        today,
+        teams,
+        pageTitle: '编辑待办',
+        locked: true,
+        lockTeamName: todo.teamName || '',
+        title: todo.title,
+        description: todo.description || '',
+        dueDate: todo.dueDate || '',
+        dueTime: todo.dueTime || '',
+        priority: todo.priority === 'urgent' ? 'urgent' : 'normal',
+        mode: todo.mode === 'claim' ? 'claim' : 'assign',
+        repeat: ['daily', 'weekly'].indexOf(todo.repeat) !== -1 ? todo.repeat : 'none',
+        slotCount: Math.max(1, Math.min(10, todo.assignTotal || 1)),
+        selectedTeamId: todo.teamId
+      })
+      return
+    }
+
     this.setData({
       themeClass: app.getThemeClass(),
       today,
@@ -157,6 +190,34 @@ Page({
     }
 
     this.setData({ submitting: true })
+
+    // 编辑模式：仅更新内容字段
+    if (this.editId) {
+      const result = store.updateTodo(this.editId, {
+        title: title.trim(),
+        description: description.trim(),
+        dueDate,
+        dueTime,
+        priority: this.data.priority,
+        repeat
+      })
+      if (!result.ok) {
+        const tips = { forbidden: '没有编辑权限', not_found: '待办不存在', no_login: '请先登录' }
+        wx.showToast({ title: tips[result.reason] || '保存失败', icon: 'none' })
+        this.setData({ submitting: false })
+        return
+      }
+      wx.vibrateShort({ type: 'medium' })
+      wx.showToast({ title: '已保存', icon: 'success', duration: 800 })
+      setTimeout(() => {
+        this.setData({ submitting: false })
+        wx.navigateBack({
+          fail: () => wx.switchTab({ url: '/pages/home/home' })
+        })
+      }, 800)
+      return
+    }
+
     store.createTodo({
       title: title.trim(),
       description: description.trim(),

@@ -1,0 +1,141 @@
+/* pages/profile-edit/profile-edit.wxss */
+.form-content {
+  padding: 24rpx 32rpx;
+}
+
+.form-card {
+  background-color: var(--surface);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);
+  box-shadow: var(--card-shadow), inset 0 1rpx 0 var(--surface-edge);
+  border-radius: var(--radius-xl);
+  padding: 32rpx;
+}
+
+.form-label {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.form-input {
+  margin-top: 20rpx;
+  height: 88rpx;
+  background-color: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  padding: 0 24rpx;
+  font-size: var(--fs-md);
+  color: var(--text-primary);
+}
+
+.form-placeholder {
+  color: var(--text-tertiary);
+}
+
+.divider {
+  height: 1rpx;
+  background-color: var(--border-light);
+  margin: 32rpx 0;
+}
+
+.color-row {
+  margin-top: 24rpx;
+  display: flex;
+  gap: 24rpx;
+}
+
+.color-dot {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4rpx solid transparent;
+}
+
+.color-dot.active {
+  border-color: var(--text-primary);
+  transform: scale(1.05);
+}
+
+.color-check {
+  color: #ffffff;
+  font-size: 28rpx;
+  font-weight: 700;
+}
+
+.preview-row {
+  margin-top: 36rpx;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  background-color: var(--bg-tertiary);
+  border-radius: var(--radius-lg);
+  padding: 24rpx;
+}
+
+.preview-avatar {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: var(--radius-lg);
+  color: #ffffff;
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+  min-width: 0;
+}
+
+.preview-name {
+  font-size: var(--fs-md);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.preview-desc {
+  font-size: var(--fs-xs);
+  color: var(--text-tertiary);
+}
+
+.footnote {
+  margin-top: 24rpx;
+  text-align: center;
+  font-size: var(--fs-xs);
+  color: var(--text-tertiary);
+  line-height: 1.6;
+}
+
+.submit-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 16rpx 32rpx;
+  background: var(--nav-bg);
+}
+
+.submit-btn {
+  background-color: var(--color-brand);
+  color: var(--text-inverse);
+  border-radius: var(--radius-full);
+  height: 96rpx;
+  line-height: 96rpx;
+  font-size: var(--fs-md);
+  font-weight: 600;
+}
+
+.submit-btn::after {
+  border: none;
+}
+
+.submit-btn[disabled] {
+  background-color: var(--color-gray-300);
+}

@@ -1,0 +1,57 @@
+<!-- pages/profile-edit/profile-edit.wxml -->
+<view class="page-container {{themeClass}}">
+  <nav-bar title="个人资料" show-back="{{true}}"></nav-bar>
+
+  <view class="form-content">
+    <view class="form-card">
+      <!-- 昵称 -->
+      <view class="form-section">
+        <text class="form-label">昵称</text>
+        <input
+          class="form-input"
+          type="text"
+          placeholder="最多 12 个字"
+          placeholder-class="form-placeholder"
+          value="{{name}}"
+          bindinput="onNameInput"
+          maxlength="12"
+        />
+      </view>
+
+      <view class="divider"></view>
+
+      <!-- 标识色 -->
+      <view class="form-section">
+        <text class="form-label">头像标识色</text>
+        <view class="color-row">
+          <view
+            wx:for="{{palette}}"
+            wx:key="*this"
+            class="color-dot {{colorIndex === index ? 'active' : ''}}"
+            style="background-color: {{item}};"
+            data-index="{{index}}"
+            bindtap="selectColor"
+          >
+            <text wx:if="{{colorIndex === index}}" class="color-check">✓</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 实时预览 -->
+      <view class="preview-row" wx:if="{{name}}">
+        <view class="preview-avatar" style="background-color: {{palette[colorIndex]}};">{{name[0]}}</view>
+        <view class="preview-meta">
+          <text class="preview-name">{{name}}</text>
+          <text class="preview-desc">保存后全团队可见</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="footnote">修改昵称与标识色会同步更新你在所有团队中的成员信息</view>
+  </view>
+
+  <view class="submit-bar">
+    <button class="submit-btn" bindtap="onSave" loading="{{saving}}" disabled="{{saving}}">{{saving ? '保存中...' : '保存'}}</button>
+    <view class="safe-bottom"></view>
+  </view>
+</view>

@@ -13,6 +13,68 @@ function getToken() {
   }
 }
 
+function getSessionRaw() {
+  try {
+    const s = wx.getStorageSync(SESSION_KEY)
+    return s && s.refresh_token ? s : null
+  } catch {
+    return null
+  }
+}
+
+// 会话刷新（单飞行去重）：401 时由 withAuthRetry 调用
+let refreshing = null
+function refreshSession() {
+  if (refreshing) return refreshing
+  refreshing = new Promise((resolve, reject) => {
+    const s = getSessionRaw()
+    if (!s) {
+      reject(new Error('no session'))
+      return
+    }
+    wx.request({
+      url: `${config.SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`,
+      method: 'POST',
+      header: { apikey: config.SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
+      data: { refresh_token: s.refresh_token },
+      timeout: 15000,
+      success(res) {
+        if (res.statusCode >= 200 && res.statusCode < 300 && res.data && res.data.access_token) {
+          setSession(res.data)
+          resolve(res.data.access_token)
+        } else {
+          reject(new Error('refresh failed: HTTP ' + res.statusCode))
+        }
+      },
+      fail(err) {
+        reject(new Error(err.errMsg || '网络请求失败'))
+      }
+    })
+  }).finally(() => { refreshing = null })
+  return refreshing
+}
+
+// 高阶包装：遇 401 刷新会话后重试一次；刷新失败清会话并抛出
+function withAuthRetry(fn) {
+  return async function (...args) {
+    try {
+      return await fn.apply(this, args)
+    } catch (e) {
+      const msg = (e && e.message) || ''
+      if (/HTTP 401/.test(msg) && getSessionRaw()) {
+        try {
+          await refreshSession()
+        } catch {
+          setSession(null)
+          throw e
+        }
+        return fn.apply(this, args)
+      }
+      throw e
+    }
+  }
+}
+
 // 登录成功后持久化会话（access_token / refresh_token / user）
 function setSession(session) {
   try {
@@ -58,17 +120,17 @@ function request(url, options) {
   })
 }
 
-/* ============ PostgREST 数据表 ============ */
+/* ============ PostgREST 数据表（均带 401 自动刷新重试） ============ */
 
 // 查询：rest.select('todos', 'id,title', 'updated_at=gt.2026-01-01&order=updated_at.asc')
-function select(table, columns = '*', query = '') {
+const select = withAuthRetry(function select(table, columns = '*', query = '') {
   let url = `${config.SUPABASE_URL}/rest/v1/${table}?select=${encodeURIComponent(columns)}`
   if (query) url += '&' + query
   return request(url, { header: baseHeaders() })
-}
+})
 
 // 批量 upsert（按主键 id 合并）
-function upsert(table, rows) {
+const upsert = withAuthRetry(function upsert(table, rows) {
   return request(`${config.SUPABASE_URL}/rest/v1/${table}?on_conflict=id`, {
     method: 'POST',
     header: {
@@ -77,16 +139,16 @@ function upsert(table, rows) {
     },
     data: rows
   })
-}
+})
 
 // 按主键更新
-function patch(table, id, fields) {
+const patch = withAuthRetry(function patch(table, id, fields) {
   return request(`${config.SUPABASE_URL}/rest/v1/${table}?id=eq.${encodeURIComponent(id)}`, {
     method: 'PATCH',
     header: { ...baseHeaders(), Prefer: 'return=minimal' },
     data: fields
   })
-}
+})
 
 /* ============ GoTrue 认证 ============ */
 
@@ -113,6 +175,8 @@ function callFunction(name, body, method = 'POST') {
 
 module.exports = {
   getToken,
+  getSessionRaw,
+  refreshSession,
   setSession,
   select,
   upsert,

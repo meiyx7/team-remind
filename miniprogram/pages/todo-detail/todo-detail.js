@@ -66,6 +66,7 @@ Page({
       canClaim: todo.mode === 'claim' && !myAssign && todo.unclaimed > 0,
       canNudge: todo.displayStatus !== 'completed' && nudgeTargets > 0,
       canDelete: !!(user && (isCreator || isTeamAdmin)),
+      canEdit: !!(user && (isCreator || isTeamAdmin)),
       comments,
       commentCount: comments.length
     })
@@ -160,6 +161,11 @@ Page({
         this.setData({ commentInput: this.data.commentInput + '@' + name + ' ' })
       }
     })
+  },
+
+  // 编辑待办（复用创建页，?id= 进入编辑模式）
+  goEdit() {
+    wx.navigateTo({ url: '/pages/create-todo/create-todo?id=' + this.todoId })
   },
 
   // 删除待办（创建者/管理员）

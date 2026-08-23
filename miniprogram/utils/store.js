@@ -16,6 +16,7 @@ const KEYS = {
   TODOS: 'todos',
   COMMENTS: 'comments',
   EVENTS: 'events',
+  PROFILES: 'profiles',
   NOTIF_READ_AT: 'notifReadAt'
 }
 
@@ -132,7 +133,7 @@ function init() {
     return
   }
   // 完整性兜底：任一集合损坏（非数组）时重置
-  const broken = [KEYS.TEAMS, KEYS.MEMBERS, KEYS.TODOS, KEYS.COMMENTS, KEYS.EVENTS]
+  const broken = [KEYS.TEAMS, KEYS.MEMBERS, KEYS.TODOS, KEYS.COMMENTS, KEYS.EVENTS, KEYS.PROFILES]
     .some(k => !Array.isArray(sGet(k, [])))
   if (broken) seedAll()
 }
@@ -146,6 +147,7 @@ function seedAll() {
   sSet(KEYS.TODOS, seedTodos.map(t => hydrate(resolveDate(t))))
   sSet(KEYS.COMMENTS, [])
   sSet(KEYS.EVENTS, [])
+  sSet(KEYS.PROFILES, [])
   sSet(KEYS.SCHEMA, SCHEMA_VERSION)
 }
 
@@ -555,6 +557,44 @@ function getTodoById(id) {
   return decorate(todo, today)
 }
 
+// 编辑待办（创建者或管理员）；团队与成员指派创建后锁定，仅改内容字段
+function updateTodo(id, patch) {
+  const user = getUser()
+  if (!user) return { ok: false, reason: 'no_login' }
+  const todos = rawTodos()
+  const idx = todos.findIndex(t => t.id === id && !t.deleted)
+  if (idx === -1) return { ok: false, reason: 'not_found' }
+  const todo = todos[idx]
+  const allowed = todo.createdBy === user.id || isTeamAdmin(todo.teamId, user.id)
+  if (!allowed) return { ok: false, reason: 'forbidden' }
+
+  if (patch.title !== undefined) {
+    const title = String(patch.title).trim()
+    if (!title) return { ok: false, reason: 'empty_title' }
+    todo.title = title
+  }
+  if (patch.description !== undefined) todo.description = String(patch.description || '').trim()
+  if (patch.dueDate !== undefined) todo.dueDate = normalizeDate(patch.dueDate)
+  if (patch.dueTime !== undefined) todo.dueTime = normalizeTime(patch.dueTime)
+  if (patch.priority !== undefined && ['urgent', 'normal'].indexOf(patch.priority) !== -1) {
+    todo.priority = patch.priority
+  }
+  if (patch.repeat !== undefined) {
+    todo.repeat = ['daily', 'weekly'].indexOf(patch.repeat) !== -1 ? patch.repeat : 'none'
+  }
+
+  todos[idx] = stamp(todo)
+  sSet(KEYS.TODOS, todos)
+  emitEvent('update', {
+    teamId: todo.teamId,
+    todoId: todo.id,
+    todoTitle: todo.title,
+    content: '更新了「' + todo.title + '」'
+  })
+  queueSync()
+  return { ok: true, todo: decorate(todo, getTodayStr()) }
+}
+
 // 删除待办（创建者或管理员；软删除保留同步墓碑）
 function deleteTodo(id) {
   const user = getUser()
@@ -773,6 +813,57 @@ function startTodo(id) {
   sSet(KEYS.TODOS, todos)
   queueSync()
   return todos[idx]
+}
+
+/* ============ 个人资料 ============ */
+
+// 更新昵称/标识色：登录态 + 全部团队成员行 + 云端 profiles 行三处联动
+function updateUserProfile(patch) {
+  const user = getUser()
+  if (!user) return { ok: false, reason: 'no_login' }
+  const name = String(patch.name || '').trim()
+  if (!name) return { ok: false, reason: 'empty_name' }
+
+  const next = {
+    ...user,
+    name,
+    avatarChar: name.charAt(0).toUpperCase(),
+    avatarColor: patch.avatarColor || user.avatarColor
+  }
+  setUser(next)
+
+  // 同一 id 的成员行遍布多个团队，全部同步更新
+  const members = sGet(KEYS.MEMBERS, [])
+  let changed = false
+  members.forEach((m, i) => {
+    if (m.id === next.id && !m.deleted) {
+      members[i] = stamp({ ...m, name: next.name, avatarChar: next.avatarChar, avatarColor: next.avatarColor })
+      changed = true
+    }
+  })
+  if (changed) sSet(KEYS.MEMBERS, members)
+
+  markOwnProfileDirty(next)
+  queueSync()
+  return { ok: true, user: next }
+}
+
+// 把当前用户写入/打脏 profiles 集合，随同步上行到云端
+function markOwnProfileDirty(user) {
+  if (!user || !user.id) return
+  const rows = sGet(KEYS.PROFILES, [])
+  const prev = rows.find(p => p.id === user.id) || {}
+  const row = stamp({
+    ...prev,
+    id: user.id,
+    name: user.name,
+    avatarChar: user.avatarChar || '',
+    avatarColor: user.avatarColor || '#10b981'
+  })
+  const idx = rows.findIndex(p => p.id === user.id)
+  if (idx === -1) rows.push(row)
+  else rows[idx] = row
+  sSet(KEYS.PROFILES, rows)
 }
 
 /* ============ 评论 / 动态 / 消息 ============ */
@@ -1022,6 +1113,7 @@ module.exports = {
   getMyTodosByRange,
   getTodoById,
   createTodo,
+  updateTodo,
   deleteTodo,
   toggleAssignment,
   toggleTodoComplete,
@@ -1037,6 +1129,9 @@ module.exports = {
   markNotificationsRead,
   // 周报
   getTeamWeeklyReport,
+  // 个人资料
+  updateUserProfile,
+  markOwnProfileDirty,
   // 工具
   getGreeting,
   getTodayLabel,

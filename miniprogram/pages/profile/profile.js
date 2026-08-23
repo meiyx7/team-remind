@@ -105,6 +105,10 @@ Page({
     wx.navigateTo({ url: '/pages/notifications/notifications' })
   },
 
+  goProfileEdit() {
+    wx.navigateTo({ url: '/pages/profile-edit/profile-edit' })
+  },
+
   goHelp() {
     wx.navigateTo({ url: '/pages/help/help' })
   },

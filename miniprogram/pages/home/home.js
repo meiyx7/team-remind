@@ -251,6 +251,8 @@ Page({
       })
     }
     if (canDelete) {
+      actions.push('编辑待办')
+      handlers.push(() => wx.navigateTo({ url: '/pages/create-todo/create-todo?id=' + id }))
       actions.push('删除待办')
       handlers.push(() => this._confirmDelete(todo))
     }

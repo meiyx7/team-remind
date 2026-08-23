@@ -483,3 +483,8 @@
   color: var(--color-brand);
   font-weight: 600;
 }
+
+.edit-link {
+  font-size: var(--fs-sm);
+  color: var(--state-info);
+}

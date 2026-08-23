@@ -249,3 +249,14 @@
   font-size: 20rpx;
   color: var(--text-tertiary);
 }
+
+/* ---- 0.12 用户卡编辑入口 ---- */
+.user-edit-arrow {
+  margin-left: auto;
+  font-size: 40rpx;
+  color: var(--text-tertiary);
+}
+
+.card-pressed {
+  opacity: 0.72;
+}

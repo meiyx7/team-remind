@@ -135,8 +135,9 @@
       <view class="not-assigned">你未被指派该待办</view>
     </view>
 
-    <!-- 催办 + 删除 -->
+    <!-- 编辑 + 催办 + 删除 -->
     <view class="sub-actions">
+      <view wx:if="{{canEdit}}" class="edit-link" bindtap="goEdit">编辑</view>
       <view wx:if="{{canNudge}}" class="nudge-link" bindtap="onNudge">催一下未完成的成员</view>
       <view wx:if="{{canDelete}}" class="danger-link" bindtap="onDeleteTodo">删除待办</view>
     </view>

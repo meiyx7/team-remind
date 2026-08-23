@@ -3,14 +3,15 @@
   <nav-bar title="我的"></nav-bar>
 
   <view class="profile-content">
-    <!-- 用户卡 -->
-    <view class="profile-card">
+    <!-- 用户卡（点击编辑资料） -->
+    <view class="profile-card" hover-class="card-pressed" bindtap="goProfileEdit">
       <view class="profile-row">
         <avatar text="{{user.avatarChar}}" color="{{user.avatarColor}}" size="lg" />
         <view class="user-info">
           <text class="user-name">{{user.name}}</text>
           <text class="user-email">{{user.email}}</text>
         </view>
+        <text class="user-edit-arrow">›</text>
       </view>
     </view>
 

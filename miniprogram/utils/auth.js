@@ -42,6 +42,8 @@ async function loginViaWx() {
     avatarColor: '#10b981'
   }
   store.setUser(user)
+  // 首次云端登录：把个人资料行打脏，随同步上行到 profiles 表
+  store.markOwnProfileDirty(user)
   sync.syncNow()
   return user
 }

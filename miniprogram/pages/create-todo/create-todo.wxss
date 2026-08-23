@@ -391,3 +391,35 @@
   color: var(--color-brand);
   font-weight: 600;
 }
+
+/* ---- 0.12 编辑模式：锁定展示 ---- */
+.lock-team-row {
+  margin-top: 20rpx;
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  background-color: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  padding: 22rpx 24rpx;
+}
+
+.lock-team-name {
+  flex: 1;
+  font-size: var(--fs-md);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.lock-tag {
+  font-size: var(--fs-xs);
+  color: var(--text-tertiary);
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-full);
+  padding: 6rpx 18rpx;
+}
+
+.edit-lock-hint {
+  font-size: var(--fs-xs);
+  color: var(--text-tertiary);
+  line-height: 1.6;
+}
