@@ -17,6 +17,15 @@
 
     <!-- 偏好设置 -->
     <view class="settings-group">
+      <view class="settings-row row-info">
+        <view class="row-left">
+          <image class="row-icon" src="{{icons.shield}}" />
+          <text class="settings-label">数据模式</text>
+        </view>
+        <view class="settings-right">
+          <text class="settings-value">{{dataMode}}</text>
+        </view>
+      </view>
       <view class="settings-row">
         <view class="row-left">
           <image class="row-icon" src="{{icons.moon}}" />

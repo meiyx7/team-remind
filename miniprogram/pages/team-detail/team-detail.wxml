@@ -55,20 +55,29 @@
 
     <!-- 成员列表 -->
     <view wx:if="{{activeTab === 'members'}}" class="members-list">
-      <view class="member-row" wx:for="{{members}}" wx:key="id">
+      <view
+        class="member-row"
+        wx:for="{{members}}"
+        wx:key="id"
+        hover-class="{{item.canManage ? 'card-pressed' : ''}}"
+        data-id="{{item.id}}"
+        data-name="{{item.name}}"
+        data-manageable="{{item.canManage}}"
+        bindtap="onMemberTap"
+      >
         <avatar text="{{item.avatarChar}}" color="{{item.avatarColor}}" size="sm" />
         <text class="member-name">{{item.name}}</text>
         <view class="member-badge {{item.role}}">{{item.roleLabel}}</view>
         <view
-          wx:if="{{item.canRemove}}"
+          wx:if="{{item.canRemove && !item.canManage}}"
           class="remove-member-btn"
           data-id="{{item.id}}"
           data-name="{{item.name}}"
-          bindtap="onRemoveMember"
+          catchtap="onRemoveMember"
         >移除</view>
       </view>
 
-      <!-- 邀请 / 退出 / 归档 -->
+      <!-- 邀请 / 退出 / 归档 / 解散 -->
       <view class="invite-btn" bindtap="onInvite">
         <image class="invite-icon" src="{{plusIcon}}" />
         <text>邀请成员</text>
@@ -76,6 +85,7 @@
 
       <view class="danger-actions">
         <view wx:if="{{isCreator}}" class="ghost-link" bindtap="onToggleArchive">{{team.archived ? '取消归档团队' : '归档团队'}}</view>
+        <view wx:if="{{isCreator}}" class="ghost-link danger" bindtap="onDissolveTeam">解散团队</view>
         <view wx:if="{{isMember && !isCreator}}" class="ghost-link danger" bindtap="onQuitTeam">退出团队</view>
       </view>
     </view>

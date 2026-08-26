@@ -69,7 +69,9 @@ Page({
     const memberViews = members.map(m => ({
       ...m,
       roleLabel: m.role === 'creator' ? '创建者' : (m.role === 'admin' ? '管理员' : '成员'),
-      canRemove: isAdmin && m.role !== 'creator' && m.id !== (user && user.id)
+      canRemove: isAdmin && m.role !== 'creator' && m.id !== (user && user.id),
+      // 创建者可点选普通成员/管理员进行角色管理与移除
+      canManage: myRole === 'creator' && m.role !== 'creator' && m.id !== (user && user.id)
     }))
 
     this.setData({
@@ -172,6 +174,88 @@ Page({
             not_found: '成员不存在'
           }
           wx.showToast({ title: tips[result.reason] || '移除失败', icon: 'none' })
+        }
+      }
+    })
+  },
+
+  // 点选成员：创建者可进行角色管理与移除
+  onMemberTap(e) {
+    const { id, name, manageable } = e.currentTarget.dataset
+    if (!manageable) return
+    const target = this.data.members.find(m => m.id === id)
+    if (!target) return
+    const actions = []
+    const handlers = []
+    if (target.role === 'admin') {
+      actions.push('撤销管理员')
+      handlers.push(() => this._applyRole(id, 'member'))
+    } else {
+      actions.push('设为管理员')
+      handlers.push(() => this._applyRole(id, 'admin'))
+    }
+    actions.push('移出团队')
+    handlers.push(() => this._confirmRemove(id, name))
+
+    wx.showActionSheet({
+      itemList: actions,
+      success: (res) => {
+        const fn = handlers[res.tapIndex]
+        if (fn) fn()
+      }
+    })
+  },
+
+  _applyRole(memberId, role) {
+    const result = store.setMemberRole(this.teamId, memberId, role)
+    if (result.ok) {
+      wx.showToast({ title: role === 'admin' ? '已设为管理员' : '已撤销管理员', icon: 'success' })
+      this.loadData()
+    } else {
+      wx.showToast({ title: '操作失败', icon: 'none' })
+    }
+  },
+
+  _confirmRemove(id, name) {
+    wx.showModal({
+      title: '移除成员',
+      content: `确定将「${name}」移出团队吗？`,
+      confirmColor: '#ef4444',
+      success: (res) => {
+        if (!res.confirm) return
+        const result = store.removeMember(this.teamId, id)
+        if (result.ok) {
+          wx.showToast({ title: '已移除', icon: 'success' })
+          this.loadData()
+        } else {
+          const tips = {
+            forbidden: '需要管理员权限',
+            cannot_remove_creator: '不能移除创建者',
+            not_found: '成员不存在'
+          }
+          wx.showToast({ title: tips[result.reason] || '移除失败', icon: 'none' })
+        }
+      }
+    })
+  },
+
+  // 解散团队（仅创建者）：级联移除全部成员与待办
+  onDissolveTeam() {
+    const team = this.data.team
+    if (!team) return
+    wx.showModal({
+      title: '解散团队',
+      content: `解散后「${team.name}」的所有待办与成员关系将永久移除，此操作不可撤销。确定解散吗？`,
+      confirmText: '解散',
+      confirmColor: '#ef4444',
+      success: (res) => {
+        if (!res.confirm) return
+        const result = store.dissolveTeam(this.teamId)
+        if (result.ok) {
+          wx.showToast({ title: '已解散', icon: 'success' })
+          setTimeout(() => this.safeBack(), 600)
+        } else {
+          wx.showToast({ title: '操作失败', icon: 'none' })
         }
       }
     })

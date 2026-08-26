@@ -14,7 +14,13 @@
       <view class="greeting-row">
         <view class="greeting-main">
           <text class="greeting-text">{{greeting}}，{{userName}}</text>
-          <text class="greeting-date">{{todayLabel}}</text>
+          <view class="greeting-date-row">
+            <text class="greeting-date">{{todayLabel}}</text>
+            <view class="sync-chip sync-{{syncState}}" wx:if="{{syncLabel}}">
+              <view class="sync-dot"></view>
+              <text>{{syncLabel}}</text>
+            </view>
+          </view>
         </view>
         <view class="today-ring-wrap" wx:if="{{todayStats.total > 0}}">
           <view class="ring-box">
@@ -58,10 +64,30 @@
       </view>
     </view>
 
+    <!-- 搜索框（可折叠） -->
+    <view wx:if="{{searchVisible}}" class="home-search">
+      <image class="hs-icon" src="{{searchIcon}}" />
+      <input
+        class="hs-input"
+        type="text"
+        placeholder="搜索标题..."
+        placeholder-class="form-placeholder"
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput"
+        confirm-type="search"
+      />
+      <view wx:if="{{searchKeyword}}" class="hs-clear" bindtap="onClearSearch">
+        <image class="hs-clear-icon" src="{{clearIcon}}" />
+      </view>
+    </view>
+
     <!-- 当前筛选标识 -->
     <view class="list-header">
       <text class="list-title">{{listTitle}}</text>
-      <text class="list-count">{{todos.length}} 项</text>
+      <view class="list-header-right">
+        <text class="list-count">{{todos.length}} 项</text>
+        <image class="list-search-btn" src="{{searchIcon}}" bindtap="toggleSearch" />
+      </view>
     </view>
 
     <!-- 待办列表 -->

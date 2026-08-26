@@ -127,16 +127,40 @@ async function pullRemote() {
   saveCursors(cursors)
 }
 
+// 同步状态：idle | syncing | ok | error | local（页面轮询 getStatus 展示）
+const status = {
+  state: 'idle',
+  lastOkAt: '',
+  lastError: ''
+}
+
+function getStatus() {
+  if (!config.cloudEnabled()) return { state: 'local', lastOkAt: status.lastOkAt, lastError: '' }
+  return { ...status }
+}
+
+const TOMBSTONE_KEEP_MS = 30 * 24 * 3600 * 1000   // 软删除墓碑本地保留 30 天
+
 // 触发一次完整同步；任何失败静默降级（本地模式 / 弱网都不影响 UI）
 async function syncNow() {
   if (!config.cloudEnabled() || !getTableRows) {
     return { ok: false, reason: 'local_mode' }
   }
+  status.state = 'syncing'
   try {
     await pushDirty()
     await pullRemote()
+    status.state = 'ok'
+    status.lastOkAt = new Date().toISOString()
+    status.lastError = ''
+    // 墓碑清理：30 天前的软删除行不再占用本地空间
+    for (const t of tables()) {
+      getTableRows.__purgeDeleted(t.key, TOMBSTONE_KEEP_MS)
+    }
     return { ok: true }
   } catch (e) {
+    status.state = 'error'
+    status.lastError = e.message
     console.warn('[sync] 同步失败（稍后重试）:', e.message)
     return { ok: false, reason: e.message }
   }
@@ -145,6 +169,7 @@ async function syncNow() {
 module.exports = {
   bindStore,
   syncNow,
+  getStatus,
   // 供测试使用
   __test: { FIELD_MAPS, toRemote, toLocal }
 }

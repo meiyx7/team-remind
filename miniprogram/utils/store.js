@@ -228,6 +228,18 @@ tableAccessor.__mergeRemote = function (key, remoteRows) {
   if (changed) sSet(key, Object.keys(map).map(k => map[k]))
 }
 
+// 墓碑清理：删除超过 keepMs 的软删除行从本地移除（云端仍在，可再拉回）
+tableAccessor.__purgeDeleted = function (key, keepMs) {
+  const rows = sGet(key, [])
+  const keep = Date.now() - keepMs
+  const kept = rows.filter(r => {
+    if (!r.deleted) return true
+    const t = new Date(r.updatedAt || 0).getTime()
+    return !(t > 0 && t < keep)
+  })
+  if (kept.length !== rows.length) sSet(key, kept)
+}
+
 sync.bindStore(tableAccessor)
 
 /* ============ 团队 ============ */
@@ -286,6 +298,53 @@ function createTeam(data) {
   })
   queueSync()
   return { ok: true, team: newTeam }
+}
+
+// 设置/撤销管理员（仅创建者；不能操作创建者本人）
+function setMemberRole(teamId, memberId, role) {
+  const user = getUser()
+  if (!user) return { ok: false, reason: 'no_login' }
+  if (memberRole(teamId, user.id) !== 'creator') return { ok: false, reason: 'forbidden' }
+  if (role !== 'admin' && role !== 'member') return { ok: false, reason: 'bad_role' }
+  if (memberId === user.id || memberRole(teamId, memberId) === 'creator') {
+    return { ok: false, reason: 'cannot_touch_creator' }
+  }
+  const members = sGet(KEYS.MEMBERS, [])
+  const idx = members.findIndex(m => m.teamId === teamId && m.id === memberId && !m.deleted)
+  if (idx === -1) return { ok: false, reason: 'not_found' }
+  members[idx] = stamp({ ...members[idx], role })
+  sSet(KEYS.MEMBERS, members)
+  queueSync()
+  return { ok: true, member: members[idx] }
+}
+
+// 解散团队（仅创建者）：团队 + 全部成员行 + 全部队内待办 级联软删除
+function dissolveTeam(teamId) {
+  const user = getUser()
+  const team = getTeamById(teamId)
+  if (!team) return { ok: false, reason: 'not_found' }
+  if (!user || team.creatorId !== user.id) return { ok: false, reason: 'forbidden' }
+
+  const teams = sGet(KEYS.TEAMS, [])
+  const tIdx = teams.findIndex(t => t.id === teamId)
+  if (tIdx !== -1) teams[tIdx] = stamp({ ...teams[tIdx], deleted: true })
+  sSet(KEYS.TEAMS, teams)
+
+  const members = sGet(KEYS.MEMBERS, [])
+  members.forEach((m, i) => {
+    if (m.teamId === teamId && !m.deleted) members[i] = stamp({ ...m, deleted: true })
+  })
+  sSet(KEYS.MEMBERS, members)
+
+  const todos = rawTodos()
+  todos.forEach((t, i) => {
+    if (t.teamId === teamId && !t.deleted) todos[i] = stamp({ ...t, deleted: true })
+  })
+  sSet(KEYS.TODOS, todos)
+
+  emitEvent('join', { teamId, content: '团队已解散' })
+  queueSync()
+  return { ok: true }
 }
 
 // 归档 / 取消归档（仅创建者）
@@ -1099,7 +1158,9 @@ module.exports = {
   isTeamAdmin,
   addMember,
   removeMember,
+  setMemberRole,
   quitTeam,
+  dissolveTeam,
   joinTeamByShare,
   // 待办
   findMyAssignment,
@@ -1136,5 +1197,7 @@ module.exports = {
   getGreeting,
   getTodayLabel,
   timeAgoLabel,
-  getTodayStr
+  getTodayStr,
+  // 测试钩子（勿在业务中使用）
+  __internal: { KEYS, sGet, sSet, sRemove, tableAccessor }
 }

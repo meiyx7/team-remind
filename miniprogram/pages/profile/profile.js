@@ -4,6 +4,7 @@ const auth = require('../../utils/auth')
 const version = require('../../utils/version')
 const icons = require('../../utils/icons')
 const themes = require('../../utils/themes')
+const sync = require('../../utils/sync')
 
 Page({
   data: {
@@ -13,6 +14,7 @@ Page({
     version,
     icons,
     unreadCount: 0,
+    dataMode: '本地存储',
     // 换肤 + 界面风格
     showSkins: false,
     skins: [],
@@ -36,7 +38,8 @@ Page({
       currentSkin: app.globalData.skin,
       skinLabel: themes.getSkin(app.globalData.skin).label,
       skins: themes.SKINS.map(s => ({ key: s.key, label: s.label, brand: s.light.brand })),
-      uiStyle: app.globalData.uiStyle
+      uiStyle: app.globalData.uiStyle,
+      dataMode: sync.getStatus().state === 'local' ? '本地存储' : '云端同步'
     })
   },
 

@@ -260,3 +260,11 @@
 .card-pressed {
   opacity: 0.72;
 }
+
+/* ---- 0.13 数据模式信息行 ---- */
+.row-info {
+  opacity: 0.75;
+}
+.row-info:active {
+  background: transparent;
+}

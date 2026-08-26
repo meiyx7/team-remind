@@ -4,6 +4,15 @@ const icons = require('../../utils/icons')
 const themes = require('../../utils/themes')
 const sync = require('../../utils/sync')
 
+// 同步状态展示文案
+const SYNC_LABEL = {
+  ok: '已同步',
+  syncing: '同步中',
+  error: '同步异常',
+  local: '本地模式',
+  idle: '待同步'
+}
+
 // 时间维度视图
 const RANGE_DEFS = [
   { key: 'today', label: '今日' },
@@ -55,7 +64,13 @@ Page({
     emptyAction: '',
     plusIcon: icons.plus,
     bellIcon: icons.bellBrand || icons.bell,
+    searchIcon: icons.search,
+    clearIcon: icons.clear,
     unreadCount: 0,
+    searchVisible: false,
+    searchKeyword: '',
+    syncState: 'idle',
+    syncLabel: '待同步',
     bellTop: 50,                // px，胶囊左侧对齐
     bellRight: 110              // px
   },
@@ -90,12 +105,15 @@ Page({
       bellTop = Math.round(mb.top + (mb.height - circlePx) / 2)
     }
     const user = store.getUser()
+    const syncStatus = sync.getStatus()
     this.setData({
       themeClass: app.getThemeClass(),
       greeting: store.getGreeting(),
       userName: user ? user.name : '',
       todayLabel: store.getTodayLabel(),
       unreadCount: store.unreadNotificationCount(),
+      syncState: syncStatus.state,
+      syncLabel: SYNC_LABEL[syncStatus.state] || '',
       bellTop,
       bellRight
     })
@@ -137,7 +155,7 @@ Page({
     this.refreshListMeta()
   },
 
-  // 双重过滤：时间维度 + 状态维度
+  // 双重过滤：时间维度 + 状态维度 + 关键词
   fetchTodos(range, stat) {
     let list = store.getMyTodosByRange(range)
     if (stat === 'all') {
@@ -149,7 +167,29 @@ Page({
     } else {
       list = list.filter(t => t.displayStatus === stat)
     }
+    // 搜索过滤（标题，忽略大小写）
+    const kw = this.data.searchKeyword.trim().toLowerCase()
+    if (kw) {
+      list = list.filter(t => (t.title || '').toLowerCase().includes(kw))
+    }
     return list
+  },
+
+  /* ---- 搜索 ---- */
+  toggleSearch() {
+    this.setData({ searchVisible: !this.data.searchVisible, searchKeyword: '' })
+    this.loadData()
+    wx.vibrateShort({ type: 'light' })
+  },
+
+  onSearchInput(e) {
+    this.setData({ searchKeyword: e.detail.value })
+    this.loadData()
+  },
+
+  onClearSearch() {
+    this.setData({ searchKeyword: '' })
+    this.loadData()
   },
 
   refreshListMeta() {
