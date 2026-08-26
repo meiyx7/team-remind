@@ -32,7 +32,9 @@ function t(name, fn) {
 
 async function main() {
   // ========== 场景一：全新启动 ==========
-  let { store, auth } = fresh()
+  const boot = fresh()
+  let store = boot.store
+  const auth = boot.auth
   store.init()
 
   t('播种：占位符解析 + schema 版本 + 认领池示例', () => {
@@ -338,7 +340,6 @@ async function main() {
   })
 
   t('墓碑清理：30 天前的软删除行被移除', () => {
-    const acc = store.__internal
     // 造一新一旧两个墓碑（直接写 mem，模拟已落盘数据）
     const rows = [
       { id: 'dead_old', deleted: true, updatedAt: new Date(Date.now() - 40 * 864e5).toISOString() },
