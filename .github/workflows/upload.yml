@@ -31,6 +31,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Smoke test
+        run: npm run test:smoke
+
       - name: Write private key
         env:
           WX_PRIVATE_KEY: ${{ secrets.WX_PRIVATE_KEY }}
