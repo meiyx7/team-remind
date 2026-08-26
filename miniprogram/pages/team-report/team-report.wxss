@@ -157,3 +157,77 @@
   font-size: var(--fs-xs);
   color: var(--text-tertiary);
 }
+
+/* ---- 0.18 标题行 / 导出 / 热力图 ---- */
+.title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.export-btn {
+  font-size: var(--fs-xs);
+  color: var(--color-brand-dark);
+  background-color: var(--brand-tint);
+  border-radius: var(--radius-full);
+  padding: 8rpx 22rpx;
+  font-weight: 500;
+}
+
+.card-pressed {
+  opacity: 0.72;
+}
+
+.heatmap {
+  margin-top: 24rpx;
+  display: flex;
+  gap: 6rpx;
+}
+
+.hm-col {
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+
+.hm-cell {
+  width: 22rpx;
+  height: 22rpx;
+  border-radius: 6rpx;
+  background-color: var(--bg-tertiary);
+}
+
+/* 色阶：品牌色 + 透明度分级（自动跟随皮肤与暗色） */
+.hm-l1 {
+  background-color: var(--color-brand);
+  opacity: 0.25;
+}
+
+.hm-l2 {
+  background-color: var(--color-brand);
+  opacity: 0.45;
+}
+
+.hm-l3 {
+  background-color: var(--color-brand);
+  opacity: 0.7;
+}
+
+.hm-l4 {
+  background-color: var(--color-brand);
+}
+
+.hm-legend {
+  margin-top: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8rpx;
+  font-size: 20rpx;
+  color: var(--text-tertiary);
+}
+
+.hm-legend .hm-cell {
+  width: 18rpx;
+  height: 18rpx;
+}

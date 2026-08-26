@@ -5,7 +5,10 @@
   <view wx:if="{{report}}" class="report-content">
     <!-- 概览卡 -->
     <view class="overview-card">
-      <text class="report-title">{{teamName}} · 近 7 天</text>
+      <view class="title-row">
+        <text class="report-title">{{teamName}} · 近 7 天</text>
+        <view class="export-btn" hover-class="card-pressed" bindtap="onExport">导出清单</view>
+      </view>
       <view class="overview-grid">
         <view class="ov-item">
           <text class="ov-num">{{report.createdTotal}}</text>
@@ -16,13 +19,34 @@
           <text class="ov-label">完成率</text>
         </view>
         <view class="ov-item">
-          <text class="ov-num">{{report.completedCount}}</text>
-          <text class="ov-label">已完成</text>
+          <text class="ov-num">{{report.completedThisWeek}}</text>
+          <text class="ov-label">本周完成</text>
         </view>
         <view class="ov-item">
           <text class="ov-num {{report.overdueOpen > 0 ? 'text-danger' : ''}}">{{report.overdueOpen}}</text>
           <text class="ov-label">逾期未清</text>
         </view>
+      </view>
+    </view>
+
+    <!-- 完成热力图 -->
+    <view class="chart-card">
+      <view class="title-row">
+        <text class="card-title">完成热力图 · 近 12 周</text>
+      </view>
+      <view class="heatmap">
+        <view class="hm-col" wx:for="{{heatWeeks}}" wx:for-item="week" wx:for-index="wi" wx:key="wi">
+          <view class="hm-cell hm-l{{day.level}}" wx:for="{{week}}" wx:for-item="day" wx:key="date"></view>
+        </view>
+      </view>
+      <view class="hm-legend">
+        <text>少</text>
+        <view class="hm-cell hm-l0"></view>
+        <view class="hm-cell hm-l1"></view>
+        <view class="hm-cell hm-l2"></view>
+        <view class="hm-cell hm-l3"></view>
+        <view class="hm-cell hm-l4"></view>
+        <text>多</text>
       </view>
     </view>
 

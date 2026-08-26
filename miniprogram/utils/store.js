@@ -1077,6 +1077,12 @@ function getTeamWeeklyReport(teamId) {
 
   const weekTodos = todos.filter(t => t.createdAt >= weekStart && t.createdAt <= today)
   const completedCount = weekTodos.filter(t => t.status === 'completed').length
+  // 本周完成数（按完成时刻 completedAt 口径，含往期创建本周完成的）
+  const completedThisWeek = todos.filter(t => {
+    if (!t.completedAt) return false
+    const d = String(t.completedAt).slice(0, 10)
+    return d >= weekStart && d <= today
+  }).length
   const overdueOpen = todos.filter(t => computeDisplayStatus(t, today) === 'overdue').length
 
   // 成员贡献（基于近 7 天待办的 assignments，认领/指派均计入）
@@ -1119,6 +1125,7 @@ function getTeamWeeklyReport(teamId) {
     today,
     createdTotal: weekTodos.length,
     completedCount,
+    completedThisWeek,
     completionRate: weekTodos.length === 0 ? 0 : Math.round(completedCount / weekTodos.length * 100),
     overdueOpen,
     openTotal: todos.filter(t => t.status !== 'completed').length,
@@ -1143,6 +1150,37 @@ function getTodayLabel() {
   const d = new Date()
   const week = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][d.getDay()]
   return `${d.getMonth() + 1}月${d.getDate()}日 ${week}`
+}
+
+/* ============ 团队热力图 ============ */
+
+// 近 N 周每日完成数（基于 completedAt），GitHub 风格网格
+function getTeamHeatmap(teamId, weeks = 12) {
+  const todos = getTodos().filter(t => t.teamId === teamId)
+  const byDate = {}
+  todos.forEach(t => {
+    if (!t.completedAt) return
+    const d = String(t.completedAt).slice(0, 10)
+    byDate[d] = (byDate[d] || 0) + 1
+  })
+
+  const total = weeks * 7
+  const cells = []
+  for (let i = total - 1; i >= 0; i--) {
+    const date = getDateStrOffset(-i)
+    const count = byDate[date] || 0
+    const level = count === 0 ? 0 : count === 1 ? 1 : count === 2 ? 2 : count <= 4 ? 3 : 4
+    cells.push({ date, count, level })
+  }
+  const cols = []
+  for (let w = 0; w < weeks; w++) {
+    cols.push(cells.slice(w * 7, w * 7 + 7))
+  }
+  return {
+    cols,
+    total: cells.reduce((s, c) => s + c.count, 0),
+    activeDays: cells.filter(c => c.count > 0).length
+  }
 }
 
 /* ============ 云同步触发（防抖） ============ */
@@ -1211,6 +1249,7 @@ module.exports = {
   markNotificationsRead,
   // 周报
   getTeamWeeklyReport,
+  getTeamHeatmap,
   // 个人资料
   updateUserProfile,
   markOwnProfileDirty,
