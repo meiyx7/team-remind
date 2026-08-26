@@ -23,7 +23,8 @@ const FIELD_MAPS = {
   todos: {
     teamId: 'team_id', teamName: 'team_name', assigneeId: 'assignee_id',
     assigneeName: 'assignee_name', dueDate: 'due_date', dueTime: 'due_time',
-    createdBy: 'created_by', createdAt: 'created_at', updatedAt: 'updated_at'
+    createdBy: 'created_by', createdAt: 'created_at', updatedAt: 'updated_at',
+    completedAt: 'completed_at'
   },
   comments: {
     todoId: 'todo_id', teamId: 'team_id', authorId: 'author_id', authorName: 'author_name',

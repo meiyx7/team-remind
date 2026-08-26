@@ -2,12 +2,14 @@
 const store = require('../../utils/store')
 const icons = require('../../utils/icons')
 const notify = require('../../utils/notify')
+const config = require('../../utils/config')
 
 Page({
   data: {
     pageTitle: '创建待办',
     locked: false,               // 编辑模式：团队与成员锁定
     lockTeamName: '',
+    createdInfo: null,           // 情境化邀请：指派了未加入伙伴时进入成功态
     title: '',
     description: '',
     dueDate: '',
@@ -38,6 +40,7 @@ Page({
     today: '',
     submitting: false,
     themeClass: '',
+    shareIcon: icons.shareWhite,
     calendarIcon: icons.calendar,
     chevronIcon: icons.chevron,
     clockIcon: icons.clock || icons.calendar
@@ -236,7 +239,7 @@ Page({
       return
     }
 
-    store.createTodo({
+    const created = store.createTodo({
       title: title.trim(),
       description: description.trim(),
       dueDate,
@@ -249,15 +252,51 @@ Page({
       selectedMembers: mode === 'assign' ? selectedMembers : []   // 认领池由 store 生成空名额
     })
     wx.vibrateShort({ type: 'medium' })
-
-    wx.showToast({ title: '创建成功', icon: 'success', duration: 800 })
     // 云端模式下顺带请求订阅消息授权（到期提醒），静默失败不打扰
     notify.requestRemindPermission()
+
+    // 情境化邀请第二棒：指派了尚未真实加入的伙伴 → 引导分享团队卡片
+    const unjoined = (mode === 'assign' ? selectedMembers : [])
+      .filter(m => !store.isRealJoinedId(m.id))
+    if (config.cloudEnabled() && unjoined.length > 0) {
+      this.setData({
+        submitting: false,
+        createdInfo: {
+          todoTitle: created.title,
+          teamId: selectedTeamId,
+          teamName: (store.getTeamById(selectedTeamId) || {}).name || '',
+          unjoinedNames: unjoined.map(m => m.name).slice(0, 3).join('、'),
+          unjoinedCount: unjoined.length
+        }
+      })
+      return
+    }
+
+    wx.showToast({ title: '创建成功', icon: 'success', duration: 800 })
     setTimeout(() => {
       this.setData({ submitting: false })
       wx.navigateBack({
         fail: () => wx.switchTab({ url: '/pages/home/home' })
       })
     }, 800)
+  },
+
+  // 成功态「完成」
+  onDone() {
+    wx.navigateBack({
+      fail: () => wx.switchTab({ url: '/pages/home/home' })
+    })
+  },
+
+  // 成功态分享：拉新团队卡片给被指派伙伴
+  onShareAppMessage() {
+    const info = this.data.createdInfo
+    const teamId = info ? info.teamId : this.data.selectedTeamId
+    const team = store.getTeamById(teamId)
+    return {
+      title: `邀请你加入「${team ? team.name : '团队待办'}」`,
+      path: `/pages/team-detail/team-detail?id=${teamId}&from=share`,
+      imageUrl: ''
+    }
   }
 })

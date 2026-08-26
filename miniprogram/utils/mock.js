@@ -124,6 +124,7 @@ const seedTodos = [
     dueDate: '__TODAY__',
     priority: 'normal',
     status: 'completed',
+    completedAt: '__TODAY__',
     mode: 'assign',
     repeat: 'none',
     dueTime: '',

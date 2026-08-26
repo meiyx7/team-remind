@@ -159,10 +159,12 @@ function resolveDate(t) {
   }
   const due = map[t.dueDate]
   const created = map[t.createdAt]
+  const completed = map[t.completedAt]
   return {
     ...t,
     dueDate: due !== undefined ? getDateStrOffset(due) : t.dueDate,
-    createdAt: created !== undefined ? getDateStrOffset(created) : t.createdAt
+    createdAt: created !== undefined ? getDateStrOffset(created) : t.createdAt,
+    completedAt: completed !== undefined ? getDateStrOffset(completed) : t.completedAt
   }
 }
 
@@ -518,6 +520,12 @@ function isMyTodo(todo, userId) {
   return Array.isArray(todo.assignments) && todo.assignments.some(a => a.memberId === userId)
 }
 
+// 成员 id 是否为真实加入用户：云端注册生成 UUID；种子/占位成员为短 id（m2、n1）
+function isRealJoinedId(id) {
+  return typeof id === 'string' &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+}
+
 // 获取当前用户的待办（带展示状态 + 相对日期）
 function getMyTodos(filter) {
   const user = getUser()
@@ -745,6 +753,9 @@ function toggleAssignment(todoId, memberId) {
   const allDone = todo.assignments.every(a => a.done)
   const wasCompleted = todo.status === 'completed'
   todo.status = allDone ? 'completed' : (wasCompleted ? 'in_progress' : todo.status)
+  // 完成时刻：热力图/统计的数据源
+  if (allDone && !wasCompleted) todo.completedAt = nowIso()
+  if (!allDone && wasCompleted) todo.completedAt = ''
   todos[idx] = stamp(todo)
   sSet(KEYS.TODOS, todos)
   if (allDone && !wasCompleted) {
@@ -861,6 +872,7 @@ function toggleTodoComplete(id) {
   const todo = todos[idx]
   const wasCompleted = todo.status === 'completed'
   todo.status = wasCompleted ? 'in_progress' : 'completed'
+  todo.completedAt = wasCompleted ? '' : nowIso()
   todos[idx] = stamp(todo)
   sSet(KEYS.TODOS, todos)
   if (!wasCompleted && (todo.repeat === 'daily' || todo.repeat === 'weekly')) {
@@ -1202,6 +1214,7 @@ module.exports = {
   // 个人资料
   updateUserProfile,
   markOwnProfileDirty,
+  isRealJoinedId,
   // 工具
   getGreeting,
   getTodayLabel,

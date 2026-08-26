@@ -1,7 +1,21 @@
 <!-- pages/create-todo/create-todo.wxml -->
 <view class="page-container {{themeClass}}">
-  <nav-bar title="创建待办" show-back="{{true}}"></nav-bar>
+  <nav-bar title="{{createdInfo ? '待办已创建' : pageTitle}}" show-back="{{!createdInfo}}"></nav-bar>
 
+  <!-- 成功态：指派了未加入的伙伴，引导分享团队卡片 -->
+  <view wx:if="{{createdInfo}}" class="success-view">
+    <view class="success-icon">✓</view>
+    <text class="success-title">「{{createdInfo.todoTitle}}」已创建</text>
+    <text class="success-desc" wx:if="{{createdInfo.unjoinedCount > 0}}">{{createdInfo.unjoinedNames}} 等 {{createdInfo.unjoinedCount}} 位伙伴还没进入团队，分享卡片喊他们</text>
+    <button class="invite-now-btn" open-type="share" hover-class="card-pressed">
+      <image class="invite-share-icon" src="{{shareIcon}}" />
+      <text>分享团队卡片邀请</text>
+    </button>
+    <view class="later-link" bindtap="onDone">完成</view>
+  </view>
+
+  <!-- 表单态 -->
+  <block wx:if="{{!createdInfo}}">
   <view class="form-content">
     <!-- 表单卡 -->
     <view class="form-card">
@@ -191,9 +205,11 @@
     </view>
   </view>
 
-  <!-- 底部提交 -->
-  <view class="submit-bar">
-    <button class="submit-btn" bindtap="onSubmit" loading="{{submitting}}" disabled="{{submitting}}">{{submitting ? '提交中...' : '提交待办'}}</button>
+  </block>
+
+  <!-- 底部提交（成功态隐藏） -->
+  <view class="submit-bar" wx:if="{{!createdInfo}}">
+    <button class="submit-btn" bindtap="onSubmit" loading="{{submitting}}" disabled="{{submitting}}">{{submitting ? '提交中...' : (locked ? '保存修改' : '提交待办')}}</button>
     <view class="safe-bottom"></view>
   </view>
 </view>
