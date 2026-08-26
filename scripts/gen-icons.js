@@ -35,6 +35,8 @@ const defs = {
   clock: svg('<circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/>', { color: GRAY, sw: 1.8 }),
   // 铃铛品牌色版（首页消息入口，浅底上清晰可辨）
   bellBrand: svg('<path d="M18 16v-5a6 6 0 0 0-12 0v5l-2 2.5h16z"/><path d="M10 21a2 2 0 0 0 4 0"/>', { color: BRAND, sw: 1.9 }),
+  // 模板库（四宫格）
+  grid: svg('<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>', { color: GRAY, sw: 1.8 }),
   // 搜索
   search: svg('<circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/>', { color: GRAY, sw: 2 }),
   // 返回

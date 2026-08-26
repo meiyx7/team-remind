@@ -66,6 +66,7 @@ Page({
     bellIcon: icons.bellBrand || icons.bell,
     searchIcon: icons.search,
     clearIcon: icons.clear,
+    tplIcon: icons.grid,
     unreadCount: 0,
     searchVisible: false,
     searchKeyword: '',
@@ -328,6 +329,10 @@ Page({
 
   goNotifications() {
     wx.navigateTo({ url: '/pages/notifications/notifications' })
+  },
+
+  goTemplates() {
+    wx.navigateTo({ url: '/pages/templates/templates' })
   },
 
   goCreateTodo() {

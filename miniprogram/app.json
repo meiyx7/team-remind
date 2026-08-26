@@ -8,6 +8,7 @@
     "pages/todo-detail/todo-detail",
     "pages/create-todo/create-todo",
     "pages/create-team/create-team",
+    "pages/templates/templates",
     "pages/profile-edit/profile-edit",
     "pages/notifications/notifications",
     "pages/team-report/team-report",

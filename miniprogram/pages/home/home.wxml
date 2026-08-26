@@ -86,6 +86,7 @@
       <text class="list-title">{{listTitle}}</text>
       <view class="list-header-right">
         <text class="list-count">{{todos.length}} 项</text>
+        <image class="list-search-btn" src="{{tplIcon}}" bindtap="goTemplates" />
         <image class="list-search-btn" src="{{searchIcon}}" bindtap="toggleSearch" />
       </view>
     </view>

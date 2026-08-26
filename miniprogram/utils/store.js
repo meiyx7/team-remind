@@ -1198,6 +1198,7 @@ module.exports = {
   getTodayLabel,
   timeAgoLabel,
   getTodayStr,
+  getDateStrOffset,
   // 测试钩子（勿在业务中使用）
   __internal: { KEYS, sGet, sSet, sRemove, tableAccessor }
 }

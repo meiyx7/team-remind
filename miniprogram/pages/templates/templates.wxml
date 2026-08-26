@@ -1,0 +1,96 @@
+<!-- pages/templates/templates.wxml 场景模板库 -->
+<view class="page-container {{themeClass}}">
+  <nav-bar title="模板库" show-back="{{true}}"></nav-bar>
+
+  <view class="tpl-content">
+    <!-- 无团队提示 -->
+    <empty-state
+      wx:if="{{teams.length === 0}}"
+      text="还没有团队"
+      hint="先在「团队」页创建一个团队再来吧"
+    />
+
+    <block wx:else>
+      <!-- 模板卡片列表 -->
+      <view
+        class="tpl-card {{activeId === item.id ? 'active' : ''}}"
+        wx:for="{{list}}"
+        wx:key="id"
+        hover-class="card-pressed"
+        data-id="{{item.id}}"
+        bindtap="toggleTemplate"
+      >
+        <view class="tpl-icon" style="background-color: {{item.accent}};">
+          <text class="tpl-icon-char">{{item.name[0]}}</text>
+        </view>
+        <view class="tpl-body">
+          <text class="tpl-name">{{item.name}}</text>
+          <text class="tpl-desc">{{item.description}}</text>
+          <view class="tpl-meta">
+            <text class="tpl-tag">{{item.taskCount}} 项任务</text>
+            <text class="tpl-tag mode">{{item.modeLabel}}</text>
+          </view>
+        </view>
+        <text class="tpl-arrow {{activeId === item.id ? 'open' : ''}}">›</text>
+      </view>
+
+      <!-- 展开的配置面板 -->
+      <view wx:if="{{activeId}}" class="config-card">
+        <text class="cfg-title">生成设置</text>
+
+        <!-- 关联团队 -->
+        <text class="cfg-label">关联团队</text>
+        <view class="team-chips">
+          <view
+            class="team-chip {{selectedTeamId === item.id ? 'active' : ''}}"
+            wx:for="{{teams}}"
+            wx:key="id"
+            data-id="{{item.id}}"
+            bindtap="selectTeam"
+          >{{item.name}}</view>
+        </view>
+
+        <!-- 开始日期 -->
+        <text class="cfg-label">开始日期（任务顺延排布）</text>
+        <picker mode="date" value="{{startDate}}" start="{{today}}" bindchange="onDateChange">
+          <view class="date-row">
+            <text class="date-text">{{startDate}}</text>
+            <text class="date-hint">点击修改</text>
+          </view>
+        </picker>
+
+        <!-- 指派成员（认领模板无需） -->
+        <block wx:if="{{memberViews.length > 0}}">
+          <text class="cfg-label">指派成员</text>
+          <view class="member-chips">
+            <view
+              class="member-chip {{item.selected ? 'selected' : ''}}"
+              wx:for="{{memberViews}}"
+              wx:key="id"
+              data-id="{{item.id}}"
+              hover-class="card-pressed"
+              bindtap="toggleMember"
+            >
+              <text>{{item.name}}</text>
+            </view>
+          </view>
+        </block>
+
+        <!-- 任务预览 -->
+        <text class="cfg-label">将生成以下任务</text>
+        <view class="task-preview">
+          <view class="tp-row" wx:for="{{activeTasks}}" wx:key="title">
+            <text class="tp-date">{{item.dueDate}}</text>
+            <text class="tp-title">{{item.title}}</text>
+          </view>
+        </view>
+
+        <!-- 生成按钮 -->
+        <button class="generate-btn" bindtap="onGenerate" loading="{{generating}}" disabled="{{generating}}">
+          {{generating ? '生成中...' : '一键生成任务组'}}
+        </button>
+      </view>
+    </block>
+  </view>
+  <view class="safe-bottom"></view>
+</view>
