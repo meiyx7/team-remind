@@ -172,29 +172,6 @@
 }
 
 /* 邀请按钮（即将上线） */
-/* 邀请按钮：品牌渐变主按钮（与登录/提交按钮同一视觉语言） */
-button.invite-btn {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 12rpx;
-  margin: 24rpx 0 0;
-  padding: 0;
-  height: 96rpx;
-  line-height: 1;
-  background: linear-gradient(180deg, var(--color-brand-light) 0%, var(--color-brand) 100%);
-  color: #ffffff;
-  border: none;
-  border-radius: var(--radius-lg);
-  font-size: var(--fs-md);
-  font-weight: 600;
-  box-shadow: 0 10rpx 28rpx var(--brand-tint-strong), inset 0 2rpx 0 rgba(255, 255, 255, 0.40);
-}
-
-button.invite-btn::after {
-  border: none;
-}
 
 .invite-btn:active {
   opacity: 0.85;
@@ -351,4 +328,44 @@ button.invite-btn::after {
   background: var(--surface);
   color: var(--text-secondary);
   border: 1rpx solid var(--border-light);
+}
+
+/* ---- 0.15.5 邀请成员行（名册首位，微信原生风格） ---- */
+button.member-row.invite-row {
+  width: 100%;
+  padding: 24rpx 32rpx;
+  margin: 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1rpx solid var(--border-light);
+  border-radius: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  text-align: left;
+}
+
+button.member-row.invite-row::after {
+  border: none;
+}
+
+.invite-avatar {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: var(--radius-full);
+  background-color: var(--brand-tint);
+  border: 2rpx dashed var(--color-brand);
+  color: var(--color-brand);
+  font-size: 40rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.invite-text {
+  font-size: var(--fs-base);
+  font-weight: 600;
+  color: var(--color-brand-dark);
 }

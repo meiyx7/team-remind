@@ -57,6 +57,11 @@
 
     <!-- 成员列表 -->
     <view wx:if="{{activeTab === 'members'}}" class="members-list">
+      <!-- 邀请成员：名册首位（微信原生样式，点击拉起分享面板） -->
+      <button wx:if="{{isMember}}" class="member-row invite-row" open-type="share" hover-class="card-pressed">
+        <view class="invite-avatar">＋</view>
+        <text class="invite-text">邀请成员</text>
+      </button>
       <view
         class="member-row"
         wx:for="{{members}}"
@@ -78,12 +83,6 @@
           catchtap="onRemoveMember"
         >移除</view>
       </view>
-
-      <!-- 邀请成员：直接拉起微信分享面板（仅成员可见） -->
-      <button wx:if="{{isMember}}" class="invite-btn" open-type="share" hover-class="card-pressed">
-        <image class="invite-icon" src="{{shareIcon}}" />
-        <text>邀请微信好友加入</text>
-      </button>
 
       <!-- 治理操作：归档 / 解散 / 退出（独立醒目） -->
       <view class="gov-actions">
