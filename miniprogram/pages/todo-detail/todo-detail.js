@@ -1,5 +1,7 @@
 // pages/todo-detail/todo-detail.js 待办详情（多人指派/认领池 + 评论 + 催办）
 const store = require('../../utils/store')
+const sync = require('../../utils/sync')
+const config = require('../../utils/config')
 
 const STATUS_LABEL = {
   pending: '待开始',
@@ -33,6 +35,33 @@ Page({
 
   onShow() {
     if (this.todoId) this.loadData()
+    this._startPolling()
+  },
+
+  onHide() {
+    this._stopPolling()
+  },
+
+  onUnload() {
+    this._stopPolling()
+  },
+
+  // 前台轮询：详情页停留时每 30s 轻量同步（队友完成/评论准实时可见）
+  _startPolling() {
+    if (!config.cloudEnabled()) return
+    this._stopPolling()
+    this._pollTimer = setInterval(() => {
+      sync.syncNow().then(res => {
+        if (res && res.ok) this.loadData()
+      })
+    }, 30000)
+  },
+
+  _stopPolling() {
+    if (this._pollTimer) {
+      clearInterval(this._pollTimer)
+      this._pollTimer = null
+    }
   },
 
   loadData() {

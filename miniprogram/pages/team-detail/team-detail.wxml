@@ -1,5 +1,7 @@
 <!-- pages/team-detail/team-detail.wxml -->
 <view class="page-container {{themeClass}}">
+  <!-- 离屏分享封面画布 -->
+  <canvas type="2d" id="shareCanvas" class="share-canvas"></canvas>
   <nav-bar title="团队详情" show-back="{{true}}"></nav-bar>
 
   <!-- 团队不存在 / 空态 -->

@@ -301,3 +301,12 @@
   color: var(--color-brand);
   padding: 4rpx 8rpx;
 }
+
+/* ---- 0.15 离屏分享封面画布 ---- */
+.share-canvas {
+  position: fixed;
+  left: -9999px;
+  top: 0;
+  width: 500px;
+  height: 400px;
+}

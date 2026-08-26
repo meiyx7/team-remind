@@ -2,6 +2,7 @@
 const store = require('../../utils/store')
 const icons = require('../../utils/icons')
 const sync = require('../../utils/sync')
+const config = require('../../utils/config')
 
 Page({
   data: {
@@ -41,6 +42,33 @@ Page({
 
   onShow() {
     if (this.teamId) this.loadData()
+    this._startPolling()
+  },
+
+  onHide() {
+    this._stopPolling()
+  },
+
+  onUnload() {
+    this._stopPolling()
+  },
+
+  // 前台轮询：详情页停留时每 30s 轻量同步，队友的变更准实时可见
+  _startPolling() {
+    if (!config.cloudEnabled()) return
+    this._stopPolling()
+    this._pollTimer = setInterval(() => {
+      sync.syncNow().then(res => {
+        if (res && res.ok) this.loadData()
+      })
+    }, 30000)
+  },
+
+  _stopPolling() {
+    if (this._pollTimer) {
+      clearInterval(this._pollTimer)
+      this._pollTimer = null
+    }
   },
 
   onPullDownRefresh() {
@@ -92,6 +120,9 @@ Page({
       this._pendingShareJoin = false
       this.promptJoinIfGuest()
     }
+
+    // 预生成分享封面（异步，失败静默回退默认截图）
+    this._generateShareCard()
   },
 
   // 分享直达页返回兜底：页面栈可能只有当前页
@@ -298,14 +329,121 @@ Page({
     })
   },
 
+  onReady() {
+    // 首次 loadData 发生在渲染完成前，Canvas 未挂载时在此补一次封面生成
+    if (this.teamId && !this._shareImagePath) {
+      this._generateShareCard()
+    }
+  },
+
   // 微信分享卡片
   onShareAppMessage() {
     const team = this.data.team
     return {
       title: `邀请你加入「${team ? team.name : '团队待办'}」`,
       path: `/pages/team-detail/team-detail?id=${this.teamId}&from=share`,
-      imageUrl: ''  // 用默认截图
+      imageUrl: this._shareImagePath || ''  // 品牌封面，生成失败回退默认截图
     }
+  },
+
+  // Canvas 绘制品牌分享封面：团队色渐变 + 名称 + 成员/待办数
+  _generateShareCard() {
+    const team = this.data.team
+    if (!team || this._shareImagePath || this._shareCardBusy) return
+    this._shareCardBusy = true
+
+    const query = this.createSelectorQuery()
+    query.select('#shareCanvas').fields({ node: true, size: true }).exec((res) => {
+      const item = res && res[0]
+      if (!item || !item.node) {
+        this._shareCardBusy = false
+        return
+      }
+      try {
+        const canvas = item.node
+        const W = 500
+        const H = 400
+        const dpr = Math.min(2, (wx.getWindowInfo ? wx.getWindowInfo().pixelRatio : 2) || 2)
+        canvas.width = W * dpr
+        canvas.height = H * dpr
+        const ctx = canvas.getContext('2d')
+        ctx.scale(dpr, dpr)
+
+        // 背景：团队色 -> 白 渐变
+        const grad = ctx.createLinearGradient(0, 0, W, H)
+        grad.addColorStop(0, team.avatarColor || '#10b981')
+        grad.addColorStop(1, '#ffffff')
+        ctx.fillStyle = grad
+        ctx.fillRect(0, 0, W, H)
+
+        // 中央半透明圆角卡
+        this._roundRect(ctx, 24, 24, W - 48, H - 48, 24)
+        ctx.fillStyle = 'rgba(255,255,255,0.88)'
+        ctx.fill()
+
+        // 团队头像圆 + 字
+        ctx.beginPath()
+        ctx.arc(78, 100, 34, 0, Math.PI * 2)
+        ctx.fillStyle = team.avatarColor || '#10b981'
+        ctx.fill()
+        ctx.fillStyle = '#ffffff'
+        ctx.font = 'bold 30px sans-serif'
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'middle'
+        ctx.fillText(team.avatarChar || (team.name || '队')[0], 78, 101)
+
+        // 团队名
+        ctx.textAlign = 'left'
+        ctx.fillStyle = '#0f172a'
+        ctx.font = 'bold 30px sans-serif'
+        const name = (team.name || '').length > 10 ? team.name.slice(0, 10) + '…' : (team.name || '')
+        ctx.fillText(name, 126, 101)
+
+        // 成员/待办信息
+        ctx.font = '22px sans-serif'
+        ctx.fillStyle = '#475569'
+        ctx.fillText(`${team.memberCount} 位成员 · ${this.data.todos.length} 个待办`, 44, 172)
+
+        // 分割线
+        ctx.strokeStyle = '#e5e7eb'
+        ctx.lineWidth = 1
+        ctx.beginPath()
+        ctx.moveTo(44, 204)
+        ctx.lineTo(W - 44, 204)
+        ctx.stroke()
+
+        // 邀请文案
+        ctx.font = 'bold 26px sans-serif'
+        ctx.fillStyle = team.avatarColor || '#10b981'
+        ctx.fillText(`我在「${name}」等你，点击加入`, 44, 248)
+        ctx.font = '20px sans-serif'
+        ctx.fillStyle = '#94a3b8'
+        ctx.fillText('团队待办 · 微信里轻量协作', 44, 296)
+
+        wx.canvasToTempFilePath({
+          canvas,
+          success: (r) => {
+            this._shareImagePath = r.tempFilePath
+            this._shareCardBusy = false
+          },
+          fail: () => {
+            this._shareCardBusy = false
+          }
+        })
+      } catch {
+        this._shareCardBusy = false
+      }
+    })
+  },
+
+  _roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath()
+    ctx.moveTo(x + r, y)
+    ctx.arcTo(x + w, y, x + w, y + h, r)
+    ctx.arcTo(x + w, y + h, x, y + h, r)
+    ctx.arcTo(x, y + h, x, y, r)
+    ctx.arcTo(x, y, x + w, y, r)
+    ctx.closePath()
   },
 
   // 通过分享进入：若未加入则弹窗确认（由 loadData 数据就绪后调用）
