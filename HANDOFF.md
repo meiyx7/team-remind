@@ -29,8 +29,8 @@ team-remind：微信原生团队待办小程序。云端已全链路打通（Sup
 ## 云端（Supabase）
 
 - 项目 ref / URL / token 见 `.secrets.local.md`
-- 七表：profiles/teams/members/todos/comments/events/feedbacks，全 RLS，migration 0001-0003 已应用
-- Edge Functions：wx-login（真实登录）、remind-cron（到期推送，pg_cron 每 5 分钟）
+- 七表 + 去重表：profiles/teams/members/todos/comments/events/feedbacks + notification_log（订阅消息发送去重，仅 service_role），migration 0001-0004 已应用
+- Edge Functions：wx-login（真实登录）、remind-cron（到期提醒去重推送 + 每日晨报聚合推送，公共封装在 functions/_shared/wx.ts；模板 secrets 未配置时自动 skip）
 - 微信域名白名单已配置；WX secrets 已注入；**订阅消息模板 ID 未申请**（config.js 的 SUBSCRIBE_TMPL_IDS 留空）
 
 ## 版本线（近况）
@@ -41,7 +41,7 @@ team-remind：微信原生团队待办小程序。云端已全链路打通（Sup
 
 0. **产品路线图已定稿：docs/ROADMAP.md**（五轴 + 版本线 0.20 订阅消息闭环 → 0.21 日历 → 0.22 排班 → 1.1 子任务），新功能开发以它为准
 1. docs/opencode-issue-draft.md：opencode 客户端 bug 的 issue 草稿，待用户提交（上游不稳定导致回合循环，详见文件）
-2. 订阅消息模板 ID ×2（任务提醒 + 每日晨报）→ 用户在 mp 后台申请，到手填 config.js / supabase secrets；0.20 全部拆解见 ROADMAP.md
+2. **0.20 云端代码已完成并部署**（2026-08-26）：到期提醒去重 + 晨报聚合 + notification_log 表。剩余：①用户在 mp 后台申请两个模板（任务提醒/每日晨报）②到手后 `supabase secrets set WX_TEMPLATE_ID / WX_MORNING_TEMPLATE_ID` + 填 config.js SUBSCRIBE_TMPL_IDS ③客户端授权时机补强 ④真机验证推送到达。拆解见 docs/ROADMAP.md
 3. 1.0 发布：人工清单在 docs/RELEASE-1.0.md（隐私指引填写/类目/基础库版本/双设备回归）
 4. Realtime WebSocket：暂缓（30s 轮询够用，双设备实测前不盲发；ROADMAP「明确不做」区亦有记录）
 
