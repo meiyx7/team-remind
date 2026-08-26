@@ -179,7 +179,7 @@ button.invite-btn {
   align-items: center;
   justify-content: center;
   gap: 12rpx;
-  margin: 32rpx 0 0;
+  margin: 24rpx 0 0;
   padding: 0;
   height: 96rpx;
   line-height: 1;
@@ -319,14 +319,14 @@ button.invite-btn::after {
 
 /* ---- 0.15.1 治理操作 ---- */
 .gov-actions {
-  margin-top: 32rpx;
+  margin-top: 16rpx;
   display: flex;
   flex-direction: column;
   gap: 16rpx;
 }
 
 .gov-btn {
-  height: 92rpx;
+  height: 96rpx;
   display: flex;
   align-items: center;
   justify-content: center;
