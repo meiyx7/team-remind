@@ -511,13 +511,20 @@ function findMyAssignment(todo) {
   return todo.assignments.find(a => a.memberId === user.id) || null
 }
 
+// 待办是否与我相关：单指派字段 或 assignments 中有我（认领池认领后即可见于首页）
+function isMyTodo(todo, userId) {
+  if (!todo || !userId) return false
+  if (todo.assigneeId === userId) return true
+  return Array.isArray(todo.assignments) && todo.assignments.some(a => a.memberId === userId)
+}
+
 // 获取当前用户的待办（带展示状态 + 相对日期）
 function getMyTodos(filter) {
   const user = getUser()
   if (!user) return []
   const today = getTodayStr()
   let list = getTodos()
-    .filter(t => t.assigneeId === user.id)
+    .filter(t => isMyTodo(t, user.id))
     .map(t => decorate(t, today))
 
   if (filter && filter !== 'all') {
@@ -549,7 +556,7 @@ function getMyStatusCounts() {
   const today = getTodayStr()
   const counts = { ...empty }
   getTodos().forEach(t => {
-    if (t.assigneeId !== user.id) return
+    if (!isMyTodo(t, user.id)) return
     const ds = computeDisplayStatus(t, today)
     if (counts[ds] !== undefined) counts[ds]++
   })
@@ -565,7 +572,7 @@ function getMyStats() {
   let completed = 0
   let mine = 0
   getTodos().forEach(t => {
-    if (t.assigneeId !== user.id) return
+    if (!isMyTodo(t, user.id)) return
     const ds = computeDisplayStatus(t, today)
     if (ds === 'completed') completed++
     else {
@@ -585,7 +592,7 @@ function getTodayStats() {
   let total = 0
   let completed = 0
   getTodos().forEach(t => {
-    if (t.assigneeId !== user.id || t.dueDate !== today) return
+    if (!isMyTodo(t, user.id) || t.dueDate !== today) return
     total++
     if (t.status === 'completed') completed++
   })
@@ -821,8 +828,9 @@ function createTodo(data) {
     description: data.description || '',
     teamId: data.teamId,
     teamName: team ? team.name : '',
-    assigneeId: firstAssign.memberId || (user ? user.id : ''),
-    assigneeName: firstAssign.memberName || (user ? user.name : '未指派'),
+    // 认领池：assignee 置空（认领者通过 assignments 通道可见），指派：取首个被指派人
+    assigneeId: data.mode === 'claim' ? '' : (firstAssign.memberId || (user ? user.id : '')),
+    assigneeName: data.mode === 'claim' ? '待认领' : (firstAssign.memberName || (user ? user.name : '未指派')),
     dueDate: normalizeDate(data.dueDate),
     dueTime: normalizeTime(data.dueTime),
     priority: data.priority || 'normal',   // urgent | normal
@@ -1164,6 +1172,7 @@ module.exports = {
   joinTeamByShare,
   // 待办
   findMyAssignment,
+  isMyTodo,
   getTodos,
   getMyTodos,
   getTeamTodos,

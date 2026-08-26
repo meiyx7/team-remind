@@ -194,13 +194,16 @@ Page({
   },
 
   refreshListMeta() {
-    const { rangeFilter, statFilter } = this.data
+    const { rangeFilter, statFilter, searchKeyword } = this.data
     const rangeLabel = (RANGE_DEFS.find(r => r.key === rangeFilter) || {}).label || ''
     const statLabel = statFilter === 'all' ? '' : (STAT_DEFS.find(s => s.key === statFilter) || {}).label
     const title = statLabel ? `${rangeLabel}·${statLabel}` : rangeLabel
-    // 空态文案
+    // 空态文案（搜索中的文案优先）
     let emptyText = '暂无待办', emptyHint = '', emptyAction = ''
-    if (statFilter === 'all') {
+    if (searchKeyword.trim()) {
+      emptyText = '未找到匹配的待办'
+      emptyHint = '换个关键词试试'
+    } else if (statFilter === 'all') {
       emptyText = rangeFilter === 'today' ? '今天暂无待办' : (rangeFilter === 'week' ? '本周暂无待办' : '暂无待办')
       emptyHint = '点击右下角按钮创建'
       emptyAction = '创建待办'

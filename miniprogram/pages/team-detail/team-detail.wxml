@@ -79,8 +79,8 @@
         >移除</view>
       </view>
 
-      <!-- 邀请成员：直接拉起微信分享面板 -->
-      <button class="invite-btn" open-type="share" hover-class="card-pressed">
+      <!-- 邀请成员：直接拉起微信分享面板（仅成员可见） -->
+      <button wx:if="{{isMember}}" class="invite-btn" open-type="share" hover-class="card-pressed">
         <image class="invite-icon" src="{{plusIcon}}" />
         <text>分享给微信好友，邀请加入</text>
       </button>

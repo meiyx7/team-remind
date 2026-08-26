@@ -444,6 +444,20 @@ Page({
       wx.showToast({ title: '你已在团队中', icon: 'none' })
       return
     }
+    // 未登录：引导登录并携带回跳地址（登录后回到本页继续加入）
+    if (!store.getUser()) {
+      wx.showModal({
+        title: '加入团队',
+        content: `登录后即可加入「${team.name}」`,
+        confirmText: '去登录',
+        success: (res) => {
+          if (!res.confirm) return
+          const target = `/pages/team-detail/team-detail?id=${this.teamId}&from=share`
+          wx.reLaunch({ url: '/pages/login/login?from=' + encodeURIComponent(target) })
+        }
+      })
+      return
+    }
     wx.showModal({
       title: '加入团队',
       content: `是否加入「${team.name}」？`,
@@ -454,7 +468,7 @@ Page({
           if (result.ok) {
             wx.showToast({ title: '加入成功', icon: 'success' })
             this.loadData()
-          } else if (result.reason === 'duplicate') {
+            } else if (result.reason === 'duplicate') {
             wx.showToast({ title: '你已在团队中', icon: 'none' })
           } else if (result.reason === 'no_login') {
             wx.showToast({ title: '请先登录', icon: 'none' })

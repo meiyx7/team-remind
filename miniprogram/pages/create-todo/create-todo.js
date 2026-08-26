@@ -101,6 +101,24 @@ Page({
     })
   },
 
+  onShow() {
+    // 从建团页返回：刷新团队列表并补选默认团队
+    if (!this.editId) {
+      const teams = store.getTeams()
+      if (teams.length !== this.data.teams.length) {
+        this.setData({
+          teams,
+          selectedTeamId: this.data.selectedTeamId || (teams.length > 0 ? teams[0].id : '')
+        })
+        this.loadMembers()
+      }
+    }
+  },
+
+  goCreateTeam() {
+    wx.navigateTo({ url: '/pages/create-team/create-team' })
+  },
+
   onTitleInput(e) {
     this.setData({ title: e.detail.value })
   },

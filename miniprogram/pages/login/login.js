@@ -27,16 +27,24 @@ Page({
       wx.showToast({ title: '登录成功', icon: 'success', duration: 800 })
       setTimeout(() => {
         this.setData({ loading: false })
-        if (this.data.from) {
-          // 来自 Tab 页的请求，使用 switchTab
-          wx.switchTab({ url: this.data.from, fail: () => wx.switchTab({ url: '/pages/home/home' }) })
-        } else {
-          wx.switchTab({ url: '/pages/home/home' })
-        }
+        this._navigateBackTo()
       }, 800)
     } catch {
       wx.showToast({ title: '登录失败', icon: 'error' })
       this.setData({ loading: false })
+    }
+  },
+
+  // 登录后回跳：Tab 页用 switchTab，普通页用 redirectTo（替换登录页，避免返回栈残留）
+  _navigateBackTo() {
+    const TABS = ['/pages/home/home', '/pages/team-list/team-list', '/pages/profile/profile']
+    const from = this.data.from
+    if (from && TABS.indexOf(from) !== -1) {
+      wx.switchTab({ url: from, fail: () => wx.switchTab({ url: '/pages/home/home' }) })
+    } else if (from) {
+      wx.redirectTo({ url: from, fail: () => wx.switchTab({ url: '/pages/home/home' }) })
+    } else {
+      wx.switchTab({ url: '/pages/home/home' })
     }
   },
 

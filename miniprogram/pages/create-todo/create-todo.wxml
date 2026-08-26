@@ -82,7 +82,13 @@
       <!-- 关联团队 -->
       <view class="form-section">
         <text class="form-label">关联团队</text>
-        <block wx:if="{{!locked}}">
+        <block wx:if="{{locked}}">
+          <view class="lock-team-row">
+            <text class="lock-team-name">{{lockTeamName}}</text>
+            <text class="lock-tag">不可更改</text>
+          </view>
+        </block>
+        <block wx:elif="{{teams.length > 0}}">
           <view class="team-chips">
             <view
               class="team-chip {{selectedTeamId === item.id ? 'active' : ''}}"
@@ -93,10 +99,12 @@
             >{{item.name}}</view>
           </view>
         </block>
-        <view wx:else class="lock-team-row">
-          <text class="lock-team-name">{{lockTeamName}}</text>
-          <text class="lock-tag">不可更改</text>
-        </view>
+        <block wx:else>
+          <view class="no-team-guide">
+            <text class="ntg-text">还没有团队，待办需要挂在团队下</text>
+            <view class="ntg-btn" hover-class="card-pressed" bindtap="goCreateTeam">去创建团队</view>
+          </view>
+        </block>
       </view>
 
       <!-- 指派方式 + 成员/名额（编辑模式下锁定隐藏） -->

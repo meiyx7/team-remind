@@ -46,6 +46,10 @@ Page({
     }
   },
 
+  goCreateTeam() {
+    wx.navigateTo({ url: '/pages/create-team/create-team' })
+  },
+
   loadMembers() {
     const members = store.getMembersByTeamId(this.data.selectedTeamId)
     const user = store.getUser()

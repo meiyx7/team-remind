@@ -56,10 +56,10 @@ App({
     }
   },
 
-  // 检查登录态，未登录则跳转登录页
+  // 检查登录态，未登录则跳转登录页（reLaunch：从 Tab 页发起 redirectTo 不可靠）
   ensureLogin(redirectBack) {
     if (!this.globalData.userInfo) {
-      wx.redirectTo({
+      wx.reLaunch({
         url: '/pages/login/login' + (redirectBack ? '?from=' + encodeURIComponent(redirectBack) : '')
       })
       return false

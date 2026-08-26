@@ -7,7 +7,9 @@
     <empty-state
       wx:if="{{teams.length === 0}}"
       text="还没有团队"
-      hint="先在「团队」页创建一个团队再来吧"
+      hint="待办需要挂在团队下，先创建一个吧"
+      action-text="新建团队"
+      bind:action="goCreateTeam"
     />
 
     <block wx:else>
