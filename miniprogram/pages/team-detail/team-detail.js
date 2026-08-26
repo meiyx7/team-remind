@@ -23,6 +23,7 @@ Page({
     ],
     filteredTodos: [],
     plusIcon: icons.plus,
+    shareIcon: icons.shareWhite,
     isMember: false,
     isAdmin: false,           // 创建者或管理员：可移除成员
     isCreator: false,         // 创建者：可归档团队

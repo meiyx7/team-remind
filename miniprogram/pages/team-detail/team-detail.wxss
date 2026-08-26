@@ -172,22 +172,28 @@
 }
 
 /* 邀请按钮（即将上线） */
-.invite-btn {
+/* 邀请按钮：品牌渐变主按钮（与登录/提交按钮同一视觉语言） */
+button.invite-btn {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   gap: 12rpx;
-  margin-top: 32rpx;
+  margin: 32rpx 0 0;
+  padding: 0;
   height: 96rpx;
-  background: var(--surface);
-  backdrop-filter: var(--surface-blur);
-  -webkit-backdrop-filter: var(--surface-blur);
-  color: var(--text-tertiary);
-  border: 1rpx dashed var(--border-default);
+  line-height: 1;
+  background: linear-gradient(180deg, var(--color-brand-light) 0%, var(--color-brand) 100%);
+  color: #ffffff;
+  border: none;
   border-radius: var(--radius-lg);
   font-size: var(--fs-md);
-  font-weight: 500;
+  font-weight: 600;
+  box-shadow: 0 10rpx 28rpx var(--brand-tint-strong), inset 0 2rpx 0 rgba(255, 255, 255, 0.40);
+}
+
+button.invite-btn::after {
+  border: none;
 }
 
 .invite-btn:active {
@@ -195,8 +201,8 @@
 }
 
 .invite-icon {
-  width: 28rpx;
-  height: 28rpx;
+  width: 36rpx;
+  height: 36rpx;
 }
 
 /* ---- 0.8 新增：周报 / 成员管理 / 动态流 ---- */
@@ -311,22 +317,7 @@
   height: 400px;
 }
 
-/* ---- 0.15.1 邀请按钮（button 复位）与治理操作 ---- */
-button.invite-btn {
-  padding: 0;
-  margin: 32rpx 0 0;
-  line-height: inherit;
-  background: var(--surface);
-  backdrop-filter: var(--surface-blur);
-  -webkit-backdrop-filter: var(--surface-blur);
-  border: 1rpx dashed var(--border-default);
-  border-radius: var(--radius-lg);
-}
-
-button.invite-btn::after {
-  border: none;
-}
-
+/* ---- 0.15.1 治理操作 ---- */
 .gov-actions {
   margin-top: 32rpx;
   display: flex;
