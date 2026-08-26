@@ -1,5 +1,6 @@
 // pages/create-team/create-team.js
 const store = require('../../utils/store')
+const icons = require('../../utils/icons')
 
 Page({
   data: {
@@ -8,7 +9,9 @@ Page({
     description: '',
     colorIndex: 0,
     palette: [],
-    submitting: false
+    submitting: false,
+    createdTeam: null,         // 建团成功后进入情境引导态
+    shareIcon: icons.shareWhite
   },
 
   onLoad() {
@@ -55,11 +58,27 @@ Page({
     }
     wx.vibrateShort({ type: 'medium' })
     wx.showToast({ title: '创建成功', icon: 'success', duration: 800 })
+    // 情境化邀请：创建成功即切换为成功态，主按钮引导拉人（团队冷启动最强时机）
     setTimeout(() => {
-      this.setData({ submitting: false })
-      wx.navigateBack({
-        fail: () => wx.switchTab({ url: '/pages/team-list/team-list' })
-      })
+      this.setData({ submitting: false, createdTeam: result.team })
     }, 800)
+  },
+
+  // 成功态「完成」：返回列表
+  goBack() {
+    wx.navigateBack({
+      fail: () => wx.switchTab({ url: '/pages/team-list/team-list' })
+    })
+  },
+
+  // 成功态分享按钮拉起的转发卡片
+  onShareAppMessage() {
+    const t = this.data.createdTeam
+    if (!t) return { title: '团队待办', path: '/pages/home/home' }
+    return {
+      title: `邀请你加入「${t.name}」`,
+      path: `/pages/team-detail/team-detail?id=${t.id}&from=share`,
+      imageUrl: ''
+    }
   }
 })

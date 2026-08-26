@@ -1,8 +1,21 @@
 <!-- pages/create-team/create-team.wxml -->
 <view class="page-container {{themeClass}}">
-  <nav-bar title="创建团队" show-back="{{true}}"></nav-bar>
+  <nav-bar title="{{createdTeam ? '团队已创建' : '创建团队'}}" show-back="{{!createdTeam}}"></nav-bar>
 
-  <view class="form-content">
+  <!-- 成功态：情境化邀请（全产品最强邀请时机） -->
+  <view wx:if="{{createdTeam}}" class="success-view">
+    <view class="success-icon">✓</view>
+    <text class="success-title">「{{createdTeam.name}}」建好了</text>
+    <text class="success-desc">一个人做待办没意思，拉上伙伴一起</text>
+    <button class="invite-now-btn" open-type="share" hover-class="card-pressed">
+      <image class="invite-share-icon" src="{{shareIcon}}" />
+      <text>立即邀请成员</text>
+    </button>
+    <view class="later-link" bindtap="goBack">稍后再说</view>
+  </view>
+
+  <!-- 表单态 -->
+  <view wx:else class="form-content">
     <view class="form-card">
       <!-- 团队名称 -->
       <view class="form-section">
@@ -64,7 +77,7 @@
     </view>
   </view>
 
-  <view class="submit-bar">
+  <view class="submit-bar" wx:if="{{!createdTeam}}">
     <button class="submit-btn" bindtap="onSubmit" loading="{{submitting}}" disabled="{{submitting}}">{{submitting ? '创建中...' : '创建团队'}}</button>
     <view class="safe-bottom"></view>
   </view>
