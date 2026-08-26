@@ -163,3 +163,33 @@
 .card-pressed {
   opacity: 0.72;
 }
+
+/* ---- 0.15.1 新建团队显性入口 ---- */
+.create-team-card {
+  margin-top: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16rpx;
+  padding: 36rpx 0;
+  border: 2rpx dashed var(--color-brand);
+  border-radius: var(--radius-lg);
+  background-color: var(--brand-tint);
+}
+
+.ctc-plus {
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: var(--radius-full);
+  background-color: var(--color-brand);
+  color: #ffffff;
+  font-size: 32rpx;
+  line-height: 44rpx;
+  text-align: center;
+}
+
+.ctc-text {
+  font-size: var(--fs-md);
+  font-weight: 600;
+  color: var(--color-brand-dark);
+}

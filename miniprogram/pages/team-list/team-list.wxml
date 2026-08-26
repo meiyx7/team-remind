@@ -47,6 +47,12 @@
       </view>
     </view>
 
+    <!-- 新建团队入口 -->
+    <view class="create-team-card" hover-class="card-pressed" bindtap="onCreateTeam">
+      <view class="ctc-plus">＋</view>
+      <text class="ctc-text">新建团队</text>
+    </view>
+
     <!-- 已归档团队 -->
     <view wx:if="{{archivedTeams.length > 0}}" class="archived-section">
       <view class="archived-toggle" bindtap="toggleArchived">
@@ -75,7 +81,9 @@
     <empty-state
       wx:if="{{teams.length === 0 && archivedTeams.length === 0}}"
       text="{{keyword ? '未找到匹配的团队' : '还没有团队'}}"
-      hint="{{keyword ? '换个关键词试试' : '点击左上角按钮创建第一个团队'}}"
+      hint="{{keyword ? '换个关键词试试' : '创建一个团队，拉上伙伴开始协作'}}"
+      action-text="{{keyword ? '' : '新建团队'}}"
+      bind:action="onCreateTeam"
     />
   </view>
 </view>

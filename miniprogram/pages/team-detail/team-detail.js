@@ -317,17 +317,7 @@ Page({
 
   /* ---- 邀请 / 分享 ---- */
 
-  // 邀请成员：拉起微信分享
-  onInvite() {
-    const team = this.data.team
-    if (!team) return
-    wx.showModal({
-      title: '邀请成员',
-      content: '点击右上角「···」→「转发」或使用下方「分享给好友」按钮，将团队卡片发给微信好友，对方打开即可加入。',
-      confirmText: '我知道了',
-      showCancel: false
-    })
-  },
+  // 分享卡片（成员 Tab 的「分享给好友」按钮 open-type=share 直接触发）
 
   onReady() {
     // 首次 loadData 发生在渲染完成前，Canvas 未挂载时在此补一次封面生成

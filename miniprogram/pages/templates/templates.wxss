@@ -218,7 +218,11 @@
   color: var(--text-inverse);
   border-radius: var(--radius-full);
   height: 92rpx;
-  line-height: 92rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
   font-size: var(--fs-md);
   font-weight: 600;
   box-shadow: 0 10rpx 28rpx var(--brand-tint-strong), inset 0 2rpx 0 rgba(255, 255, 255, 0.40);

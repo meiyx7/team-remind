@@ -310,3 +310,54 @@
   width: 500px;
   height: 400px;
 }
+
+/* ---- 0.15.1 邀请按钮（button 复位）与治理操作 ---- */
+button.invite-btn {
+  padding: 0;
+  margin: 32rpx 0 0;
+  line-height: inherit;
+  background: var(--surface);
+  backdrop-filter: var(--surface-blur);
+  -webkit-backdrop-filter: var(--surface-blur);
+  border: 1rpx dashed var(--border-default);
+  border-radius: var(--radius-lg);
+}
+
+button.invite-btn::after {
+  border: none;
+}
+
+.gov-actions {
+  margin-top: 32rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.gov-btn {
+  height: 92rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-lg);
+  font-size: var(--fs-base);
+  font-weight: 600;
+}
+
+.gov-btn.warn {
+  background: var(--warning-tint);
+  color: var(--state-warning);
+  border: 1rpx solid var(--state-warning);
+}
+
+.gov-btn.danger {
+  background: var(--error-tint);
+  color: var(--state-error);
+  border: 1rpx solid var(--state-error);
+}
+
+.gov-btn.plain {
+  background: var(--surface);
+  color: var(--text-secondary);
+  border: 1rpx solid var(--border-light);
+}
