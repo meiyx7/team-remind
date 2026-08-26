@@ -1,7 +1,7 @@
 # HANDOFF — 跨会话交接文档
 
 > 新会话第一件事：读本文件 + `.secrets.local.md`（密钥，已 gitignore）。
-> 最后更新：v0.19.0 发布后（2026-08-26）
+> 最后更新：路线图定稿（2026-08-26，v0.19.0 之后）
 
 ## 项目一句话
 
@@ -39,11 +39,11 @@ team-remind：微信原生团队待办小程序。云端已全链路打通（Sup
 
 ## 待办 / 待决
 
-1. **工作区有 3 个已写好未提交文件**：docs/RELEASE-1.0.md（发布人工清单）、scripts/check-size.js、package.json（check:size 脚本行）——确认后提交
-2. docs/opencode-issue-draft.md：opencode 客户端 bug 的 issue 草稿，待用户提交（上游不稳定导致回合循环，详见文件）
-3. 订阅消息模板 ID → 到手填 config.js + 提醒用户在 mp 后台申请
-4. 1.0 发布：人工清单在 docs/RELEASE-1.0.md（隐私指引填写/类目/基础库版本/双设备回归）
-5. Realtime WebSocket：暂缓（30s 轮询够用，双设备实测前不盲发）
+0. **产品路线图已定稿：docs/ROADMAP.md**（五轴 + 版本线 0.20 订阅消息闭环 → 0.21 日历 → 0.22 排班 → 1.1 子任务），新功能开发以它为准
+1. docs/opencode-issue-draft.md：opencode 客户端 bug 的 issue 草稿，待用户提交（上游不稳定导致回合循环，详见文件）
+2. 订阅消息模板 ID ×2（任务提醒 + 每日晨报）→ 用户在 mp 后台申请，到手填 config.js / supabase secrets；0.20 全部拆解见 ROADMAP.md
+3. 1.0 发布：人工清单在 docs/RELEASE-1.0.md（隐私指引填写/类目/基础库版本/双设备回归）
+4. Realtime WebSocket：暂缓（30s 轮询够用，双设备实测前不盲发；ROADMAP「明确不做」区亦有记录）
 
 ## 踩坑记录（重要！）
 
