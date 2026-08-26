@@ -112,6 +112,10 @@ Page({
     wx.navigateTo({ url: '/pages/profile-edit/profile-edit' })
   },
 
+  goMyStats() {
+    wx.navigateTo({ url: '/pages/my-stats/my-stats' })
+  },
+
   goHelp() {
     wx.navigateTo({ url: '/pages/help/help' })
   },

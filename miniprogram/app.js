@@ -38,6 +38,27 @@ App({
 
     // 计算导航栏相关尺寸
     this.initLayout()
+
+    // 隐私授权监听（基础库 2.32.3+；上架审核必需）
+    // 涉及隐私接口被调用时弹出说明，用户同意后继续
+    if (wx.onNeedPrivacyAuthorization) {
+      wx.onNeedPrivacyAuthorization((resolve) => {
+        wx.showModal({
+          title: '隐私保护提示',
+          content: '我们非常重视你的隐私。团队待办仅在你主动使用对应功能时处理必要信息（如账号登录、任务数据同步、导出内容复制到剪贴板），不会收集与功能无关的个人信息。详情见「我的-隐私政策」。',
+          confirmText: '同意',
+          cancelText: '拒绝',
+          success: (res) => {
+            if (res.confirm) {
+              resolve({ event: 'agree' })
+            } else {
+              resolve({ event: 'disagree' })
+              wx.showToast({ title: '部分功能将不可用', icon: 'none' })
+            }
+          }
+        })
+      })
+    }
   },
 
   initLayout() {

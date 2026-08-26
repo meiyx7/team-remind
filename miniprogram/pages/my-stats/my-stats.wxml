@@ -1,0 +1,78 @@
+<!-- pages/my-stats/my-stats.wxml 个人贡献档案 -->
+<view class="page-container {{themeClass}}">
+  <nav-bar title="我的贡献" show-back="{{true}}"></nav-bar>
+
+  <view wx:if="{{stats}}" class="stats-content">
+    <!-- 顶部统计 -->
+    <view class="hero-card">
+      <view class="hero-ring">
+        <text class="hero-rate">{{stats.rate}}%</text>
+        <text class="hero-rate-label">完成率</text>
+      </view>
+      <view class="hero-nums">
+        <view class="hn-item">
+          <text class="hn-num">{{stats.done}}</text>
+          <text class="hn-label">累计完成</text>
+        </view>
+        <view class="hn-divider"></view>
+        <view class="hn-item">
+          <text class="hn-num">{{stats.total}}</text>
+          <text class="hn-label">参与任务</text>
+        </view>
+        <view class="hn-divider"></view>
+        <view class="hn-item">
+          <text class="hn-num">{{stats.teamCount}}</text>
+          <text class="hn-label">参与团队</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 按团队分解 -->
+    <view class="section-card">
+      <text class="sec-title">按团队</text>
+      <view wx:if="{{stats.teams.length > 0}}" class="team-rows">
+        <view
+          class="tr-row"
+          wx:for="{{stats.teams}}"
+          wx:key="teamId"
+          hover-class="card-pressed"
+          data-id="{{item.teamId}}"
+          bindtap="goTeam"
+        >
+          <view class="tr-body">
+            <view class="tr-top">
+              <text class="tr-name">{{item.teamName}}</text>
+              <text class="tr-num">{{item.done}}/{{item.total}}</text>
+            </view>
+            <view class="tr-track">
+              <view class="tr-fill" style="width: {{item.rate}}%;"></view>
+            </view>
+          </view>
+          <text class="tr-arrow">›</text>
+        </view>
+      </view>
+      <empty-state wx:else text="还没有参与任何任务" hint="去首页或模板库创建一个吧" />
+    </view>
+
+    <!-- 最近完成 -->
+    <view class="section-card">
+      <text class="sec-title">最近完成</text>
+      <view wx:if="{{stats.recent.length > 0}}" class="recent-rows">
+        <view
+          class="rc-row"
+          wx:for="{{stats.recent}}"
+          wx:key="id"
+          hover-class="card-pressed"
+          data-id="{{item.id}}"
+          bindtap="onTapRecent"
+        >
+          <view class="rc-check">✓</view>
+          <text class="rc-title">{{item.title}}</text>
+          <text class="rc-time">{{item.timeLabel}}</text>
+        </view>
+      </view>
+      <empty-state wx:else text="暂无完成记录" />
+    </view>
+  </view>
+  <view class="safe-bottom"></view>
+</view>

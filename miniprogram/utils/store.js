@@ -1152,6 +1152,56 @@ function getTodayLabel() {
   return `${d.getMonth() + 1}月${d.getDate()}日 ${week}`
 }
 
+/* ============ 个人贡献档案 ============ */
+
+// 跨团队个人视角：累计完成/参与团队/按团队分解/最近完成
+function getMyContribution() {
+  const user = getUser()
+  if (!user) return null
+  const todos = getTodos()
+
+  const byTeam = {}
+  let done = 0
+  let total = 0
+  todos.forEach(t => {
+    const a = (t.assignments || []).find(x => x.memberId === user.id)
+    if (!a) return
+    const team = getTeamById(t.teamId)
+    const teamName = t.teamName || (team ? team.name : '未命名团队')
+    if (!byTeam[t.teamId]) {
+      byTeam[t.teamId] = { teamId: t.teamId, teamName, done: 0, total: 0 }
+    }
+    byTeam[t.teamId].total++
+    total++
+    if (a.done) {
+      byTeam[t.teamId].done++
+      done++
+    }
+  })
+
+  const teams = Object.keys(byTeam).map(k => {
+    const item = byTeam[k]
+    item.rate = item.total === 0 ? 0 : Math.round(item.done / item.total * 100)
+    return item
+  }).sort((a, b) => b.done - a.done)
+
+  // 最近完成（我的指派为 done，按整单更新时间倒序）
+  const recent = todos
+    .filter(t => (t.assignments || []).some(x => x.memberId === user.id && x.done))
+    .sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''))
+    .slice(0, 5)
+    .map(t => ({ id: t.id, title: t.title, timeLabel: timeAgoLabel(t.updatedAt) }))
+
+  return {
+    done,
+    total,
+    rate: total === 0 ? 0 : Math.round(done / total * 100),
+    teamCount: teams.length,
+    teams,
+    recent
+  }
+}
+
 /* ============ 团队热力图 ============ */
 
 // 近 N 周每日完成数（基于 completedAt），GitHub 风格网格
@@ -1250,6 +1300,8 @@ module.exports = {
   // 周报
   getTeamWeeklyReport,
   getTeamHeatmap,
+  // 个人贡献
+  getMyContribution,
   // 个人资料
   updateUserProfile,
   markOwnProfileDirty,

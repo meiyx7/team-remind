@@ -10,6 +10,7 @@
     "pages/create-team/create-team",
     "pages/templates/templates",
     "pages/profile-edit/profile-edit",
+    "pages/my-stats/my-stats",
     "pages/notifications/notifications",
     "pages/team-report/team-report",
     "pages/about/about",
@@ -48,5 +49,6 @@
   },
   "sitemapLocation": "sitemap.json",
   "style": "v2",
-  "lazyCodeLoading": "requiredComponents"
+  "lazyCodeLoading": "requiredComponents",
+  "__usePrivacyCheck__": true
 }
